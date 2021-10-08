@@ -1,0 +1,19 @@
+{
+  "cwd": "/Users/Alex/Documents/JSProjects/AnimationStudio/Portal App F7 v2",
+  "type": [
+    "web"
+  ],
+  "name": "AnimationStudio Portal",
+  "framework": "react",
+  "template": "single-view",
+  "bundler": "vite",
+  "cssPreProcessor": false,
+  "theming": {
+    "customColor": true,
+    "color": "#341c65",
+    "darkTheme": false,
+    "iconFonts": true,
+    "fillBars": false
+  },
+  "customBuild": false
+}
