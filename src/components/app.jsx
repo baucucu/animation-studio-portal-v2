@@ -77,12 +77,12 @@ const MyApp = () => {
     f7.views.main.router.navigate(`/${selected}/`)
   },[selected])
 
-  useEffect(() => {
-    console.log("Realm app: ",app)
-    if(app.currentUser) {
-      setUser(app.currentUser)
-    }
-  },[user])
+  // useEffect(() => {
+  //   console.log("Realm app: ",app)
+  //   if(app.currentUser) {
+  //     setUser(app.currentUser)
+  //   }
+  // },[user])
 
   f7ready(() => {
 
