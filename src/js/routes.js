@@ -13,6 +13,8 @@ import PeoplePage from '../pages/people';
 import ClientsPage from '../pages/clients';
 import ProfilePage from '../pages/profile';
 import LoginPage from '../pages/login';
+import BriefPage from '../pages/brief';
+import ManuscriptPage from '../pages/manuscript';
 
 var routes = [
   {
@@ -31,7 +33,7 @@ var routes = [
   },
   {
     name:'project',
-    path: '/project/',
+    path: '/project/:id',
     component: ProjectPage,
   },
   {
@@ -58,8 +60,14 @@ var routes = [
     path: '/form/',
     component: FormPage,
   },
-
-
+  {
+    path: '/brief/',
+    component: BriefPage,
+  },
+  {
+    path: '/manuscript/',
+    component: ManuscriptPage,
+  },
   {
     path: '/dynamic-route/blog/:blogId/post/:postId/',
     component: DynamicRoutePage,

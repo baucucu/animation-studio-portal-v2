@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import { Page, Navbar, Block, Button } from 'framework7-react';
-import * as Realm from "realm-web";
+import { Page, Navbar, Block, Button, View, Views, useStore } from 'framework7-react';
+import store from '../js/store';
 
 import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
@@ -15,72 +15,37 @@ import CheckIcon from '@mui/icons-material/Check';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LockClockIcon from '@mui/icons-material/LockClock';
 
-import Manuscript from '../components/manuscript.jsx'
-// import Brief from '../../components/brief/brief.js'
 
 import BSON from 'bson';
 
 const ProjectPage = ({f7route,f7router}) => {
-  const app = new Realm.App({ id: "animationstudioapp-hxbnj" });
-  const mongodb = app.currentUser.mongoClient("mongodb-atlas");
-  const projectsColection = mongodb.db("AnimationStudioDB").collection("Projects");
-  // const history = useHistory();
-  // const projectId = history.location.pathname.split(":")[1]
 
-  const [project, setProject] = useState()
+  const [project, setProject] = useState(store.state.projects.filter(project => project._id.toString() === f7route.params.id)[0])
+
+  useEffect(()=>{
+    console.log("project changed: ", project)
+  },[project])
+
+  const tabs = [
+    { text: 'Brief','icon':'fullscreen', path: '/brief/', index:0, completed:"true", active:"true", mIcon:CheckIcon },
+    { text: 'Manuscript','icon':'verticalaligntop', path: '/manuscript/', index:1, completed:"true", active:"true", mIcon:AccessTimeIcon  },
+    { text: 'Storyboard','icon':'image', index:2, path: '/storyboard/', completed:"false", active:"false" ,mIcon:LockClockIcon },
+    { text: 'Voiceover','icon':'music', index:3,  path: '/voiceover/', completed:"false", active:"false",mIcon:LockClockIcon  },
+    { text: 'Illustrations','icon':'palette', path: '/illustrations/', index:4,  completed:"false", active:"false",mIcon:LockClockIcon   },
+    { text: 'Animation','icon':'runner', path: '/animation/', index:5, completed:"false", active:"false",mIcon:LockClockIcon   },
+    { text: 'Delivery','icon':'movetofolder', path: '/delivery/', index:6,  completed:"false", active:"false", mIcon:LockClockIcon   },
+  ];
+  
   const [selectedIndex, setSelectedIndex] = useState(0)
-
-  async function getProject(projectId){
-    return await projectsColection.find({_id: BSON.ObjectId(projectId)})
-  }
 
   useEffect(() => {
       console.log("route: ", f7route)
-      // getProject(projectId)
-      //   .then(data => {
-      //     setProject(data[0])
-      //   })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
-
-  useEffect(() => {
-  },[project])
-
-  const Brief = (props) => {
-    return(<>Brief content</>)
-  }
-  const Storyboard = (props) => {
-    return(<>Storyboard content</>)
-  }
-  const Voiceover = (props) => {
-    return(<>Voiceover content</>)
-  }
-  const Illustrations = (props) => {
-    return(<>Illustrations content</>)
-  }
-  const Animation = (props) => {
-    return(<>Animation content</>)
-  }
-  const Delivery = (props) => {
-    return(<>Delivery content</>)
-  }
-
-  const tabs = [
-    { text: 'Brief','icon':'fullscreen', index:0, completed:"true", active:"true", mIcon:CheckIcon , component: Brief, project: project},
-    { text: 'Manuscript','icon':'verticalaligntop', index:1, completed:"true", active:"true", mIcon:AccessTimeIcon , component: Manuscript, project: project },
-    { text: 'Storyboard','icon':'image', index:2, completed:"false", active:"false" ,mIcon:LockClockIcon , component: Storyboard, project: project },
-    { text: 'Voiceover','icon':'music', index:3,  completed:"false", active:"false",mIcon:LockClockIcon ,  component: Voiceover, project: project  },
-    { text: 'Illustrations','icon':'palette', index:4,  completed:"false", active:"false",mIcon:LockClockIcon ,  component: Illustrations, project: project  },
-    { text: 'Animation','icon':'runner', index:5, completed:"false", active:"false",mIcon:LockClockIcon ,  component: Animation, project: project  },
-    { text: 'Delivery','icon':'movetofolder', index:6,  completed:"false", active:"false", mIcon:LockClockIcon ,  component: Delivery, project: project  },
-  ];
 
 return (
   <Page>
     <Navbar title="Project Name"/>
-      <Stack spacing={2} className={'content-block'}>
-        {/* <ProjectHeader project={project} history={history}/>  */}
-        
+      <Block inset strong>
         <Stepper activeStep={selectedIndex} >
           {tabs.map((tab, index) => {
             const stepProps = {};
@@ -100,16 +65,10 @@ return (
             );
           })}
         </Stepper>
-        {/* <MultiView
-          // flexGrow={1}
-          dataSource={tabs}
-          selectedIndex={selectedIndex}
-          swipeEnabled={false}
-          itemComponent={tabs.filter(tab => tab.index===selectedIndex)[0].component}
-          animationEnabled={true} 
-        /> */}
-      </Stack>
-
+      </Block>
+        <Views tabs>
+            {tabs.map((tab,id) => <View key={id} tab url={tab.path} tabActive={id === selectedIndex} />)}
+        </Views>      
   </Page>
 )};
 

@@ -7,7 +7,7 @@ const app = new Realm.App({ id: "animationstudioapp-hxbnj" });
 const store = createStore({
   state: {
     user: app.currentUser,
-    projects: []
+    projects: [],
   },
   getters: {
     projects({state}) {
