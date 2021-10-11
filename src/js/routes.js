@@ -12,8 +12,19 @@ import TasksPage from '../pages/tasks';
 import PeoplePage from '../pages/people';
 import ClientsPage from '../pages/clients';
 import ProfilePage from '../pages/profile';
+import LoginPage from '../pages/login';
 
 var routes = [
+  {
+    name:'home',
+    path: '/',
+    component: HomePage,
+  },
+  {
+    name:'login',
+    path: '/login/',
+    component: LoginPage,
+  },
   {
     path: '/projects/',
     component: ProjectsPage,

@@ -1,18 +1,15 @@
 import React,{useState, useEffect} from 'react';
 import * as Realm from "realm-web";
 
-import { f7, Page, Navbar, Block, View, List, ListItem } from 'framework7-react';
+import { f7, Page, Navbar, Block, View, List, ListItem, useStore } from 'framework7-react';
+import store from '../js/store';
 
 import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
-const ProjectsPage = ({f7router}) => {
+export default function ProjectsPage({f7router}) {
   const [projects, setProjects] = useState([])
-
-  function navigateToProject(projectId) {
-    
-  }
 
   function stringAvatar(name) {
     return {
@@ -25,21 +22,33 @@ const ProjectsPage = ({f7router}) => {
     id,
   };
   const app = new Realm.App(config);
-  const mongodb = app.currentUser.mongoClient("mongodb-atlas");
-  const projectsCollection = mongodb.db("AnimationStudioDB").collection("Projects");
   
   async function getProjects() {
+    f7.dialog.preloader();
+    const mongodb = app?.currentUser.mongoClient("mongodb-atlas");
+    const projectsCollection = mongodb?.db("AnimationStudioDB").collection("Projects");
     return await projectsCollection.find()
   }
 
+  function logout() {
+    f7.dialog.preloader()
+    store.dispatch('logout', app)
+  }
+
   useEffect(() => {
-    f7.dialog.preloader();
-    getProjects().then(data => setProjects(data)).then(() => f7.dialog.close());
-  } ,[])
+    if(!store.state.user) {f7router.navigate('/login/')}
+  },[store.state.user])
+
+
+  useEffect(() => {
+    store.state.user && getProjects().then(data => setProjects(data)).then(() => f7.dialog.close());
+  } ,[store.state.user])
 
   useEffect(() => {
     console.log("projects changed: ", projects)
   }, [projects])
+
+  
   
   return (
     <Page name="projects" >
@@ -59,8 +68,5 @@ const ProjectsPage = ({f7router}) => {
       
     </Page>
 )};
-
-export default ProjectsPage;
-
 
 

@@ -78,10 +78,11 @@ const MyApp = () => {
   },[selected])
 
   useEffect(() => {
+    console.log("Realm app: ",app)
     if(app.currentUser) {
       setUser(app.currentUser)
     }
-  },[])
+  },[user])
 
   f7ready(() => {
 
@@ -174,9 +175,8 @@ const MyApp = () => {
         </View>
       </Panel>
 
-
       {/* Your main view, should have "view-main" class */}
-      <View main className="safe-areas view-main" url="/projects/" />
+      <View main className="safe-areas view-main" url="/" />
 
       {/* Popup */}
       <Popup id="my-popup">
