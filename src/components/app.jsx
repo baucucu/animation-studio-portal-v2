@@ -25,16 +25,15 @@ import {
   useStore
 } from 'framework7-react';
 
-
 import routes from '../js/routes';
 import store from '../js/store';
 
 const MyApp = () => {
-  // Login screen demo data
+  const user = store.getters.user
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [selected, setSelected] = useState('projects');
-  const [loginScreenOpened, setLoginScreenOpened] = useState(!store.state.user)
+  const [loginScreenOpened,setLoginScreenOpened] = useState(!user.value)
 
   // Framework7 Parameters
   const f7params = {
@@ -52,11 +51,12 @@ const MyApp = () => {
   },[selected])
 
   useEffect(() => {
-    
-  },[])
+    f7.on('loggedIn', () => setLoginScreenOpened(false)) 
+    f7.on('loggedOut', () => setLoginScreenOpened(true)) 
+  })
 
   f7ready(() => {
-
+    f7.on
     // Call F7 APIs here
   });
 
@@ -124,7 +124,7 @@ const MyApp = () => {
                       <ListItem
                         link
                         title="Log out"
-                        onClick={() => store.dispatch('logout')}
+                        onClick={() => {store.dispatch('logout')}}
                       >
                         <Icon aurora="f7:arrow_right_to_line" slot="media" />
                       </ListItem>
@@ -186,7 +186,7 @@ const MyApp = () => {
               ></ListInput>
             </List>
             <List>
-              <ListButton title="Sign In" onClick={() => store.dispatch('login',{email,password})} />
+              <ListButton title="Sign In" onClick={() => {store.dispatch('login',{email,password})}} />
               <BlockFooter>
                 Some text about login information.<br />Click "Sign In" to close Login Screen
               </BlockFooter>

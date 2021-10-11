@@ -9,7 +9,6 @@ import Avatar from '@mui/material/Avatar';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 export default function ProjectsPage({f7router}) {
-  const app = new Realm.App({ id: "animationstudioapp-hxbnj" });
   const [projects, setProjects] = useState([])
 
   function stringAvatar(name) {

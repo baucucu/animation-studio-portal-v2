@@ -7,11 +7,11 @@ const app = new Realm.App({ id: "animationstudioapp-hxbnj" });
 const store = createStore({
   state: {
     user: app.currentUser,
-    loginError: null
+    loginError: null,
   },
   getters: {
-    user({ state }) {
-      console.log("getters user called: ", state.user)
+    user({ state }, caller) {
+      // console.log("get user: ", state.user)
       return state.user;
     },
     loginError({state}) {
@@ -21,17 +21,17 @@ const store = createStore({
   actions: {
     setUser({ state }, user) {
       state.user = user
-      console.log('user set: ', state.user)
+      // console.log('set user: ', state.user)
     },
-    login({state},{email, password}) {
+    login({state, dispatch},{email, password}) {
       async function loginEmailPassword(email, password) {
         f7.dialog.preloader()
         const credentials = Realm.Credentials.emailPassword(email, password);
         
         app.logIn(credentials).then(dbUser => {
-          store.dispatch('setUser', dbUser)
-          f7.loginScreen.close()
+          dispatch('setUser', dbUser)
           f7.dialog.close()
+          f7.emit('loggedIn')
         })
         .catch((err) => {
           console.error("Failed to log in", err);
@@ -42,18 +42,18 @@ const store = createStore({
       loginEmailPassword(email,password)
       .then(user => state.user = user)
     },
-    logout({state}) {
-      f7.dialog.preloader()
-      console.log('logout dispatched: ', app)
+    logout({state, dispatch}) {
       const logOutUser = async () => {
         return await app.currentUser.logOut()
       }
+      // console.log('logout dispatched: ', app)
+      f7.dialog.preloader()
       logOutUser()
       .then(() => {
-        console.log("log out successful: ")
-        state.user = null
+        // console.log("log out successful")
+        dispatch('setUser', null)
         f7.dialog.close()
-        f7.loginScreen.open()
+        f7.emit('loggedOut')
       })
       .catch(error=> {
         console.log("log out error: ", error)
