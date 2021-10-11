@@ -7,15 +7,11 @@ const app = new Realm.App({ id: "animationstudioapp-hxbnj" });
 const store = createStore({
   state: {
     user: app.currentUser,
-    loginError: null,
   },
   getters: {
     user({ state }, caller) {
       // console.log("get user: ", state.user)
       return state.user;
-    },
-    loginError({state}) {
-      return state.loginError
     }
   },
   actions: {
@@ -35,7 +31,7 @@ const store = createStore({
         })
         .catch((err) => {
           console.error("Failed to log in", err);
-          state.loginError = err
+          f7.emit('loginError', err)
           f7.dialog.close()
         })
       }

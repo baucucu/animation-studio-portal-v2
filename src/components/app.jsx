@@ -29,11 +29,12 @@ import routes from '../js/routes';
 import store from '../js/store';
 
 const MyApp = () => {
-  const user = store.getters.user
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState()
   const [selected, setSelected] = useState('projects');
-  const [loginScreenOpened,setLoginScreenOpened] = useState(!user.value)
+  const [loginScreenOpened,setLoginScreenOpened] = useState(!store.getters.user.value)
 
   // Framework7 Parameters
   const f7params = {
@@ -51,13 +52,15 @@ const MyApp = () => {
   },[selected])
 
   useEffect(() => {
-    f7.on('loggedIn', () => setLoginScreenOpened(false)) 
+    f7.on('loggedIn', () => {setLoginScreenOpened(false); setLoginError()}) 
     f7.on('loggedOut', () => setLoginScreenOpened(true)) 
+    f7.on('loginError', (err) => {console.log("login error: ", err.error);setLoginError(err.error)})
   })
 
+  useEffect(() => {console.log("loginError changed: ", loginError)}, [loginError])
+
   f7ready(() => {
-    f7.on
-    // Call F7 APIs here
+
   });
 
   return (
@@ -188,7 +191,7 @@ const MyApp = () => {
             <List>
               <ListButton title="Sign In" onClick={() => {store.dispatch('login',{email,password})}} />
               <BlockFooter>
-                Some text about login information.<br />Click "Sign In" to close Login Screen
+                {loginError && String(loginError)}
               </BlockFooter>
             </List>
           </Page>
