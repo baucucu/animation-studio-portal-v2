@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Page, Navbar, Block, Button, View, Views, useStore } from 'framework7-react';
+import { Page, Navbar, Block, BlockTitle, Button, View, Views, useStore,f7 } from 'framework7-react';
 import store from '../js/store';
 
 import Chip from '@mui/material/Chip';
@@ -15,16 +15,17 @@ import CheckIcon from '@mui/icons-material/Check';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LockClockIcon from '@mui/icons-material/LockClock';
 
-
 import BSON from 'bson';
 
 const ProjectPage = ({f7route,f7router}) => {
 
-  const [project, setProject] = useState(store.state.projects.filter(project => project._id.toString() === f7route.params.id)[0])
+  // const [project, setProject] = useState(store.state.projects.filter(project => project._id.toString() === f7route.params.id)[0])
+
+  const project = useStore('project') 
 
   useEffect(()=>{
     console.log("project changed: ", project)
-  },[project])
+  },[])
 
   const tabs = [
     { text: 'Brief','icon':'fullscreen', path: '/brief/', index:0, completed:"true", active:"true", mIcon:CheckIcon },
@@ -39,7 +40,8 @@ const ProjectPage = ({f7route,f7router}) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   useEffect(() => {
-      console.log("route: ", f7route)
+      console.log("project route: ", f7route.params.id)
+      store.dispatch('setProject',f7route.params.id)
   },[])
 
 return (
@@ -67,7 +69,7 @@ return (
         </Stepper>
       </Block>
         <Views tabs>
-            {tabs.map((tab,id) => <View key={id} tab url={tab.path} tabActive={id === selectedIndex} />)}
+            {tabs.map((tab,id) => <View key={id} tab url={`${tab.path}${f7route.params.id}`} tabActive={id === selectedIndex} />)}
         </Views>      
   </Page>
 )};

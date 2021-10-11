@@ -1,20 +1,48 @@
-import React from 'react';
-import { Page, Navbar, Block, BlockTitle } from 'framework7-react';
+import React, {useEffect} from 'react';
+import { Page, Navbar, Block, List, ListItem, useStore, Button } from 'framework7-react';
 
-const BriefPage = () => (
-  <Page>
-    <Navbar title="Brief" />
-    <BlockTitle>Brief</BlockTitle>
-    <Block strong inset>
-      <p>Fugiat perspiciatis excepturi, soluta quod non ullam deleniti. Nobis sint nemo consequuntur, fugiat. Eius perferendis animi autem incidunt vel quod tenetur nostrum, voluptate omnis quasi quidem illum consequuntur, a, quisquam.</p>
-      <p>Laudantium neque magnam vitae nemo quam commodi, in cum dolore obcaecati laborum, excepturi harum, optio qui, consequuntur? Obcaecati dolor sequi nesciunt culpa quia perspiciatis, reiciendis ex debitis, ut tenetur alias.</p>
-    </Block>
-    <Block strong inset>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni molestiae laudantium dignissimos est nobis delectus nemo ea alias voluptatum architecto, amet similique, saepe iste consectetur in repellat ut minus quibusdam!</p>
-      <p>Molestias et distinctio porro nesciunt ratione similique, magni doloribus, rerum nobis, aliquam quae reiciendis quasi modi. Nam a recusandae, fugiat in ea voluptates fuga eius, velit corrupti reprehenderit dignissimos consequatur!</p>
-      <p>Blanditiis, cumque quo adipisci. Molestiae, dolores dolorum quos doloremque ipsa ullam eligendi commodi deserunt doloribus inventore magni? Ea mollitia veniam nostrum nihil, iusto doloribus a at! Ea molestiae ullam delectus!</p>
-    </Block>
-  </Page>
-);
+const BriefPage = ({f7route}) => {
+  const brief = useStore('project').brief
+  console.log("brief: ", brief)
+
+  function startQuestionnaire() {
+    
+  }
+
+  return(
+    <Page>
+      <Navbar title="Brief" />
+      
+      {brief.completed && <>
+        <List inset meediaList>  
+          {brief.formResponse.answers.map((item,index) =>{
+            return (
+              <ListItem 
+                key={index}
+                title={brief.formResponse.definition.fields[index].title}
+                after={String(item[item.type]?.label || item[item.type]?.labels || item[item.type])}
+                >
+              </ListItem>)})}
+        </List>
+      </>}
+
+      {!brief.completed && <>
+        <Block strong inset>  
+          <p>In order to start your project, we need to collect some information about your company, product, and your expectations.</p>
+
+          <p>This will lay the ground for the whole project and will be shared with all creators working on the project.</p>
+
+          <p>The questionnaire contains about 40 questions and takes roughly 30 minutes to respond to.</p>
+
+          <p>Make sure you have gathered all involved parties on your side when answering the questions in the brief. The more detailed the better it is!</p>
+
+          <p>Click the link below to start the questionnaire.</p>
+          <Button onClick={()=>startQuestionnaire()}>Start brief questionnaire</Button>
+        </Block>
+      </>}
+
+    </Page>
+  )
+}
 
 export default BriefPage;

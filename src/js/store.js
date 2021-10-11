@@ -8,23 +8,31 @@ const store = createStore({
   state: {
     user: app.currentUser,
     projects: [],
+    project: null
   },
   getters: {
+    project({state}) {
+      return state.project
+    },
     projects({state}) {
       return state.projects
     },
     user({ state }) {
-      // console.log("get user: ", state.user)
       return state.user;
     }
   },
   actions: {
     getProjects({state}, user){
-      console.log("getProjects dispatched: ", user)
       const mongodb = app.currentUser.mongoClient("mongodb-atlas");
       const projectsCollection = mongodb.db("AnimationStudioDB").collection("Projects");
       projectsCollection.find()
       .then(projects=> state.projects = [...projects])
+    },
+    setProject({state}, id){
+      console.log("setProject dispatch received: ", id)
+      const project = state.projects.filter(project => project._id.toString() === id)[0]
+      console.log("store: new project set: ",project)
+      state.project= project
     },
     setUser({ state }, user) {
       state.user = user

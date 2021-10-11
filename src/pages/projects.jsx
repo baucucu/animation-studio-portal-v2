@@ -10,7 +10,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 export default function ProjectsPage({f7router}) {
   const projects = useStore('projects')
-  // console.log("projects useStore: ", projects)
+  console.log("projects useStore: ", projects)
 
   function stringAvatar(name) {
     return {
@@ -25,7 +25,14 @@ export default function ProjectsPage({f7router}) {
       <Navbar title="Projects"/>
       <List inset mediaList>
         {projects.map((project, id) => 
-          <ListItem key={id} onClick={ () => f7router.navigate( `/project/${project._id.toString()}`)}>
+          <ListItem 
+            key={id} 
+            onClick={() => {
+              console.log("project id: ", project?._id.toString());
+              store.dispatch('setProject',project?._id.toString())
+              f7router.navigate(`/project/${project?._id.toString()}`)
+            }}
+            >
             <h4 slot='title'>{project.projectName} <Chip style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Ongoing" /></h4>  
             {project.products.map((product, id) => <Chip slot='footer' key={id} style={{marginLeft: 4}} avatar={<Avatar>{product.quantity}</Avatar>} label={product.name}/>)}
             <div className="members" slot='after'>

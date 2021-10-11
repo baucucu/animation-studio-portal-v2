@@ -18,12 +18,10 @@ import ManuscriptPage from '../pages/manuscript';
 
 var routes = [
   {
-    name:'home',
     path: '/',
     component: HomePage,
   },
   {
-    name:'login',
     path: '/login/',
     component: LoginPage,
   },
@@ -32,7 +30,6 @@ var routes = [
     component: ProjectsPage,
   },
   {
-    name:'project',
     path: '/project/:id',
     component: ProjectPage,
   },
@@ -61,11 +58,11 @@ var routes = [
     component: FormPage,
   },
   {
-    path: '/brief/',
+    path: '/brief/:id',
     component: BriefPage,
   },
   {
-    path: '/manuscript/',
+    path: '/manuscript/:id',
     component: ManuscriptPage,
   },
   {
