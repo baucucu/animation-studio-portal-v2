@@ -7,14 +7,25 @@ const app = new Realm.App({ id: "animationstudioapp-hxbnj" });
 const store = createStore({
   state: {
     user: app.currentUser,
+    projects: []
   },
   getters: {
-    user({ state }, caller) {
+    projects({state}) {
+      return state.projects
+    },
+    user({ state }) {
       // console.log("get user: ", state.user)
       return state.user;
     }
   },
   actions: {
+    getProjects({state}, user){
+      console.log("getProjects dispatched: ", user)
+      const mongodb = app.currentUser.mongoClient("mongodb-atlas");
+      const projectsCollection = mongodb.db("AnimationStudioDB").collection("Projects");
+      projectsCollection.find()
+      .then(projects=> state.projects = [...projects])
+    },
     setUser({ state }, user) {
       state.user = user
       // console.log('set user: ', state.user)
@@ -26,6 +37,7 @@ const store = createStore({
         
         app.logIn(credentials).then(dbUser => {
           dispatch('setUser', dbUser)
+          dispatch('getProjects', dbUser)
           f7.dialog.close()
           f7.emit('loggedIn')
         })

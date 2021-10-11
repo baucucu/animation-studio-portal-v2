@@ -24,6 +24,7 @@ import {
   BlockFooter,
   useStore
 } from 'framework7-react';
+import Container from '@mui/material/Container';
 
 import routes from '../js/routes';
 import store from '../js/store';
@@ -35,6 +36,7 @@ const MyApp = () => {
   const [loginError, setLoginError] = useState()
   const [selected, setSelected] = useState('projects');
   const [loginScreenOpened,setLoginScreenOpened] = useState(!store.getters.user.value)
+  const [showLeftDrawer,setShowLeftDrawer] = useState(true)
 
   // Framework7 Parameters
   const f7params = {
@@ -70,14 +72,12 @@ const MyApp = () => {
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
       />
       {/* Left panel with cover effect*/}
-      <Panel left visibleBreakpoint={0} opened>
+      <Panel left visibleBreakpoint={0} opened={showLeftDrawer}>
         <View>
           <Page>
             <Navbar title="Animation Studio"/>
-            <div style={{display: 'flex', flexDirection:'column', height: '100%'}}>
-              <div style={{display: 'flex', flexDirection:'column', justifyContent: 'start'}}>
-                <Block style={{marginTop:0}}>
-                  <List menuList>
+            <div style={{display:'flex',flexDirection:'column',height:'100%', padding:0}}>
+                  <List inset menuList style={{flexGrow:1}}>
                     <ListItem
                       link
                       title="Projects"
@@ -111,30 +111,25 @@ const MyApp = () => {
                       <Icon aurora="f7:building" slot="media" />
                     </ListItem>
                   </List>
-                </Block>
+
+                  <List inset menuList style={{alignItems: 'flex-end'}}>
+                    <ListItem
+                      link
+                      title="Profile"
+                      selected={selected === 'profile'}
+                      onClick={() => setSelected('profile')}
+                    >
+                      <Icon aurora="f7:person" slot="media" />
+                    </ListItem>
+                    <ListItem
+                      link
+                      title="Log out"
+                      onClick={() => {store.dispatch('logout')}}
+                    >
+                      <Icon aurora="f7:arrow_right_to_line" slot="media" />
+                    </ListItem>
+                  </List>  
               </div>
-              <div style={{display: 'flex', flexDirection:'column', justifyContent: 'end', flexGrow:1}}>
-                <Block style={{marginBottom:0}}>
-                    <List menuList>
-                      <ListItem
-                        link
-                        title="Profile"
-                        selected={selected === 'profile'}
-                        onClick={() => setSelected('profile')}
-                      >
-                        <Icon aurora="f7:person" slot="media" />
-                      </ListItem>
-                      <ListItem
-                        link
-                        title="Log out"
-                        onClick={() => {store.dispatch('logout')}}
-                      >
-                        <Icon aurora="f7:arrow_right_to_line" slot="media" />
-                      </ListItem>
-                    </List>  
-                </Block>    
-              </div>
-            </div>
           </Page>
         </View>
       </Panel>

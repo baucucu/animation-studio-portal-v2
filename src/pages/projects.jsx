@@ -1,7 +1,7 @@
 import React,{useState, useEffect} from 'react';
 import * as Realm from "realm-web";
 
-import { f7, Page, Navbar, List, ListItem} from 'framework7-react';
+import { f7, Page, Navbar, List, ListItem, useStore} from 'framework7-react';
 import store from '../js/store';
 
 import Chip from '@mui/material/Chip';
@@ -9,13 +9,15 @@ import Avatar from '@mui/material/Avatar';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 export default function ProjectsPage({f7router}) {
-  const [projects, setProjects] = useState([])
+  const projects = useStore('projects')
 
   function stringAvatar(name) {
     return {
       children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
     };
   }
+
+  useEffect(() => {console.log("projects: ", projects); store.dispatch('getProjects',store.state.user)}, [])
 
   return (
     <Page name="projects" >
