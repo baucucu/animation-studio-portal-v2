@@ -15,6 +15,7 @@ import {
   NavRight,
   Link,
   Block,
+  Button,
   LoginScreen,
   LoginScreenTitle,
   List,
@@ -77,58 +78,58 @@ const MyApp = () => {
           <Page>
             <Navbar title="Animation Studio"/>
             <div style={{display:'flex',flexDirection:'column',height:'100%', padding:0}}>
-                  <List inset menuList style={{flexGrow:1}}>
-                    <ListItem
-                      link
-                      title="Projects"
-                      selected={selected === 'projects'}
-                      onClick={() => setSelected('projects')}
-                    >
-                      <Icon aurora="f7:folder" slot="media" />
-                    </ListItem>
-                    <ListItem
-                      link
-                      title="Tasks"
-                      selected={selected === 'tasks'}
-                      onClick={() => setSelected('tasks')}
-                    >
-                      <Icon aurora="f7:hammer" slot="media" />
-                    </ListItem>
-                    <ListItem
-                      link
-                      title="People"
-                      selected={selected === 'people'}
-                      onClick={() => setSelected('people')}
-                    >
-                      <Icon aurora="f7:person_2" slot="media" />
-                    </ListItem>
-                    <ListItem
-                      link
-                      title="Clients"
-                      selected={selected === 'clients'}
-                      onClick={() => setSelected('clients')}
-                    >
-                      <Icon aurora="f7:building" slot="media" />
-                    </ListItem>
-                  </List>
+                <List inset menuList style={{flexGrow:1}}>
+                  <ListItem
+                    link
+                    title="Projects"
+                    selected={selected === 'projects'}
+                    onClick={() => setSelected('projects')}
+                  >
+                    <Icon aurora="f7:folder" slot="media" />
+                  </ListItem>
+                  <ListItem
+                    link
+                    title="Tasks"
+                    selected={selected === 'tasks'}
+                    onClick={() => setSelected('tasks')}
+                  >
+                    <Icon aurora="f7:hammer" slot="media" />
+                  </ListItem>
+                  <ListItem
+                    link
+                    title="People"
+                    selected={selected === 'people'}
+                    onClick={() => setSelected('people')}
+                  >
+                    <Icon aurora="f7:person_2" slot="media" />
+                  </ListItem>
+                  <ListItem
+                    link
+                    title="Clients"
+                    selected={selected === 'clients'}
+                    onClick={() => setSelected('clients')}
+                  >
+                    <Icon aurora="f7:building" slot="media" />
+                  </ListItem>
+                </List>
 
-                  <List inset menuList style={{alignItems: 'flex-end'}}>
-                    <ListItem
-                      link
-                      title="Profile"
-                      selected={selected === 'profile'}
-                      onClick={() => setSelected('profile')}
-                    >
-                      <Icon aurora="f7:person" slot="media" />
-                    </ListItem>
-                    <ListItem
-                      link
-                      title="Log out"
-                      onClick={() => {store.dispatch('logout')}}
-                    >
-                      <Icon aurora="f7:arrow_right_to_line" slot="media" />
-                    </ListItem>
-                  </List>  
+                <List inset menuList style={{alignItems: 'flex-end'}}>
+                  <ListItem
+                    link
+                    title="Profile"
+                    selected={selected === 'profile'}
+                    onClick={() => setSelected('profile')}
+                  >
+                    <Icon aurora="f7:person" slot="media" />
+                  </ListItem>
+                  <ListItem
+                    link
+                    title="Log out"
+                    onClick={() => {store.dispatch('logout')}}
+                  >
+                    <Icon aurora="f7:arrow_right_to_line" slot="media" />
+                  </ListItem>
+                </List>  
               </div>
           </Page>
         </View>
