@@ -22,6 +22,7 @@ import {
   ListInput,
   ListButton,
   BlockFooter,
+  useStore
 } from 'framework7-react';
 
 
@@ -30,10 +31,10 @@ import store from '../js/store';
 
 const MyApp = () => {
   // Login screen demo data
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [user, setUser] = useState()
   const [selected, setSelected] = useState('projects');
+  const [loginScreenOpened, setLoginScreenOpened] = useState(!store.state.user)
 
   // Framework7 Parameters
   const f7params = {
@@ -45,44 +46,14 @@ const MyApp = () => {
       // App routes
       routes: routes,
   };
-  const alertLoginData = () => {
-    f7.dialog.alert('Username: ' + username + '<br>Password: ' + password, () => {
-      f7.loginScreen.close();
-    });
-  }
-
-  const id = "animationstudioapp-hxbnj";
-  const config = {
-    id,
-  };
-  const app = new Realm.App(config);
-
-  async function loginEmailPassword(email, password) {
-    // Create an anonymous credential
-    const credentials = Realm.Credentials.emailPassword(email, password);
-    try {
-      // Authenticate the user
-      const user = await app.logIn(credentials);
-      // `App.currentUser` updates to match the logged in user
-      // assert(user.id === app.currentUser.id)
-      return user
-    } catch(err) {
-      console.error("Failed to log in", err);
-    }
-  }
 
   useEffect(() => {
-    console.log("selected changed: ", selected);
-    console.log("f7: ",f7)
     f7.views.main.router.navigate(`/${selected}/`)
   },[selected])
 
-  // useEffect(() => {
-  //   console.log("Realm app: ",app)
-  //   if(app.currentUser) {
-  //     setUser(app.currentUser)
-  //   }
-  // },[user])
+  useEffect(() => {
+    
+  },[])
 
   f7ready(() => {
 
@@ -153,7 +124,7 @@ const MyApp = () => {
                       <ListItem
                         link
                         title="Log out"
-                        onClick={() => app.currentUser.logOut().then(() => setUser(app.currentUser))}
+                        onClick={() => store.dispatch('logout')}
                       >
                         <Icon aurora="f7:arrow_right_to_line" slot="media" />
                       </ListItem>
@@ -166,7 +137,7 @@ const MyApp = () => {
       </Panel>
 
       {/* Right panel with reveal effect*/}
-      <Panel right cover opened>
+      <Panel right reveal>
         <View>
           <Page>
             <Navbar title="Right Panel"/>
@@ -176,7 +147,7 @@ const MyApp = () => {
       </Panel>
 
       {/* Your main view, should have "view-main" class */}
-      <View main className="safe-areas view-main" url="/" />
+      <View main className="safe-areas view-main"/>
 
       {/* Popup */}
       <Popup id="my-popup">
@@ -194,17 +165,17 @@ const MyApp = () => {
         </View>
       </Popup>
 
-      <LoginScreen id="my-login-screen" opened={!user}>
+      <LoginScreen id="my-login-screen" opened={loginScreenOpened}>
         <View>
           <Page loginScreen>
             <LoginScreenTitle>Login</LoginScreenTitle>
             <List form>
               <ListInput
                 type="text"
-                name="username"
-                placeholder="Your username"
-                value={username}
-                onInput={(e) => setUsername(e.target.value)}
+                name="email"
+                placeholder="Your email"
+                value={email}
+                onInput={(e) => setEmail(e.target.value)}
               ></ListInput>
               <ListInput
                 type="password"
@@ -215,7 +186,7 @@ const MyApp = () => {
               ></ListInput>
             </List>
             <List>
-              <ListButton title="Sign In" onClick={() => {loginEmailPassword(username,password).then(data => setUser(data))}} />
+              <ListButton title="Sign In" onClick={() => store.dispatch('login',{email,password})} />
               <BlockFooter>
                 Some text about login information.<br />Click "Sign In" to close Login Screen
               </BlockFooter>

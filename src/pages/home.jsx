@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {
-  Page, useStore
+  Page
 } from 'framework7-react';
 
 const HomePage = () => {
