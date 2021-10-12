@@ -4,6 +4,7 @@ import store from '../js/store';
 
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
+import MUIButton from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -14,6 +15,7 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import Box from '@mui/material/Box';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import CheckIcon from '@mui/icons-material/Check';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LockClockIcon from '@mui/icons-material/LockClock';
@@ -89,30 +91,34 @@ function ProjectHeader(props) {
 
   return(
     <>
-    <Stack sx={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
-      <Stack sx={{flexDirection: 'row', alignItems: 'center', justifyContent:'flex-start'}}>
-        <Box>
-          <IconButton onClick={() => f7router.back()}>
-            <ArrowBackIcon/>
-          </IconButton>
+      <Stack sx={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
+        <Stack sx={{flexDirection: 'row', alignItems: 'center', justifyContent:'flex-start'}}>
+          <Box>
+            <IconButton onClick={() => f7router.back()}>
+              <ArrowBackIcon/>
+            </IconButton>
+          </Box>
+          <Typography sx={{flexGrow:1}} ml={1} mr={1} component="div" variant='h6' className="projectName">{project.projectName}</Typography>
+          <AvatarGroup max={4} >
+            <Avatar sx={{ width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
+            <Avatar sx={{ width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
+          </AvatarGroup>
+        </Stack>
+        <Box style={{display: "flex", flexGrow:0, justifyContent: "flex-end", alignItems:"center"}}>
+          {project.products.map((product, id) => <Chip key={id} style={{marginLeft: 4}} avatar={<Avatar>{product.quantity}</Avatar>} label={product.name} />)}
         </Box>
-        <Typography sx={{flexGrow:1}} component="div" variant='h6' className="projectName">{project.projectName}</Typography>
-          <AvatarGroup max={4}>
-          <Avatar sx={{ width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
-          <Avatar sx={{ width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
-        </AvatarGroup>
       </Stack>
-      <Box style={{display: "flex", flexGrow:0, justifyContent: "flex-end", alignItems:"center"}}>
-        {project.products.map((product, id) => <Chip key={id} style={{marginLeft: 4}} avatar={<Avatar>{product.quantity}</Avatar>} label={product.name} />)}
-        <Button icon="product" style={{marginLeft:8}} text="Proposal"></Button>
-      </Box>
-    </Stack>
-    <Stack sx={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
-      <Box style={{display:"flex", flexDirection:"row", alignItems: "center"}}>
-        {/* <Typography variant='h6' className="projectName">{project.projectName}</Typography> */}
-        <Chip style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Ongoing" />
-        <Chip style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Next expected delivery: 1 aug 2021 14:00" />
-      </Box>
-    </Stack>   
+      <Stack mt={1} sx={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
+        <Box style={{display:"flex", flexDirection:"row", alignItems: "center"}}>
+          {/* <Typography variant='h6' className="projectName">{project.projectName}</Typography> */}
+          <Chip style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Ongoing" />
+          <Chip style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Next expected delivery: 1 aug 2021 14:00" />
+        </Box>
+        <Box>
+          <MUIButton size="small" variant="outlined" color="primary" startIcon={<WorkOutlineIcon />}>
+            Proposal
+          </MUIButton>
+        </Box>
+      </Stack>   
     </>
   )}
