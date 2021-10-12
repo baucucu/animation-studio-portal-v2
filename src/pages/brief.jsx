@@ -40,7 +40,7 @@ const BriefPage = ({f7route}) => {
             <p>Make sure you have gathered all involved parties on your side when answering the questions in the brief. The more detailed the better it is!</p>
 
             <p>Click the link below to start the questionnaire.</p>
-            <Button popupOpen=".brief-popup" onClick={startQuestionnaire}>Start brief questionnaire</Button>
+            <Button raised fill popupOpen=".brief-popup" onClick={startQuestionnaire}>Start brief questionnaire</Button>
           </Block>
           <Popup
             push
@@ -49,14 +49,14 @@ const BriefPage = ({f7route}) => {
             opened={briefModalOpen}
             onPopupClosed={() => setBriefModalOpen(false)}
           >
-            <Page>
+            <Page style={{display: 'flex', flexDirection: 'column'}}>
               <Navbar title="Brief Form">
                 <NavRight>
                   <Link popupClose>Close</Link>
                 </NavRight>
               </Navbar>
-              <div>
-                <iframe style={{height:'1000px', width: '100%' }} scrolling='no' title="Brief" src={brief.formUrl}></iframe>
+              <div style={{flexGrow:1, height:'100%'}}>
+                <iframe style={{height:'100%', width: '100%' }} scrolling='no' title="Brief" src={brief.formUrl}></iframe>
               </div>
             </Page>
           </Popup>
