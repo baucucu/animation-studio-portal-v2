@@ -34,16 +34,16 @@ const ManuscriptPage = () => {
         <Stack sx={{flexDirection:"row", alignItems: "center", justifyContent:"space-between"}}>
           <Stack sx={{flexDirection:"row", justifyContent: "space-between", alignItems: "center"}}>
             <Typography mr={1} variant="subtitle1" color="text.secondary" component="div">Word count</Typography>
-            <Chip label={"385"} ></Chip>
+            <Chip color="secondary" variant="outlined" label={"385"} ></Chip>
           </Stack>
           <Stack sx={{flexDirection:"row", justifyContent: "space-between", alignItems: "center"}}>
             <Typography mr={1} variant="subtitle1" color="text.secondary" component="div">Target length</Typography>
-            <Chip sx={{marginRight:1}} label={"60s"} ></Chip>
-            <Chip label={"not so strict"} ></Chip>
+            <Chip color="secondary" variant="outlined" sx={{marginRight:1}} label={"60s"} ></Chip>
+            <Chip color="secondary" variant="outlined" label={"not so strict"} ></Chip>
           </Stack>
           <Stack sx={{flexDirection:"row", justifyContent: "space-between", alignItems: "center"}}>
             <Typography mr={1} variant="subtitle1" color="text.secondary" component="div">Scenes</Typography>
-            <Chip label={"8"} ></Chip>
+            <Chip color="secondary" variant="outlined" label={"8"} ></Chip>
           </Stack>
         </Stack>
         <CardActions>
@@ -56,11 +56,11 @@ const ManuscriptPage = () => {
         <Stack sx={{flexDirection:"row", alignItems: "center", justifyContent:"space-between"}}>
           <Stack sx={{flexDirection:"row", justifyContent: "space-between", alignItems: "center"}}>
               <Typography mr={1} variant="subtitle1" color="text.secondary" component="div">Revisions</Typography>
-              <Chip label={"2/5"} ></Chip>
+              <Chip color="secondary" variant="outlined" label={"2/5"} ></Chip>
           </Stack>
           <Stack sx={{flexDirection:"row", justifyContent: "space-between", alignItems: "center"}}>
               <Typography mr={1} variant="subtitle1" color="text.secondary" component="div">Time to respond</Typography>
-              <Chip label={"18:00:00"} ></Chip>
+              <Chip color="secondary" variant="outlined" label={"18:00:00"} ></Chip>
           </Stack>
         </Stack>
         <CardActions>
