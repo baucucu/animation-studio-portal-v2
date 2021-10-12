@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Page, Navbar, Block, BlockTitle, Button, View, Views, useStore,f7 } from 'framework7-react';
+import { Page, Navbar, Block, View, Views, useStore,f7 } from 'framework7-react';
 import store from '../js/store';
 
 import Chip from '@mui/material/Chip';
@@ -24,13 +24,7 @@ import BSON from 'bson';
 
 const ProjectPage = ({f7route,f7router}) => {
 
-  // const [project, setProject] = useState(store.state.projects.filter(project => project._id.toString() === f7route.params.id)[0])
-
   const project = useStore('project') 
-
-  useEffect(()=>{
-    console.log("project changed: ", project)
-  },[])
 
   const tabs = [
     { text: 'Brief','icon':'fullscreen', path: '/brief/', index:0, completed:"true", active:"true", mIcon:CheckIcon },
@@ -45,16 +39,13 @@ const ProjectPage = ({f7route,f7router}) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   useEffect(() => {
-      console.log("project route: ", f7route.params.id)
       store.dispatch('setProject',f7route.params.id)
   },[])
 
 return (
   <Page>
     <Navbar title="Project Name"/>
-      <Block inset strong>
-        <ProjectHeader project={project} f7router={f7router} />
-      </Block>
+      <ProjectHeader project={project} f7router={f7router} />
       <Block inset strong style={{marginTop:0, marginBottom:0}}>
         <Stepper activeStep={selectedIndex} >
           {tabs.map((tab, index) => {
@@ -76,9 +67,9 @@ return (
           })}
         </Stepper>
       </Block>
-        <Views tabs>
-            {tabs.map((tab,id) => <View key={id} tab url={`${tab.path}${f7route.params.id}`} tabActive={id === selectedIndex} />)}
-        </Views>      
+      <Views tabs>
+          {tabs.map((tab,id) => <View id="view-tab" key={id} tab url={`${tab.path}${f7route.params.id}`} tabActive={id === selectedIndex} />)}
+      </Views>      
   </Page>
 )};
 
@@ -90,7 +81,7 @@ function ProjectHeader(props) {
   const {project, f7router} = props
 
   return(
-    <>
+    <Block inset strong>
       <Stack sx={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
         <Stack sx={{flexDirection: 'row', alignItems: 'center', justifyContent:'flex-start'}}>
           <Box>
@@ -120,5 +111,5 @@ function ProjectHeader(props) {
           </MUIButton>
         </Box>
       </Stack>   
-    </>
+    </Block>
   )}

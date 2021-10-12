@@ -29,14 +29,11 @@ const store = createStore({
       .then(projects=> state.projects = [...projects])
     },
     setProject({state}, id){
-      console.log("setProject dispatch received: ", id)
       const project = state.projects.filter(project => project._id.toString() === id)[0]
-      console.log("store: new project set: ",project)
       state.project= project
     },
     setUser({ state }, user) {
       state.user = user
-      // console.log('set user: ', state.user)
     },
     login({state, dispatch},{email, password}) {
       async function loginEmailPassword(email, password) {
@@ -77,7 +74,7 @@ const store = createStore({
     },
     toggleTest({ state }) {
       state.test = !state.test
-      console.log('dispatch executed: ', state.test)
+      // console.log('dispatch executed: ', state.test)
     },
   },
 })

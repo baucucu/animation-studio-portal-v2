@@ -7,3 +7,7 @@
 }
 
 /* Your app custom styles here */
+
+#briefForm > .page-content {
+  padding-top:0;
+}

@@ -10,7 +10,6 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 export default function ProjectsPage({f7router}) {
   const projects = useStore('projects')
-  console.log("projects useStore: ", projects)
 
   function stringAvatar(name) {
     return {
@@ -18,7 +17,7 @@ export default function ProjectsPage({f7router}) {
     };
   }
 
-  useEffect(() => {console.log("projects: ", projects); store.dispatch('getProjects',store.state.user)}, [])
+  useEffect(() => {store.dispatch('getProjects',store.state.user)}, [])
 
   return (
     <Page name="projects" >
