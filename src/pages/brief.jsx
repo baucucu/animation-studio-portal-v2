@@ -29,7 +29,7 @@ const BriefPage = () => {
               <p>Be careful when filling in the form, no changes are possible afterwards</p>
               <Button raised fill popupOpen=".brief-popup" >Start brief questionnaire</Button>
             </Stack>
-            <img style={{height:200, marginLeft:40}} src="../assets/fill_form.png"/>
+            <img style={{height:200, marginLeft:40}} src="https://github.com/baucucu/animation-studio-portal-v2/blob/master/src/assets/fill_form.png?raw=true"/>
           </Stack>  
         </Block>
         
