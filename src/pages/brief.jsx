@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 
 const BriefPage = () => {
-  const brief = useStore('project').brief
+  const brief = useStore('project')?.brief
 
   if (brief.completed) {
     return (

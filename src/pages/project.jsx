@@ -89,14 +89,14 @@ function ProjectHeader(props) {
               <ArrowBackIcon/>
             </IconButton>
           </Box>
-          <Typography sx={{flexGrow:1}} ml={1} mr={1} component="div" variant='h6' className="projectName">{project.projectName}</Typography>
+          <Typography sx={{flexGrow:1}} ml={1} mr={1} component="div" variant='h6' className="projectName">{project?.projectName}</Typography>
           <AvatarGroup max={4} >
             <Avatar sx={{ width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
             <Avatar sx={{ width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
           </AvatarGroup>
         </Stack>
         <Box style={{display: "flex", flexGrow:0, justifyContent: "flex-end", alignItems:"center"}}>
-          {project.products.map((product, id) => <Chip key={id} style={{marginLeft: 4}} avatar={<Avatar>{product.quantity}</Avatar>} label={product.name} />)}
+          {project?.products.map((product, id) => <Chip key={id} style={{marginLeft: 4}} avatar={<Avatar>{product.quantity}</Avatar>} label={product.name} />)}
         </Box>
       </Stack>
       <Stack mt={1} sx={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>

@@ -1,12 +1,18 @@
 import React,{useState, useEffect} from 'react';
 import * as Realm from "realm-web";
 
-import { f7, Page, Navbar, List, ListItem, useStore} from 'framework7-react';
+import { Block, Page, Navbar, List,Link, useStore} from 'framework7-react';
 import store from '../js/store';
 
 import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import AvatarGroup from '@mui/material/AvatarGroup';
+import Box from '@mui/material/Box';
+
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+
 
 export default function ProjectsPage({f7router}) {
   const projects = useStore('projects')
@@ -24,24 +30,42 @@ export default function ProjectsPage({f7router}) {
       <Navbar title="Projects"/>
       <List inset mediaList>
         {projects.map((project, id) => 
-          <ListItem 
+          <ProjectItemList 
+            project={project} 
+            f7router={f7router}
             key={id} 
-            onClick={() => {
-              console.log("project id: ", project?._id.toString());
-              store.dispatch('setProject',project?._id.toString())
-              f7router.navigate(`/project/${project?._id.toString()}`)
-            }}
-            >
-            <h4 slot='title'>{project.projectName} <Chip style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Ongoing" /></h4>  
-            {project.products.map((product, id) => <Chip slot='footer' key={id} style={{marginLeft: 4}} avatar={<Avatar>{product.quantity}</Avatar>} label={product.name}/>)}
-            <div className="members" slot='after'>
-              <Chip style={{marginRight: 4}} avatar={<Avatar sx={{ bgcolor: 'primary' }}>PM</Avatar>} label={project.projectOwnerName} />
-              <Chip style={{marginRight: 4}} avatar={<Avatar sx={{ bgcolor: 'primary' }} {...stringAvatar(project.clientName)} /> } label={project.clientName}/>
-            </div>
-          </ListItem>)}
+          />
+        )}
       </List>
       
     </Page>
 )};
+
+function ProjectItemList({project, f7router}) {
+  return(
+    <Block inset strong>
+      <Stack sx={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
+        <Stack sx={{flexDirection: 'row', alignItems: 'center', justifyContent:'flex-start'}}>
+          <Link onClick={()=>{console.log("project id: ",project?._id.toString());store.dispatch('setProject',project?._id.toString()); f7router.navigate(`/project/${project?._id.toString()}`)}}  > <Typography sx={{flexGrow:1}} ml={1} mr={1} component="div" variant='h6' className="projectName">{project.projectName}</Typography></Link>
+          <AvatarGroup max={4} >
+            <Avatar sx={{ width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
+            <Avatar sx={{ width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
+          </AvatarGroup>
+        </Stack>
+        <Box style={{display: "flex", flexGrow:0, justifyContent: "flex-end", alignItems:"center"}}>
+          {project.products.map((product, id) => <Chip key={id} style={{marginLeft: 4}} avatar={<Avatar>{product.quantity}</Avatar>} label={product.name} />)}
+        </Box>
+      </Stack>
+      <Stack mt={1} sx={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
+        <Box style={{display:"flex", flexDirection:"row", alignItems: "center"}}>
+          <Chip style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Ongoing" />
+          <Chip style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Next expected delivery: 1 aug 2021 14:00" />
+        </Box>
+      </Stack>   
+      
+    </Block>
+    
+  )
+}
 
 
