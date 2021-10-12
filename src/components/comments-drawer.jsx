@@ -1,6 +1,5 @@
 import React,{useEffect} from 'react'
-// import commentBox from 'commentbox.io';
-
+import {Block} from 'framework7-react';
 const commentBox = window.commentBox;
 
 const CommentsDrawer = () => {
@@ -8,7 +7,7 @@ const CommentsDrawer = () => {
     const removeCommentBox = commentBox('5707536883777536-proj');
   },[])
   return (
-    <div style={{minwidth:300}} className="commentbox" />
+    <Block className="commentbox" />
 );
 }
 
