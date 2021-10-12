@@ -71,17 +71,19 @@ function Scenes(props) {
     const {toggleDrawer} = props
     return(
         <Grid pb={2} pr={2} container spacing={2} direction="row" rows={1} wrap="nowrap" sx={{overflow:"auto", flexGrow: 1, alignItems:"stretch", }}>
-            {[1,2,3,].map((card,id) => 
+            {[1,2,3,4,5].map((card,id) => 
                 <Grid item key={id}>
                     <Card sx={{width: 450}}>
                         <CardContent >
                             <Stack sx={{flexDirection:"row", justifyContent: "space-between"}}>
                                 <Typography variant="h6" color="text.secondary" component="div">Scene #</Typography>
-                                <IconButton color="primary" aria-label="open comments" onClick={() => {toggleDrawer(id)}}>
-                                    <Badge badgeContent={4} color="secondary" >
-                                        <RateReviewIcon color="action" onClick={() => {}}/>
-                                    </Badge>
-                                </IconButton>
+                                <Box>
+                                    <IconButton sx={{flexGrow:0}} color="primary" aria-label="open comments" onClick={() => {toggleDrawer(id)}}>
+                                        <Badge badgeContent={4} color="secondary" >
+                                            <RateReviewIcon color="action" onClick={() => {}}/>
+                                        </Badge>
+                                    </IconButton>
+                                </Box>
                             </Stack>
                             {/* <Typography variant="body2" color="text.secondary" component="div">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</Typography> */}
                             <Stack sx={{flexDirection:"column"}} spacing={2}>

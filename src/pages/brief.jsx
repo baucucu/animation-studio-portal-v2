@@ -20,7 +20,7 @@ const BriefPage = () => {
       </List>
   )} else {
     return (
-      <Page id="briefForm">
+      <Page className="viewPage">
         <Block strong inset>
           <Stack sx={{flexDirection:'row', alignItems:'center'}}>
             <Stack>

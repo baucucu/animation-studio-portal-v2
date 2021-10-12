@@ -8,6 +8,6 @@
 
 /* Your app custom styles here */
 
-#briefForm > .page-content {
+.viewPage > .page-content {
   padding-top:0;
 }
