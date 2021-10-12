@@ -3,14 +3,17 @@ import { Page, Navbar, Block, BlockTitle, Button, View, Views, useStore,f7 } fro
 import store from '../js/store';
 
 import Chip from '@mui/material/Chip';
+import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import Stack from '@mui/material/Stack';
 import StepLabel from '@mui/material/StepLabel';
+import Typography from '@mui/material/Typography';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Box from '@mui/material/Box';
 
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CheckIcon from '@mui/icons-material/Check';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LockClockIcon from '@mui/icons-material/LockClock';
@@ -48,6 +51,9 @@ return (
   <Page>
     <Navbar title="Project Name"/>
       <Block inset strong>
+        <ProjectHeader project={project} f7router={f7router} />
+      </Block>
+      <Block inset strong style={{marginTop:0, marginBottom:0}}>
         <Stepper activeStep={selectedIndex} >
           {tabs.map((tab, index) => {
             const stepProps = {};
@@ -79,26 +85,34 @@ export default ProjectPage;
 
 function ProjectHeader(props) {
 
-  const {project, history} = props
+  const {project, f7router} = props
 
   return(
+    <>
     <Stack sx={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
-      <Box style={{display:"flex", flexDirection:"row", alignItems: "center"}}>
-        <Button icon="back" onClick={history.goBack} style={{margin:8}}></Button>
-        <h2 style={{fontSize:24}} className="projectName">{project.projectName}</h2>
-        <Chip style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Ongoing" />
-        <Chip style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Next expected delivery: 1 aug 2021 14:00" />
-      </Box>
-      <AvatarGroup max={4}>
-        <Avatar sx={{ bgcolor: 'primary'}}>PM</Avatar>
-        <Avatar sx={{ bgcolor: 'primary'}}>AR</Avatar>  
-        <Avatar sx={{ bgcolor: 'primary'}}>AR</Avatar>  
-        <Avatar sx={{ bgcolor: 'primary'}}>AR</Avatar>  
-        <Avatar sx={{ bgcolor: 'primary'}}>AR</Avatar>  
-      </AvatarGroup>
+      <Stack sx={{flexDirection: 'row', alignItems: 'center', justifyContent:'flex-start'}}>
+        <Box>
+          <IconButton onClick={() => f7router.back()}>
+            <ArrowBackIcon/>
+          </IconButton>
+        </Box>
+        <Typography sx={{flexGrow:1}} component="div" variant='h6' className="projectName">{project.projectName}</Typography>
+          <AvatarGroup max={4}>
+          <Avatar sx={{ width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
+          <Avatar sx={{ width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
+        </AvatarGroup>
+      </Stack>
       <Box style={{display: "flex", flexGrow:0, justifyContent: "flex-end", alignItems:"center"}}>
         {project.products.map((product, id) => <Chip key={id} style={{marginLeft: 4}} avatar={<Avatar>{product.quantity}</Avatar>} label={product.name} />)}
         <Button icon="product" style={{marginLeft:8}} text="Proposal"></Button>
       </Box>
+    </Stack>
+    <Stack sx={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
+      <Box style={{display:"flex", flexDirection:"row", alignItems: "center"}}>
+        {/* <Typography variant='h6' className="projectName">{project.projectName}</Typography> */}
+        <Chip style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Ongoing" />
+        <Chip style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Next expected delivery: 1 aug 2021 14:00" />
+      </Box>
     </Stack>   
+    </>
   )}

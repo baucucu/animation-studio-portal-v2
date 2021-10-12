@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import { Popup, Page, Navbar,NavRight,Link, Block, List, ListItem, Button, useStore } from 'framework7-react';
-
+import Box from '@mui/material/Box';
 
 const BriefPage = ({f7route}) => {
   const brief = useStore('project').brief
@@ -14,8 +14,8 @@ const BriefPage = ({f7route}) => {
   }
 
   return(
-      <Page>
-        <Navbar title="Brief" />
+      <Box>
+        {/* <Navbar title="Brief" /> */}
         {brief.completed && <>
           <List inset meediaList>  
             {brief.formResponse.answers.map((item,index) =>{
@@ -61,7 +61,7 @@ const BriefPage = ({f7route}) => {
             </Page>
           </Popup>
         </>}
-      </Page>
+      </Box>
   )
 }
 
