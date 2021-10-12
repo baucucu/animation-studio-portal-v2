@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {f7 } from 'framework7-react';
+import React from 'react';
+import {f7, useStore } from 'framework7-react';
 
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
@@ -16,59 +16,8 @@ import Box from '@mui/material/Box';
 
 
 export default function ManuscriptScenes(props) {
-
-    const {briefDrawerOpen} = props
-    const [commentsDrawerOpen, setCommentsDrawerOpen] = useState(false)
-    const toggleDrawer = () => {
-        setCommentsDrawerOpen(!commentsDrawerOpen)
-    }
-
-    // const [showBriefDrawer, setShowBriefDrawer] = useState(false)
-    // const toggleBriefDrawer = () => {
-    //     setShowBriefDrawer(!showBriefDrawer)
-    // }
-
-    return(
-        <Box >
-            {/* <Drawer
-                
-                opened={briefDrawerOpen}
-                openedStateMode="shrink"
-                position="left"
-                revealMode="slide"
-                component={BriefDrawer}
-                // closeOnOutsideClick={this.onOutsideClick}
-                // height="100%"
-            >
-                <Drawer
-                    
-                    opened={commentsDrawerOpen}
-                    openedStateMode="shrink"
-                    position="right"
-                    revealMode="slide"
-                    component={CommentsDrawer}
-                    // closeOnOutsideClick={this.onOutsideClick}
-                    // height="100%"
-                > */}
-                    
-                    <Scenes toggleDrawer={toggleDrawer}/>
-                {/* </Drawer>
-            </Drawer>             */}
-        </Box>
-    )
-}
-
-function BriefDrawer(props) {
-    return(
-        <Box pr={2}>
-            Brief drawer *****************************
-        </Box>
-    )
-}
-
-
-function Scenes(props) {
-    const {toggleDrawer} = props
+    const project = useStore('project') 
+    
     return(
         <Grid pb={2} pr={2} container spacing={2} direction="row" rows={1} wrap="nowrap" sx={{overflow:"auto", flexGrow: 1, alignItems:"stretch", }}>
             {[1,2,3,4,5].map((card,id) => 
@@ -78,7 +27,7 @@ function Scenes(props) {
                             <Stack sx={{flexDirection:"row", justifyContent: "space-between"}}>
                                 <Typography variant="h6" color="text.secondary" component="div">Scene {id+1}</Typography>
                                 <Box>
-                                    <IconButton sx={{flexGrow:0}} color="primary" aria-label="open comments" onClick={() => {f7.emit('showComments')}}>
+                                    <IconButton sx={{flexGrow:0}} color="primary" aria-label="open comments" onClick={() => {f7.emit('showComments',{commentboxId:project._id.toString()+id.toString()})}}>
                                         <Badge badgeContent={4} color="secondary" >
                                             <RateReviewIcon color="action" onClick={() => {}}/>
                                         </Badge>

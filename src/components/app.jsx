@@ -50,6 +50,7 @@ const MyApp = () => {
       // App routes
       routes: routes,
   };
+  const [commentBoxId,setCommentBoxId] = useState()
 
   useEffect(() => {
     f7.views.main.router.navigate(`/${selected}/`)
@@ -59,7 +60,7 @@ const MyApp = () => {
     f7.on('loggedIn', () => {setLoginScreenOpened(false); setLoginError()}) 
     f7.on('loggedOut', () => setLoginScreenOpened(true)) 
     f7.on('loginError', (err) => {console.log("login error: ", err.error);setLoginError(err.error)})
-    f7.on('showComments', () => {console.log("showComments event received"); setShowRight(true)}) 
+    f7.on('showComments', (e) => {console.log("showComments event received:",e); setShowRight(true); setCommentBoxId(e.commentBoxId)}) 
   })
 
   useEffect(() => {console.log("showRight changed: ", showRight)}, [showRight])
@@ -143,7 +144,7 @@ const MyApp = () => {
           <Page>
             <Navbar title="Right Panel"/>
             <Block>
-              <CommentsDrawer id={1}/>  
+              <CommentsDrawer id={commentBoxId}/>  
             </Block>  
           </Page>
         </View>
