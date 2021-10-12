@@ -1,21 +1,14 @@
 import React, {useState} from 'react';
-import { Page, Icon, Block, BlockTitle, Segmented, Button } from 'framework7-react';
+import { Page, Icon, Block, BlockTitle, Segmented, Button,f7 } from 'framework7-react';
 
 import Chip from '@mui/material/Chip';
-import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
 import CardButton from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import MUIButton from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import LockClockIcon from '@mui/icons-material/LockClock';
 
 import ManuscriptScenes from '../components/manuscript-scenes'
-
 
 const ManuscriptPage = () => {
   
@@ -49,7 +42,7 @@ const ManuscriptPage = () => {
           </Stack>
         </Stack>
         <CardActions>
-            <CardButton color="secondary" size="small" onClick={()=>toggleBriefDrawer()}>Show Brief</CardButton>
+            <CardButton color="secondary" size="small" >Show Brief</CardButton>
             <CardButton color="secondary" size="small">Listen to AI Voiceover</CardButton>
             <CardButton color="secondary" size="small">Download PDF</CardButton>
         </CardActions>
@@ -66,10 +59,10 @@ const ManuscriptPage = () => {
           </Stack>
         </Stack>
         <CardActions>
-          <CardButton color="secondary" size="small" >Send to client</CardButton>
-          <CardButton color="secondary" size="small" >Approve manuscript</CardButton>
-          <CardButton color="secondary" size="small">Ask for revision</CardButton>
-          <CardButton color="secondary" size="small">Extend time</CardButton>
+          <CardButton color="secondary" size="small" onClick={()=>f7.dialog.confirm('Are you sure you want to send to client?')}>Send to client</CardButton>
+          <CardButton color="secondary" size="small" onClick={()=>f7.dialog.confirm('Are you sure you want to approve the manuscript?')}>Approve manuscript</CardButton>
+          <CardButton color="secondary" size="small" onClick={()=>f7.dialog.confirm('Are you sure you want to ask for revision?')}>Ask for revision</CardButton>
+          <CardButton color="secondary" size="small" onClick={()=>f7.dialog.confirm('Are you sure you want to extend time?')}>Extend time</CardButton>
         </CardActions>
       </Block>
     </Stack>
