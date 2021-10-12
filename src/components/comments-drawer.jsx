@@ -5,10 +5,10 @@ const commentBox = window.commentBox;
 const CommentsDrawer = (props) => {
   useEffect(() => {
     console.log("commentsbox id: ",props?.id)
-    commentBox('5707536883777536-proj',{className:props?.id} );
+    commentBox('5707536883777536-proj');
   },[])
   return (
-    <Block className={props?.id}/>
+    <div className="commentsbox" id={props?.id}/>
 );
 }
 
