@@ -138,12 +138,12 @@ const MyApp = () => {
       </Panel>
 
       {/* Right panel with reveal effect*/}
-      <Panel resizable right cover opened={showRight} style={{minWidth:500}} onPanelClose={()=>setShowRight(false)}>
+      <Panel resizable right cover opened={showRight} style={{minWidth: '33%'}} onPanelClose={()=>setShowRight(false)}>
         <View>
           <Page>
             <Navbar title="Right Panel"/>
             <Block>
-              <CommentsDrawer/>  
+              <CommentsDrawer id={1}/>  
             </Block>  
           </Page>
         </View>
