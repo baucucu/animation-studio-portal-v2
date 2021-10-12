@@ -25,7 +25,7 @@ const ManuscriptPage = () => {
       </Block>
     </Box>
     <Stack sx={{flexDirection:"row", justifyContent: "space-between", alignItems: "center"}}>
-      <Block inset strong style={{flexGrow:2, marginTop:0}}>
+      <Block inset strong style={{flexGrow:1, marginTop:0}}>
         <Stack sx={{flexDirection:"row", alignItems: "center", justifyContent:"space-between"}}>
           <Stack sx={{flexDirection:"row", justifyContent: "space-between", alignItems: "center"}}>
             <Typography mr={1} variant="subtitle1" color="text.secondary" component="div">Word count</Typography>
@@ -42,7 +42,6 @@ const ManuscriptPage = () => {
           </Stack>
         </Stack>
         <CardActions>
-            <CardButton color="secondary" size="small" onClick={()=>f7.emit('showBrief')}>Show Brief</CardButton>
             <CardButton color="secondary" size="small" onClick={()=>f7.emit('listenVoiceover')}>Listen to AI Voiceover</CardButton>
             <CardButton color="secondary" size="small" onClick={()=>f7.emit('downloadPDF')}>Download PDF</CardButton>
         </CardActions>

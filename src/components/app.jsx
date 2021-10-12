@@ -57,7 +57,6 @@ const MyApp = () => {
     f7.on('loggedIn', () => {setLoginScreenOpened(false); setLoginError()}) 
     f7.on('loggedOut', () => setLoginScreenOpened(true)) 
     f7.on('loginError', (err) => {console.log("login error: ", err.error);setLoginError(err.error)})
-    f7.on('showBrief', () => {console.log("showBrief event received"); setShowRight(true)}) 
     f7.on('showComments', () => {console.log("showComments event received"); setShowRight(true)}) 
   })
 
