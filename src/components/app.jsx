@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import * as Realm from "realm-web";
+import 'semantic-ui-css/semantic.min.css'
 
 import {
   f7,
@@ -25,7 +25,7 @@ import {
   BlockFooter,
   useStore
 } from 'framework7-react';
-import Container from '@mui/material/Container';
+import CommentsDrawer from '../components/comments-drawer.jsx'
 
 import routes from '../js/routes';
 import store from '../js/store';
@@ -136,11 +136,13 @@ const MyApp = () => {
       </Panel>
 
       {/* Right panel with reveal effect*/}
-      <Panel right cover opened={showRight} onPanelClose={()=>setShowRight(false)}>
+      <Panel resizable right cover opened={showRight} onPanelClose={()=>setShowRight(false)}>
         <View>
           <Page>
             <Navbar title="Right Panel"/>
-            <Block>Right panel content goes here</Block>
+            <Block>
+              <CommentsDrawer/>  
+            </Block>  
           </Page>
         </View>
       </Panel>
