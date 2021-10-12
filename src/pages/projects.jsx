@@ -40,7 +40,6 @@ export default function ProjectsPage({f7router}) {
       
     </Page>
 )};
-
 function ProjectItemList({project, f7router}) {
   return(
     <Block inset strong>
@@ -48,21 +47,21 @@ function ProjectItemList({project, f7router}) {
         <Stack sx={{flexDirection: 'row', alignItems: 'center', justifyContent:'flex-start'}}>
           <Link onClick={()=>{console.log("project id: ",project?._id.toString());store.dispatch('setProject',project?._id.toString()); f7router.navigate(`/project/${project?._id.toString()}`)}}  > <Typography sx={{flexGrow:1}} ml={1} mr={1} component="div" variant='h6' className="projectName">{project.projectName}</Typography></Link>
           <AvatarGroup max={4} >
-            <Avatar sx={{ width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
-            <Avatar sx={{ width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
+            <Avatar  sx={{ bgcolor: 'secondary', width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
+            <Avatar sx={{ bgcolor: 'secondary', width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
           </AvatarGroup>
         </Stack>
         <Box style={{display: "flex", flexGrow:0, justifyContent: "flex-end", alignItems:"center"}}>
-          {project.products.map((product, id) => <Chip key={id} style={{marginLeft: 4}} avatar={<Avatar>{product.quantity}</Avatar>} label={product.name} />)}
+          {project?.products.map((product, id) => <Chip color="secondary" variant="outlined" key={id} style={{marginLeft: 4}} avatar={<Avatar>{product.quantity}</Avatar>} label={product.name} />)}
         </Box>
       </Stack>
       <Stack mt={1} sx={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
         <Box style={{display:"flex", flexDirection:"row", alignItems: "center"}}>
-          <Chip style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Ongoing" />
-          <Chip style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Next expected delivery: 1 aug 2021 14:00" />
+          {/* <Typography variant='h6' className="projectName">{project.projectName}</Typography> */}
+          <Chip color="secondary" variant="outlined" style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Ongoing" />
+          <Chip color="secondary" variant="outlined" style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Next expected delivery: 1 aug 2021 14:00" />
         </Box>
       </Stack>   
-      
     </Block>
     
   )
