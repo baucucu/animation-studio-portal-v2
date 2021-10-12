@@ -42,9 +42,9 @@ const ManuscriptPage = () => {
           </Stack>
         </Stack>
         <CardActions>
-            <CardButton color="secondary" size="small" >Show Brief</CardButton>
-            <CardButton color="secondary" size="small">Listen to AI Voiceover</CardButton>
-            <CardButton color="secondary" size="small">Download PDF</CardButton>
+            <CardButton color="secondary" size="small" onClick={()=>f7.emit('showBrief')}>Show Brief</CardButton>
+            <CardButton color="secondary" size="small" onClick={()=>f7.emit('listenVoiceover')}>Listen to AI Voiceover</CardButton>
+            <CardButton color="secondary" size="small" onClick={()=>f7.emit('downloadPDF')}>Download PDF</CardButton>
         </CardActions>
       </Block>
       <Block inset strong style={{flexGrow:1, marginTop:0}}>

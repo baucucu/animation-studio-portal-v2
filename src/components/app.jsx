@@ -37,8 +37,7 @@ const MyApp = () => {
   const [loginError, setLoginError] = useState()
   const [selected, setSelected] = useState('projects');
   const [loginScreenOpened,setLoginScreenOpened] = useState(!store.getters.user.value)
-  const [showLeftDrawer,setShowLeftDrawer] = useState(true)
-
+  const [showRight, setShowRight] = useState(false)
   // Framework7 Parameters
   const f7params = {
     name: 'AnimationStudio Portal', // App name
@@ -58,9 +57,11 @@ const MyApp = () => {
     f7.on('loggedIn', () => {setLoginScreenOpened(false); setLoginError()}) 
     f7.on('loggedOut', () => setLoginScreenOpened(true)) 
     f7.on('loginError', (err) => {console.log("login error: ", err.error);setLoginError(err.error)})
+    f7.on('showBrief', () => {console.log("showBrief event received"); setShowRight(true)}) 
+    f7.on('showComments', () => {console.log("showComments event received"); setShowRight(true)}) 
   })
 
-  useEffect(() => {console.log("loginError changed: ", loginError)}, [loginError])
+  useEffect(() => {console.log("showRight changed: ", showRight)}, [showRight])
 
   f7ready(() => {
 
@@ -73,7 +74,7 @@ const MyApp = () => {
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
       />
       {/* Left panel with cover effect*/}
-      <Panel left visibleBreakpoint={0} opened={showLeftDrawer}>
+      <Panel left visibleBreakpoint={0} >
         <View>
           <Page>
             <Navbar title="Animation Studio"/>
@@ -136,7 +137,7 @@ const MyApp = () => {
       </Panel>
 
       {/* Right panel with reveal effect*/}
-      <Panel right reveal>
+      <Panel right cover opened={showRight} onPanelClose={()=>setShowRight(false)}>
         <View>
           <Page>
             <Navbar title="Right Panel"/>
@@ -149,7 +150,7 @@ const MyApp = () => {
       <View main className="safe-areas view-main"/>
 
       {/* Popup */}
-      <Popup id="my-popup">
+      <Popup id="my-popup" >
         <View>
           <Page>
             <Navbar title="Popup">

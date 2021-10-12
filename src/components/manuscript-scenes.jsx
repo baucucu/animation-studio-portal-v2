@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-// import CommentsDrawer from '../components/comments-drawer.jsx'
+import {f7 } from 'framework7-react';
 
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
@@ -76,9 +76,9 @@ function Scenes(props) {
                     <Card sx={{width: 450}}>
                         <CardContent >
                             <Stack sx={{flexDirection:"row", justifyContent: "space-between"}}>
-                                <Typography variant="h6" color="text.secondary" component="div">Scene #</Typography>
+                                <Typography variant="h6" color="text.secondary" component="div">Scene {id+1}</Typography>
                                 <Box>
-                                    <IconButton sx={{flexGrow:0}} color="primary" aria-label="open comments" onClick={() => {toggleDrawer(id)}}>
+                                    <IconButton sx={{flexGrow:0}} color="primary" aria-label="open comments" onClick={() => {f7.emit('showComments')}}>
                                         <Badge badgeContent={4} color="secondary" >
                                             <RateReviewIcon color="action" onClick={() => {}}/>
                                         </Badge>
