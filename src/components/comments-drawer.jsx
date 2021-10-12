@@ -4,10 +4,10 @@ const commentBox = window.commentBox;
 
 const CommentsDrawer = (props) => {
   useEffect(() => {
-    const removeCommentBox = commentBox('5707536883777536-proj', { defaultBoxId: props?.cardId });
+    const removeCommentBox = commentBox('5707536883777536-proj', { defaultBoxId: props?.id });
   },[])
   return (
-    <Block className="commentbox" />
+    <Block className="commentbox" id={props?.cardId}/>
 );
 }
 
