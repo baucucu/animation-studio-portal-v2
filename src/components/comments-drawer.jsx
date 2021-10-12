@@ -8,7 +8,7 @@ const CommentsDrawer = (props) => {
     commentBox('5707536883777536-proj');
   },[])
   return (
-    <div className="commentsbox" id={props?.id}/>
+    <Block className="commentbox" />
 );
 }
 
