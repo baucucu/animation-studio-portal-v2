@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import 'semantic-ui-css/semantic.min.css'
+
 
 import {
   f7,
@@ -26,6 +26,8 @@ import {
   useStore
 } from 'framework7-react';
 import CommentsDrawer from '../components/comments-drawer.jsx'
+
+// import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 
 import routes from '../js/routes';
 import store from '../js/store';
