@@ -28,7 +28,7 @@ export default function ProjectsPage({f7router}) {
   return (
     <Page name="projects" >
       <Navbar title="Projects"/>
-      <List inset mediaList>
+      <List mediaList>
         {projects.map((project, id) => 
           <ProjectItemList 
             project={project} 

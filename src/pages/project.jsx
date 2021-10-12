@@ -108,7 +108,7 @@ function ProjectHeader(props) {
           <Chip color="secondary" variant="outlined" style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Next expected delivery: 1 aug 2021 14:00" />
         </Box>
         <Box>
-          <Chip color="secondary" variant="outlined" style={{marginLeft:8}} icon={<WorkOutlineIcon/>} label="Proposal" />
+          <Chip clickable color="secondary" variant="outlined" style={{marginLeft:8}} icon={<WorkOutlineIcon/>} label="Proposal" />
           {/* <MUIButton size="small" variant="outlined"  round color="secondary" startIcon={<WorkOutlineIcon />}>
             Proposal
           </MUIButton> */}

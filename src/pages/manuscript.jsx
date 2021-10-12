@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Page, Navbar, Block, BlockTitle } from 'framework7-react';
+import { Page, Icon, Block, BlockTitle, Segmented, Button } from 'framework7-react';
 
 import Chip from '@mui/material/Chip';
 import Card from '@mui/material/Card';
@@ -8,7 +8,7 @@ import CardContent from '@mui/material/CardContent';
 import CardButton from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import MUIButton from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -26,9 +26,11 @@ const ManuscriptPage = () => {
 
   return (
   <Page className="viewPage">
-    <Block inset style={{marginBottom:16, marginTop:16}}>
-      <SplitButton />
-    </Block>
+    <Box sx={{display:"flex", flexDirection:"row"}}>
+      <Block inset style={{flexDirection:"row", marginBottom:16, marginTop:16, flexGrow:0, justifyContent:'flex-start'}}>
+        <SplitButton />
+      </Block>
+    </Box>
     <Stack sx={{flexDirection:"row", justifyContent: "space-between", alignItems: "center"}}>
       <Block inset strong style={{flexGrow:2, marginTop:0}}>
         <Stack sx={{flexDirection:"row", alignItems: "center", justifyContent:"space-between"}}>
@@ -64,8 +66,8 @@ const ManuscriptPage = () => {
           </Stack>
         </Stack>
         <CardActions>
-          <CardButton color="secondary" size="small"  fill>Send to client</CardButton>
-          <CardButton color="secondary" size="small"  fill>Approve manuscript</CardButton>
+          <CardButton color="secondary" size="small" >Send to client</CardButton>
+          <CardButton color="secondary" size="small" >Approve manuscript</CardButton>
           <CardButton color="secondary" size="small">Ask for revision</CardButton>
           <CardButton color="secondary" size="small">Extend time</CardButton>
         </CardActions>
@@ -83,10 +85,18 @@ export default ManuscriptPage;
 function SplitButton(props) {
   
   return (
-    <ButtonGroup variant="outlined" color="secondary" aria-label="small outlined primary button group">
-      <Button variant="contained">English</Button>
-      <Button startIcon={<LockClockIcon/>}>Swedish</Button>
-      <Button startIcon={<LockClockIcon/>}>Norwegian</Button>
-    </ButtonGroup>
+    <Segmented round tag="div">
+      <Button  round outline active>
+        English
+      </Button>
+      <Button icon="lock" round outline>
+        <Icon icon="lock"></Icon>
+        Swedish
+      </Button>
+      <Button icon="lock" round outline>
+        
+        Norwegian
+      </Button>
+    </Segmented>   
   );
 }
