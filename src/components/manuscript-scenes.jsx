@@ -27,7 +27,7 @@ export default function ManuscriptScenes(props) {
                             <Stack sx={{flexDirection:"row", justifyContent: "space-between"}}>
                                 <Typography variant="h6" color="text.secondary" component="div">Scene {id+1}</Typography>
                                 <Box>
-                                    <IconButton sx={{flexGrow:0}} color="primary" aria-label="open comments" onClick={() => {f7.emit('showComments',{commentboxId:project._id.toString()+id.toString()})}}>
+                                    <IconButton sx={{flexGrow:0}} color="primary" aria-label="open comments" onClick={() => {f7.emit('showComments',{dealId:project._id, sceneId: id})}}>
                                         <Badge badgeContent={4} color="secondary" >
                                             <RateReviewIcon color="action" onClick={() => {}}/>
                                         </Badge>

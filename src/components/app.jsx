@@ -60,7 +60,7 @@ const MyApp = () => {
     f7.on('loggedIn', () => {setLoginScreenOpened(false); setLoginError()}) 
     f7.on('loggedOut', () => setLoginScreenOpened(true)) 
     f7.on('loginError', (err) => {console.log("login error: ", err.error);setLoginError(err.error)})
-    f7.on('showComments', (e) => {console.log("showComments event received:",e); setShowRight(true); setCommentBoxId(e.commentBoxId)}) 
+    f7.on('showComments', (e) => {console.log("showComments event received:",e); setShowRight(true); setCommentBoxId(String(e.dealId)+"-"+String(e.sceneId))}) 
   })
 
   useEffect(() => {console.log("showRight changed: ", showRight)}, [showRight])
@@ -144,7 +144,7 @@ const MyApp = () => {
           <Page>
             <Navbar title="Right Panel"/>
             <Block>
-              <CommentsDrawer id={commentBoxId}/>  
+              <CommentsDrawer commentBoxId={commentBoxId} />  
             </Block>  
           </Page>
         </View>
