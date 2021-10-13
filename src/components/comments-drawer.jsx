@@ -13,7 +13,7 @@ const CommentsDrawer = (props) => {
         const relevantParams = {
             'commentBoxId': props.commentBoxId
         };
-        pageLocation.search = qs.stringify(relevantParams); // we will now include "?page_id=5" in the box URL
+        pageLocation.search = encodeURIComponent(relevantParams); // we will now include "?page_id=5" in the box URL
         pageLocation.hash = boxId; // creates link to this specific Comment Box on your page
         return pageLocation.href; // return url string
       }
