@@ -10,7 +10,7 @@ const CommentsDrawer = (props) => {
     });
   },[])
   return (
-    <div className="commentbox" id="article"/>
+    <div className="commentbox" id={String(props.id)}/>
 );
 }
 
