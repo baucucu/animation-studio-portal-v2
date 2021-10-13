@@ -44,7 +44,7 @@ const ProjectPage = ({f7route,f7router}) => {
 
 return (
   <Page>
-    <Navbar title="Project Name"/>
+    <Navbar title={project.projectName}/>
       <ProjectHeader project={project} f7router={f7router} />
       <Block inset strong style={{marginTop:0, marginBottom:0}}>
         <Stepper activeStep={selectedIndex} >
@@ -108,10 +108,10 @@ function ProjectHeader(props) {
           <Chip color="secondary" variant="outlined" style={{marginLeft:8}} icon={<AccessTimeIcon/>} label="Next expected delivery: 1 aug 2021 14:00" />
         </Box>
         <Box>
-          <Chip clickable color="secondary" variant="filled " style={{marginLeft:8}} icon={<WorkOutlineIcon/>} label="Proposal" />
-          {/* <MUIButton size="small" variant="outlined"  round color="secondary" startIcon={<WorkOutlineIcon />}>
+          {/* <Chip clickable color="secondary" variant="filled " style={{marginLeft:8}} icon={<WorkOutlineIcon/>} label="Proposal" /> */}
+          <MUIButton size="small" variant="contained"  round color="secondary" startIcon={<WorkOutlineIcon />}>
             Proposal
-          </MUIButton> */}
+          </MUIButton>
         </Box>
       </Stack>   
     </Block>

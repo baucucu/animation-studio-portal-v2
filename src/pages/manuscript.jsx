@@ -7,6 +7,7 @@ import CardButton from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
+import MUIButton from '@mui/material/Button';
 
 import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
@@ -15,6 +16,8 @@ import SendIcon from '@mui/icons-material/Send';
 import CheckIcon from '@mui/icons-material/Check';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import MoreTimeIcon from '@mui/icons-material/MoreTime';
+import PreviewIcon from '@mui/icons-material/Preview';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 import ManuscriptScenes from '../components/manuscript-scenes'
 
@@ -27,13 +30,8 @@ const ManuscriptPage = () => {
 
   return (
   <Page className="viewPage">
-    <Box sx={{display:"flex", flexDirection:"row"}}>
-      <Block inset style={{flexDirection:"row", marginBottom:16, marginTop:16, flexGrow:0, justifyContent:'flex-start'}}>
-        <SplitButton />
-      </Block>
-    </Box>
     <Stack direction="row">
-      <Block inset strong style={{flexGrow:1, marginTop:0}}>
+      <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={3}>
           <Stack direction="row">
             <Typography mr={1} variant="subtitle1" color="text.secondary" component="div">Word count</Typography>
@@ -49,12 +47,25 @@ const ManuscriptPage = () => {
             <Chip color="secondary" variant="outlined" label={"8"} ></Chip>
           </Stack>
         </Stack>
-        <Stack direction="row" mt={2}>
-            <Chip clickable color="info" variant="filled " style={{marginLeft:8}} icon={<VolumeUpIcon/>} label="Listen to AI Voiceover" />
-            <Chip clickable color="info" variant="filled " style={{marginLeft:8}} icon={<PictureAsPdfIcon/>} label="Download PDF" />
+        <Stack direction="row" mt={2} spacing={2}>
+          <Box>
+            <MUIButton size="small" variant="contained" color= "info" startIcon={<VolumeUpIcon />}>
+              Listen to AI Voiceover
+            </MUIButton>
+          </Box>
+          <Box>
+            <MUIButton size="small" variant="contained" color= "info" startIcon={<VisibilityIcon />}>
+              Preview
+            </MUIButton>
+          </Box>
+          <Box>
+            <MUIButton size="small" variant="contained" color= "info" startIcon={<PictureAsPdfIcon />}>
+            Download PDF
+            </MUIButton>
+          </Box>
         </Stack>
       </Block>
-      <Block inset strong style={{flexGrow:1, marginTop:0}}>
+      <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={2}>
           <Stack direction="row" spacing={1}>
               <Typography variant="subtitle1" color="text.secondary" component="div">Revisions</Typography>
@@ -66,13 +77,34 @@ const ManuscriptPage = () => {
           </Stack>
         </Stack>
         <Stack direction="row" spacing={2} mt={2}>
-          <Chip onClick={()=>f7.dialog.confirm('Are you sure you want to send to client?')} clickable color="success" variant="filled " style={{marginLeft:8}} icon={<SendIcon pl={0} />} label="Send to client" />
-          <Chip onClick={()=>f7.dialog.confirm('Are you sure you want to approve the manuscript?')} clickable color="success" variant="filled " style={{marginLeft:8}} icon={<CheckIcon/>} label="Approve manuscript" />
-          <Chip onClick={()=>f7.dialog.confirm('Are you sure you want to ask for revision?')} clickable color="info" variant="filled " style={{marginLeft:8}} icon={<RateReviewIcon/>} label="Ask for revision" />
-          <Chip onClick={()=>f7.dialog.confirm('Are you sure you want to extend time?')} clickable color="warning" variant="filled " style={{marginLeft:8}} icon={<MoreTimeIcon/>} label="Extend time" />
+          <Box>
+            <MUIButton size="small" variant="contained" color= "success" startIcon={<SendIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to send to client?')}>
+              Send to client
+            </MUIButton>
+          </Box>
+          <Box>
+            <MUIButton size="small" variant="contained" color= "success" startIcon={<CheckIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to approve the manuscript?')}>
+              Approve manuscript
+            </MUIButton>
+          </Box>
+          <Box>
+            <MUIButton size="small" variant="contained" color= "info" startIcon={<RateReviewIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to ask for revision?')}>
+              Ask for revision
+            </MUIButton>
+          </Box>
+          <Box>
+            <MUIButton size="small" variant="contained" color= "warning" startIcon={<MoreTimeIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to extend time?')}>
+              Extend time
+            </MUIButton>
+          </Box>
         </Stack>
       </Block>
     </Stack>
+    <Box sx={{display:"flex", flexDirection:"row"}}>
+      <Block inset style={{flexDirection:"row", marginBottom:16, marginTop:16, flexGrow:0, justifyContent:'flex-start'}}>
+        <SplitButton />
+      </Block>
+    </Box>
     <Block inset >
       <ManuscriptScenes />
     </Block>
