@@ -5,12 +5,10 @@ const commentBox = window.commentBox;
 const CommentsDrawer = (props) => {
   useEffect(() => {
     console.log("commentsbox id: ",props?.id)
-    commentBox('5707536883777536-proj',{
-      defaultBoxId: props.id
-    });
+    commentBox('5707536883777536-proj');
   },[])
   return (
-    <div className="commentbox" id={String(props.id)}/>
+    <div className="commentbox" id={`deal-${String(props.id)}-scene-1`}/>
 );
 }
 
