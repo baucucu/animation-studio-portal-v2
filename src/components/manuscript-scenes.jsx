@@ -1,6 +1,7 @@
 import React from 'react';
 import {f7, useStore } from 'framework7-react';
 import CommentsDrawer from '../components/comments-drawer'
+import PageWithComments from '../components/comments'
 
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
@@ -69,7 +70,8 @@ export default function ManuscriptScenes(props) {
                                         // onChange={handleChange}
                                     />
                                 </Stack>
-                                <CommentsDrawer style={{flexGrow:1, minHeight:300}} commentBoxId={`${String(project._id)}-${id}`}/>
+                                {/* <CommentsDrawer style={{flexGrow:1, minHeight:300}} commentBoxId={`${String(project._id)}-${id}`}/> */}
+                                <PageWithComments commentBoxId={${String(project._id)}-${id}} />
                             </Stack>
                         </CardContent>
                     </Card>
