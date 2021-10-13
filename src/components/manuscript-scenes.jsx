@@ -27,17 +27,7 @@ export default function ManuscriptScenes(props) {
                 <Grid item key={id}>
                     <Card sx={{width: 450}}>
                         <CardContent >
-                            <Stack sx={{flexDirection:"row", justifyContent: "space-between"}}>
-                                <Typography variant="h6" color="text.secondary" component="div">Scene {id+1}</Typography>
-                                <Box>
-                                    <IconButton sx={{flexGrow:0}} color="primary" aria-label="open comments" onClick={() => {f7.emit('showComments',{dealId:project._id, sceneId: id})}}>
-                                        <Badge badgeContent={4} color="secondary" >
-                                            <RateReviewIcon color="action" onClick={() => {}}/>
-                                        </Badge>
-                                    </IconButton>
-                                </Box>
-                            </Stack>
-                            {/* <Typography variant="body2" color="text.secondary" component="div">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</Typography> */}
+                        <Typography variant="h6" color="text.secondary" component="div">Scene {id+1}</Typography>
                             <Stack sx={{flexDirection:"column"}} spacing={2}>
                                 <Stack mt={1} sx={{flexDirection:"row"}}>
                                     <MicIcon />
