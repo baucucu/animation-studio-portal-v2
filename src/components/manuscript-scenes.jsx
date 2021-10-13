@@ -1,5 +1,6 @@
 import React from 'react';
 import {f7, useStore } from 'framework7-react';
+import CommentsDrawer from '../components/comments-drawer'
 
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
@@ -17,6 +18,7 @@ import Box from '@mui/material/Box';
 
 export default function ManuscriptScenes(props) {
     const project = useStore('project') 
+    console.log("project: ",project)
     
     return(
         <Grid pb={2} pr={2} container spacing={2} direction="row" rows={1} wrap="nowrap" sx={{overflow:"auto", flexGrow: 1, alignItems:"stretch", }}>
@@ -67,6 +69,7 @@ export default function ManuscriptScenes(props) {
                                         // onChange={handleChange}
                                     />
                                 </Stack>
+                                <CommentsDrawer commentBoxId={`${String(project._id)}-${id}`}/>
                             </Stack>
                         </CardContent>
                     </Card>
