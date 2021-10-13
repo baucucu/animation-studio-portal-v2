@@ -50,7 +50,6 @@ const MyApp = () => {
       // App routes
       routes: routes,
   };
-  const [commentBoxId,setCommentBoxId] = useState()
 
   useEffect(() => {
     f7.views.main.router.navigate(`/${selected}/`)
@@ -60,10 +59,7 @@ const MyApp = () => {
     f7.on('loggedIn', () => {setLoginScreenOpened(false); setLoginError()}) 
     f7.on('loggedOut', () => setLoginScreenOpened(true)) 
     f7.on('loginError', (err) => {console.log("login error: ", err.error);setLoginError(err.error)})
-    f7.on('showComments', (e) => {console.log("showComments event received:",e); setShowRight(true); setCommentBoxId(String(e.dealId)+"-"+String(e.sceneId))}) 
   })
-
-  useEffect(() => {console.log("showRight changed: ", showRight)}, [showRight])
 
   f7ready(() => {
 
@@ -139,12 +135,11 @@ const MyApp = () => {
       </Panel>
 
       {/* Right panel with reveal effect*/}
-      <Panel resizable right cover opened={showRight} style={{minWidth: '33%'}} onPanelClose={()=>setShowRight(false)}>
+      <Panel resizable right cover  style={{minWidth: '33%'}}>
         <View>
           <Page>
             <Navbar title="Right Panel"/>
             <Block>
-              <CommentsDrawer commentBoxId={commentBoxId} />  
             </Block>  
           </Page>
         </View>
