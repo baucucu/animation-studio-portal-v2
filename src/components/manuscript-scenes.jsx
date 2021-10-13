@@ -69,7 +69,7 @@ export default function ManuscriptScenes(props) {
                                         // onChange={handleChange}
                                     />
                                 </Stack>
-                                <CommentsDrawer commentBoxId={`${String(project._id)}-${id}`}/>
+                                <CommentsDrawer style={{flexGrow:1, minHeight:300}} commentBoxId={`${String(project._id)}-${id}`}/>
                             </Stack>
                         </CardContent>
                     </Card>
