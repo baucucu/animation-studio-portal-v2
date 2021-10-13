@@ -1,5 +1,6 @@
 import React from 'react';
-import commentBox from 'commentbox.io';
+// import commentBox from 'commentbox.io';
+const commentBox = window.commentBox;
 
 class PageWithComments extends React.Component {
 

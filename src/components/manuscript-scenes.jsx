@@ -1,7 +1,7 @@
 import React from 'react';
 import {f7, useStore } from 'framework7-react';
 import CommentsDrawer from '../components/comments-drawer'
-import PageWithComments from '../components/comments'
+import PageWithComments from './comments'
 
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
