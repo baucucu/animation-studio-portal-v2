@@ -47,8 +47,8 @@ function ProjectItemList({project, f7router}) {
         <Stack sx={{flexDirection: 'row', alignItems: 'center', justifyContent:'flex-start'}}>
           <Link onClick={()=>{console.log("project id: ",project?._id.toString());store.dispatch('setProject',project?._id.toString()); f7router.navigate(`/project/${project?._id.toString()}`)}}  > <Typography sx={{flexGrow:1}} ml={1} mr={1} component="div" variant='h6' className="projectName">{project.projectName}</Typography></Link>
           <AvatarGroup max={4} >
-            <Avatar  sx={{ width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
-            <Avatar sx={{  width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
+            <Avatar  sx={{ width: 24, height: 24, fontSize:12 }}>PM</Avatar>
+            <Avatar sx={{  width: 24, height: 24, fontSize:12}}>PM</Avatar>
           </AvatarGroup>
         </Stack>
         <Box style={{display: "flex", flexGrow:0, justifyContent: "flex-end", alignItems:"center"}}>

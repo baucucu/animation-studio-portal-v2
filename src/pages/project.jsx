@@ -27,19 +27,20 @@ const ProjectPage = ({f7route,f7router}) => {
   const project = useStore('project') 
 
   const tabs = [
-    { text: 'Brief','icon':'fullscreen', path: '/brief/', index:0, completed:"true", active:"true", mIcon:CheckIcon },
-    { text: 'Manuscript','icon':'verticalaligntop', path: '/manuscript/', index:1, completed:"true", active:"true", mIcon:AccessTimeIcon  },
-    { text: 'Storyboard','icon':'image', index:2, path: '/storyboard/', completed:"false", active:"false" ,mIcon:LockClockIcon },
-    { text: 'Voiceover','icon':'music', index:3,  path: '/voiceover/', completed:"false", active:"false",mIcon:LockClockIcon  },
-    { text: 'Illustrations','icon':'palette', path: '/illustrations/', index:4,  completed:"false", active:"false",mIcon:LockClockIcon   },
-    { text: 'Animation','icon':'runner', path: '/animation/', index:5, completed:"false", active:"false",mIcon:LockClockIcon   },
-    { text: 'Delivery','icon':'movetofolder', path: '/delivery/', index:6,  completed:"false", active:"false", mIcon:LockClockIcon   },
+    { text: 'Brief','icon':'fullscreen', path: '/brief/', index:0, completed: project?.brief?.completed, active:"true", mIcon:CheckIcon },
+    { text: 'Manuscript','icon':'verticalaligntop', path: '/manuscript/', index:1, completed: project?.manuscript?.completed, active:"true", mIcon:AccessTimeIcon  },
+    { text: 'Storyboard','icon':'image', index:2, path: '/storyboard/', completed: project?.storyboard?.completed, active:"false" ,mIcon:LockClockIcon },
+    { text: 'Voiceover','icon':'music', index:3,  path: '/voiceover/', completed: project?.voiceover?.completed, active:"false",mIcon:LockClockIcon  },
+    { text: 'Illustrations','icon':'palette', path: '/illustrations/', index:4,  completed: project?.illustrations?.completed, active:"false",mIcon:LockClockIcon   },
+    { text: 'Animation','icon':'runner', path: '/animation/', index:5, completed: project?.animation?.completed, active:"false",mIcon:LockClockIcon   },
+    { text: 'Delivery','icon':'movetofolder', path: '/delivery/', index:6,  completed: project?.delivery?.completed, active:"false", mIcon:LockClockIcon   },
   ];
   
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   useEffect(() => {
       store.dispatch('setProject',f7route.params.id)
+      console.log("tabs: ", tabs)
   },[])
 
 return (
@@ -62,7 +63,7 @@ return (
             return (
               <Step key={tab.index} className={`step-${tab.index}`} {...stepProps} >
                 <Link>
-                <StepLabel onClick={()=>{setSelectedIndex(tab.index)}} style={{cursor:'pointer'}} StepIconComponent={tab.mIcon} StepIconProps={{active:'true',completed:'true', error: 'false'}} {...labelProps}>{tab.text}</StepLabel>
+                  <StepLabel onClick={()=>{setSelectedIndex(tab.index)}} style={{cursor:'pointer'}} StepIconComponent={tab.completed === true ? CheckIcon : tab.completed === false ? AccessTimeIcon : LockClockIcon} StepIconProps={{active:'true',completed:'true', error: 'false'}} {...labelProps}>{tab.text}</StepLabel>
                 </Link>
               </Step>
             );
@@ -93,8 +94,8 @@ function ProjectHeader(props) {
           </Box>
           <Typography color="secondary" sx={{flexGrow:1}} ml={1} mr={1} component="div" variant='h6' className="projectName">{project?.projectName}</Typography>
           <AvatarGroup max={4} >
-            <Avatar  sx={{ bgcolor: 'secondary', width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
-            <Avatar sx={{ bgcolor: 'secondary', width: 24, height: 24, fontSize:12, bgcolor: 'primary'}}>PM</Avatar>
+            <Avatar  sx={{ bgcolor: 'secondary', width: 24, height: 24, fontSize:12, }}>PM</Avatar>
+            <Avatar sx={{ bgcolor: 'secondary', width: 24, height: 24, fontSize:12}}>PM</Avatar>
           </AvatarGroup>
         </Stack>
         <Box style={{display: "flex", flexGrow:0, justifyContent: "flex-end", alignItems:"center"}}>
@@ -109,7 +110,7 @@ function ProjectHeader(props) {
         </Box>
         <Box>
           {/* <Chip clickable color="secondary" variant="filled " style={{marginLeft:8}} icon={<WorkOutlineIcon/>} label="Proposal" /> */}
-          <MUIButton size="small" variant="contained"  round color="secondary" startIcon={<WorkOutlineIcon />}>
+          <MUIButton size="small" variant="contained"  color="secondary" startIcon={<WorkOutlineIcon />}>
             Proposal
           </MUIButton>
         </Box>

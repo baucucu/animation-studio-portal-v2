@@ -42,12 +42,12 @@ const ManuscriptPage = () => {
           <SplitButton />
           <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Version</InputLabel>
+              <InputLabel color="secondary" id="demo-simple-select-label">Version</InputLabel>
               <Select
                 color="secondary"
                 size="small"
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
+                // labelId="demo-simple-select-label"
+                // id="demo-simple-select"
                 value={version}
                 label="Version"
                 onChange={handleChangeVersion}
@@ -71,7 +71,7 @@ const ManuscriptPage = () => {
               </MUIButton>
             </Box>
             <Box>
-            <Chip   variant="outlined" icon={<AccessTimeIcon/>} label="In review by client"/>
+            <Chip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="In review by client"/>
             </Box>
         </Stack>
       </Block>
@@ -133,17 +133,12 @@ const ManuscriptPage = () => {
             </MUIButton>
           </Box>
           <Box>
-            <Chip   variant="outlined" icon={<AccessTimeIcon/>} label="Open by manuscript writer"/>
+            <Chip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="Open by manuscript writer"/>
           </Box>
           
         </Stack>
       </Block>
     </Stack>
-    {/* <Box sx={{display:"flex", flexDirection:"row"}}>
-      <Block inset style={{flexDirection:"row", marginBottom:16, marginTop:16, flexGrow:0, justifyContent:'flex-start'}}>
-        <SplitButton />
-      </Block>
-    </Box> */}
     <Block inset >
       <ManuscriptScenes />
     </Block>
@@ -156,15 +151,14 @@ export default ManuscriptPage;
 function SplitButton(props) {
   
   return (
-    <Segmented round tag="div">
-      <Button  round outline active>
+    <Segmented  tag="div">
+      <Button  round size="small"  outline active>
         English
       </Button>
-      <Button icon="lock" round outline>
-        <Icon icon="lock"></Icon>
+      <Button round size="small"  outline>
         Swedish
       </Button>
-      <Button icon="lock" round outline>
+      <Button round size="small"  outline>
         
         Norwegian
       </Button>
