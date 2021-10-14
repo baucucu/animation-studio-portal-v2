@@ -30,7 +30,7 @@ const store = createStore({
     },
     setProject({state}, id){
       const project = state.projects.filter(project => project._id.toString() === id)[0]
-      state.project= project
+      state.project = project
     },
     setUser({ state }, user) {
       state.user = user

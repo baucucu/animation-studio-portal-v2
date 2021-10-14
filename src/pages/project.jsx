@@ -27,13 +27,13 @@ const ProjectPage = ({f7route,f7router}) => {
   const project = useStore('project') 
 
   const tabs = [
-    { text: 'Brief','icon':'fullscreen', path: '/brief/', index:0, completed: project?.brief?.completed, active:"true", mIcon:CheckIcon },
-    { text: 'Manuscript','icon':'verticalaligntop', path: '/manuscript/', index:1, completed: project?.manuscript?.completed, active:"true", mIcon:AccessTimeIcon  },
-    { text: 'Storyboard','icon':'image', index:2, path: '/storyboard/', completed: project?.storyboard?.completed, active:"false" ,mIcon:LockClockIcon },
-    { text: 'Voiceover','icon':'music', index:3,  path: '/voiceover/', completed: project?.voiceover?.completed, active:"false",mIcon:LockClockIcon  },
-    { text: 'Illustrations','icon':'palette', path: '/illustrations/', index:4,  completed: project?.illustrations?.completed, active:"false",mIcon:LockClockIcon   },
-    { text: 'Animation','icon':'runner', path: '/animation/', index:5, completed: project?.animation?.completed, active:"false",mIcon:LockClockIcon   },
-    { text: 'Delivery','icon':'movetofolder', path: '/delivery/', index:6,  completed: project?.delivery?.completed, active:"false", mIcon:LockClockIcon   },
+    { text: 'Brief','icon':'fullscreen', path: '/brief/', index:0, completed: project?.brief?.completed, active:"true" },
+    { text: 'Manuscript','icon':'verticalaligntop', path: '/manuscript/', index:1, completed: project?.manuscript?.completed, active:"true"},
+    { text: 'Storyboard','icon':'image', index:2, path: '/storyboard/', completed: project?.storyboard?.completed, active:"false" },
+    { text: 'Voiceover','icon':'music', index:3,  path: '/voiceover/', completed: project?.voiceover?.completed, active:"false"},
+    { text: 'Illustrations','icon':'palette', path: '/illustrations/', index:4,  completed: project?.illustrations?.completed, active:"false"},
+    { text: 'Animation','icon':'runner', path: '/animation/', index:5, completed: project?.animation?.completed, active:"false"},
+    { text: 'Delivery','icon':'movetofolder', path: '/delivery/', index:6,  completed: project?.delivery?.completed, active:"false"},
   ];
   
   const firstIndex = tabs.filter(tab => {return tab.completed !== true})[0]?.index || 0

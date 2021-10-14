@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Page, Icon, Block, Input, Segmented, Button,f7 } from 'framework7-react';
+import { Page, Icon, Block, BlockTitle, Segmented, Button,f7, useStore } from 'framework7-react';
 
 import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
@@ -27,6 +27,7 @@ import ManuscriptScenes from '../components/manuscript-scenes'
 
 const ManuscriptPage = () => {
   
+  const project = useStore('project')
   const [version, setVersion] = useState(1)
   const [language, setLanguage] = useState("English")
   
@@ -34,7 +35,9 @@ const ManuscriptPage = () => {
     setVersion(event.target.value);
   };
 
-  return (
+  if(project.manuscript.completed === undefined) return <ManuscriptClosed/>
+  
+  else return (
   <Page className="viewPage">
     <Stack direction="row" justifyContent="stretch">
     <Block inset strong>
@@ -164,4 +167,15 @@ function SplitButton(props) {
       </Button>
     </Segmented>   
   );
+}
+
+function ManuscriptClosed() {
+  return(
+    <Page className="viewPage">
+      <Block inset strong>
+        <BlockTitle>Manuscript is closed</BlockTitle>
+      </Block>
+    </Page>
+    
+  )
 }

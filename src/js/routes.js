@@ -15,6 +15,11 @@ import ProfilePage from '../pages/profile';
 import LoginPage from '../pages/login';
 import BriefPage from '../pages/brief';
 import ManuscriptPage from '../pages/manuscript';
+import StoryboardPage from '../pages/storyboard';
+import VoiceoverPage from '../pages/voiceover';
+import IllustrationsPage from '../pages/illustrations';
+import AnimationPage from '../pages/animation';
+import DeliveryPage from '../pages/delivery'
 
 var routes = [
   {
@@ -64,6 +69,26 @@ var routes = [
   {
     path: '/manuscript/:id',
     component: ManuscriptPage,
+  },
+  {
+    path: '/voiceover/:id',
+    component: VoiceoverPage,
+  },
+  {
+    path: '/storyboard/:id',
+    component: StoryboardPage,
+  },
+  {
+    path: '/illustrations/:id',
+    component: IllustrationsPage,
+  },
+  {
+    path: '/animation/:id',
+    component: AnimationPage,
+  },
+  {
+    path: '/delivery/:id',
+    component: DeliveryPage,
   },
   {
     path: '/dynamic-route/blog/:blogId/post/:postId/',
