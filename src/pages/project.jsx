@@ -36,7 +36,8 @@ const ProjectPage = ({f7route,f7router}) => {
     { text: 'Delivery','icon':'movetofolder', path: '/delivery/', index:6,  completed: project?.delivery?.completed, active:"false", mIcon:LockClockIcon   },
   ];
   
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const firstIndex = tabs.filter(tab => {return tab.completed !== true})[0]?.index || 0
+  const [selectedIndex, setSelectedIndex] = useState(firstIndex)
 
   useEffect(() => {
       store.dispatch('setProject',f7route.params.id)
