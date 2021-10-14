@@ -35,7 +35,7 @@ const ManuscriptPage = () => {
     setVersion(event.target.value);
   };
 
-  if(project.manuscript.completed === undefined) return <ManuscriptClosed/>
+  if(project?.manuscript?.completed === undefined) return <ManuscriptClosed/>
   
   else return (
   <Page className="viewPage">
