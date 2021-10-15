@@ -25,9 +25,7 @@ import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 
 export default function ManuscriptScenes({scenes=[], language="", version=0}) {
     const project = useStore('project') 
-    console.log("project: ",project)
-
-    console.log("scenes: ",scenes)
+    function handleChange(e) {console.log("card changed: ", e)}
     
     return(
         <Grid pb={2} pr={2} container spacing={2} direction="row" rows={1} wrap="nowrap" sx={{overflow:"auto", flexGrow: 1, alignItems:"stretch", }}>
@@ -70,7 +68,6 @@ export default function ManuscriptScenes({scenes=[], language="", version=0}) {
                                     </Box>}
                                 </Stack>
                             </Stack>
-                            
                             <Stack spacing={2}>
                                 <Stack mt={1} sx={{flexDirection:"row"}}>
                                     <MicIcon />
@@ -81,12 +78,10 @@ export default function ManuscriptScenes({scenes=[], language="", version=0}) {
                                         label="Voice"
                                         multiline
                                         maxRows={20}
-                                        // value={scene.voice}
                                         placeholder="Maximum 4 rows"
                                         defaultValue={scene.voice}
-                                        // onChange={handleChange}
+                                        onChange={handleChange}
                                     />
-                                    {/* <MoreVertIcon/> */}
                                 </Stack>
                                 <Stack mt={1} style={{flexDirection:"row"}} >
                                     <DirectionsRunIcon />
@@ -97,10 +92,9 @@ export default function ManuscriptScenes({scenes=[], language="", version=0}) {
                                         label="Action"
                                         multiline
                                         maxRows={20}
-                                        // value={scene.action}
                                         placeholder="Maximum 4 rows"
                                         defaultValue={scene.action}
-                                        // onChange={handleChange}
+                                        onChange={handleChange}
                                     />
                                 </Stack>
                                 <PageWithComments commentBoxId={`${String(project._id)}-${language}-${version}-${id}`} />

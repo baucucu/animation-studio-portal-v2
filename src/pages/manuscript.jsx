@@ -131,13 +131,12 @@ function ManuscriptClosed() {
 function VersionSelect({versions, versionIndex, setVersionIndex}) {
   return(
     <Stack direction="row" spacing={2} sx={{alignItems:'center'}}>
-      {/* <Typography variant="subtitle1" color="text.secondary" component="div">Version</Typography> */}
       <Button small style={{minWidth:80}} fill raised popoverOpen=".popover-menu">
-        {versions.length-1 === versionIndex ?  String("version "+versionIndex+" (current)"): String("version "+versionIndex)}
+        {versions.length-1 === versionIndex ?  "version ".concat(versionIndex+1," (current)"): String("version "+versionIndex)}
       </Button>
       <Popover className="popover-menu">
         <List>
-          {versions.map((version, id) => <ListItem onClick={() => setVersionIndex(version)} link key={id} popoverClose >{versions.length-1 === version ?  String(version+" (current)"): String(version)}</ListItem>)}
+          {versions.map((version, id) => <ListItem onClick={() => setVersionIndex(version)} link key={id} popoverClose >{versions.length === version ?  String(version+" (current)"): String(version)}</ListItem>)}
         </List>
       </Popover>
     </Stack>
