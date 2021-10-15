@@ -80,7 +80,7 @@ export default function ManuscriptScenes({scenes=[], language="", version=0}) {
                                         maxRows={20}
                                         placeholder="Maximum 4 rows"
                                         defaultValue={scene.voice}
-                                        onChange={handleChange}
+                                        onChange={(e)=>handleChange(value=e.target.value,payload={})}
                                     />
                                 </Stack>
                                 <Stack mt={1} style={{flexDirection:"row"}} >
