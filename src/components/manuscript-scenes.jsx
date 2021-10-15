@@ -23,13 +23,15 @@ import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 
 
 
-export default function ManuscriptScenes(props) {
+export default function ManuscriptScenes({scenes=[]}) {
     const project = useStore('project') 
     console.log("project: ",project)
+
+    console.log("scenes: ",scenes)
     
     return(
         <Grid pb={2} pr={2} container spacing={2} direction="row" rows={1} wrap="nowrap" sx={{overflow:"auto", flexGrow: 1, alignItems:"stretch", }}>
-            {[1,2,3,4,5].map((card,id) => 
+            {scenes.sort((a,b) => a?.index<b?.index).map((scene,id) => 
                 <Grid item key={id}>
                     <Card sx={{width: 450}}>
                         <CardContent >
@@ -79,9 +81,9 @@ export default function ManuscriptScenes(props) {
                                         label="Voice"
                                         multiline
                                         maxRows={20}
-                                        // value={value}
+                                        // value={scene.voice}
                                         placeholder="Maximum 4 rows"
-                                        defaultValue="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+                                        defaultValue={scene.voice}
                                         // onChange={handleChange}
                                     />
                                     {/* <MoreVertIcon/> */}
@@ -95,9 +97,9 @@ export default function ManuscriptScenes(props) {
                                         label="Action"
                                         multiline
                                         maxRows={20}
-                                        // value={value}
+                                        // value={scene.action}
                                         placeholder="Maximum 4 rows"
-                                        defaultValue="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+                                        defaultValue={scene.action}
                                         // onChange={handleChange}
                                     />
                                 </Stack>

@@ -51,7 +51,7 @@ const ProjectPage = ({f7route,f7router}) => {
       }
     })) {
       const { documentKey, fullDocument } = change;
-      console.log(`updated document - projects.jsx : ${documentKey}`, fullDocument);
+      console.log(`updated document - projects.jsx: ${documentKey}`, fullDocument);
       store.dispatch('setProject',f7route.params.id)
     }
   }

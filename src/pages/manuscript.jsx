@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import { Page, Block, BlockTitle, ListItem,Popover, List, Segmented, Button,f7, useStore } from 'framework7-react';
+import { Page, Chip, Block, BlockTitle, ListItem,Popover, List, Segmented, Button,f7, useStore } from 'framework7-react';
 
-import Chip from '@mui/material/Chip';
+import MUIChip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MUIButton from '@mui/material/Button';
@@ -43,11 +43,11 @@ const ManuscriptPage = () => {
   <Page className="viewPage">
     <Stack direction="row" justifyContent="stretch">
     <Block inset strong style={{flexGrow:1}}>
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={1}>
           <SplitButton languages={project?.manuscript?.languages} languageIndex={languageIndex} setLanguageIndex={setLanguageIndex}/>
           <VersionSelect versions={project?.manuscript?.data[languageIndex].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
         </Stack>
-        <Stack direction="row" mt={2} spacing={2}>
+        <Stack direction="row" mt={2} spacing={1}>
           <Box>
               <MUIButton size="small" variant="contained" color= "success" startIcon={<SendIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to send to client?')}>
                 Send to client
@@ -59,27 +59,27 @@ const ManuscriptPage = () => {
               </MUIButton>
             </Box>
             <Box>
-            <Chip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="In review by client"/>
+            <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="In review by client"/>
             </Box>
         </Stack>
       </Block>
       <Block inset strong style={{flexGrow:1}}>
-        <Stack direction="row" spacing={3}>
+        <Stack direction="row" spacing={2}>
           <Stack direction="row" sx={{alignItems:'center'}}>
             <Typography mr={1} variant="subtitle1" color="text.secondary" component="div">Word count</Typography>
-            <Chip color="secondary" variant="outlined" label={"385"} ></Chip>
+            <Chip color="secondary" outline text={"385"} ></Chip>
           </Stack>
           <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
             <Typography variant="subtitle1" color="text.secondary" component="div">Target length</Typography>
-            <Chip color="secondary" variant="outlined" sx={{marginRight:1}} label={"60s"} ></Chip>
-            <Chip color="secondary" variant="outlined" label={"not so strict"} ></Chip>
+            <Chip color="secondary" outline text={project?.brief.formResponse.answers[0].choice.label} ></Chip>
+            <Chip color="secondary" outline text={project?.brief.formResponse.answers[1].choice.label} ></Chip>
           </Stack>
           <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
             <Typography  variant="subtitle1" color="text.secondary" component="div">Scenes</Typography>
-            <Chip color="secondary" variant="outlined" label={"8"} ></Chip>
+            <Chip color="secondary" outline text={versions?.[versionIndex]?.scenes?.length} ></Chip>
           </Stack>
         </Stack>
-        <Stack direction="row" mt={3} spacing={2}>
+        <Stack direction="row" mt={1} spacing={2}>
           <Box>
             <MUIButton size="small" variant="contained" color= "info" startIcon={<VolumeUpIcon />}>
               Listen to AI Voiceover
@@ -99,7 +99,7 @@ const ManuscriptPage = () => {
       </Block>
     </Stack>
     <Block inset >
-      <ManuscriptScenes />
+      <ManuscriptScenes scenes={versions[versionIndex]?.scenes}/>
     </Block>
   </Page>
 )};
@@ -110,9 +110,9 @@ function SplitButton(props) {
   const {languages,languageIndex, setLanguageIndex} = props
   return (
     <Stack direction="row" spacing={2} sx={{alignItems:'center'}}>
-      <Typography variant="subtitle1" color="text.secondary" component="div">Language</Typography>
+      {/* <Typography variant="subtitle1" color="text.secondary" component="div">Language</Typography> */}
       <Segmented  tag="div">
-        {languages.map((language,index) => <Button key={index} size="small"  outline active={languageIndex === index} onClick={() => {setLanguageIndex(index)}}>{language}</Button>)}
+        {languages.map((language,index) => <Button small key={index} size="small"  outline active={languageIndex === index} onClick={() => {setLanguageIndex(index)}}>{language}</Button>)}
       </Segmented>   
     </Stack>
   );
@@ -131,13 +131,13 @@ function ManuscriptClosed() {
 function VersionSelect({versions, versionIndex, setVersionIndex}) {
   return(
     <Stack direction="row" spacing={2} sx={{alignItems:'center'}}>
-      <Typography variant="subtitle1" color="text.secondary" component="div">Version</Typography>
-      <Button style={{minWidth:80}} fill raised popoverOpen=".popover-menu">
-        {versions.length-1 === versionIndex ?  String(versionIndex+" (current)"): String(versionIndex)}
+      {/* <Typography variant="subtitle1" color="text.secondary" component="div">Version</Typography> */}
+      <Button small style={{minWidth:80}} fill raised popoverOpen=".popover-menu">
+        {versions.length-1 === versionIndex ?  String("version "+versionIndex+" (current)"): String("version "+versionIndex)}
       </Button>
       <Popover className="popover-menu">
         <List>
-          {versions.map((version, id) => <ListItem onClick={() => setVersionIndex(version)} link key={id} popoverClose >{version === versionIndex ?  String(version+" (current)"): String(version)}</ListItem>)}
+          {versions.map((version, id) => <ListItem onClick={() => setVersionIndex(version)} link key={id} popoverClose >{versions.length-1 === version ?  String(version+" (current)"): String(version)}</ListItem>)}
         </List>
       </Popover>
     </Stack>
