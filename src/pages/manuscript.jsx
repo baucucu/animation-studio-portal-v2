@@ -1,66 +1,49 @@
-import React, {useState} from 'react';
-import { Page, Icon, Block, BlockTitle, Segmented, Button,f7, useStore } from 'framework7-react';
+import React, {useState, useEffect} from 'react';
+import { Page, Block, BlockTitle,Icon, ListItem,ListInput, Segmented, Button,f7, useStore } from 'framework7-react';
+
+import Select from 'react-select'
 
 import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MUIButton from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 
-import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import SendIcon from '@mui/icons-material/Send';
 import CheckIcon from '@mui/icons-material/Check';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import MoreTimeIcon from '@mui/icons-material/MoreTime';
-import PreviewIcon from '@mui/icons-material/Preview';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-
 
 import ManuscriptScenes from '../components/manuscript-scenes'
 
 const ManuscriptPage = () => {
   
   const project = useStore('project')
-  const [version, setVersion] = useState(1)
-  const [language, setLanguage] = useState("English")
+  const [versions, setVersions] = useState([])
+  const [versionIndex, setVersionIndex] = useState(0)
+  const [languageIndex, setLanguageIndex] = useState(0)
+  const [currentManuscript, setCurrentManuscript] = useState()
   
-  const handleChangeVersion = (event) => {
-    setVersion(event.target.value);
-  };
+  useEffect(() => {
+    // const  versions = project.manuscript.data.filter(manuscript => {return manuscript.language === project.manuscript.languages[languageIndex]}).versions
+    console.log("selected language: ", project.manuscript.languages[languageIndex])
+    const versions = project.manuscript.data[languageIndex].versions
+    console.log("versions: ",versions)
+  },[languageIndex])
 
   if(project?.manuscript?.completed === undefined) return <ManuscriptClosed/>
   
   else return (
   <Page className="viewPage">
     <Stack direction="row" justifyContent="stretch">
-    <Block inset strong>
+    <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={2}>
-          <SplitButton />
-          <Box sx={{ minWidth: 120 }}>
-            <FormControl fullWidth>
-              <InputLabel color="secondary" id="demo-simple-select-label">Version</InputLabel>
-              <Select
-                color="secondary"
-                size="small"
-                // labelId="demo-simple-select-label"
-                // id="demo-simple-select"
-                value={version}
-                label="Version"
-                onChange={handleChangeVersion}
-              >
-                <MenuItem value={1}>1 (current)</MenuItem>
-                <MenuItem value={2}>2</MenuItem>
-                <MenuItem value={3}>3</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
+          <SplitButton languages={project?.manuscript?.languages} languageIndex={languageIndex} setLanguageIndex={setLanguageIndex}/>
+          <VersionSelect versions={project?.manuscript.data.filter(man => {return man.language === project?.manuscript.languages[languageIndex]})[0].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
         </Stack>
         <Stack direction="row" mt={2} spacing={2}>
           <Box>
@@ -80,16 +63,16 @@ const ManuscriptPage = () => {
       </Block>
       <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={3}>
-          <Stack direction="row">
+          <Stack direction="row" sx={{alignItems:'center'}}>
             <Typography mr={1} variant="subtitle1" color="text.secondary" component="div">Word count</Typography>
             <Chip color="secondary" variant="outlined" label={"385"} ></Chip>
           </Stack>
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
             <Typography variant="subtitle1" color="text.secondary" component="div">Target length</Typography>
             <Chip color="secondary" variant="outlined" sx={{marginRight:1}} label={"60s"} ></Chip>
             <Chip color="secondary" variant="outlined" label={"not so strict"} ></Chip>
           </Stack>
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
             <Typography  variant="subtitle1" color="text.secondary" component="div">Scenes</Typography>
             <Chip color="secondary" variant="outlined" label={"8"} ></Chip>
           </Stack>
@@ -112,13 +95,13 @@ const ManuscriptPage = () => {
           </Box>
         </Stack>
       </Block>
-      <Block inset strong style={{flexGrow:2}}>
+      {/* {<Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={2}>
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
               <Typography variant="subtitle1" color="text.secondary" component="div">Revisions</Typography>
               <Chip color="secondary" variant="outlined" label={"2/5"} ></Chip>
           </Stack>
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
               <Typography variant="subtitle1" color="text.secondary" component="div">Time to respond</Typography>
               <Chip color="secondary" variant="outlined" label={"18:00:00"} ></Chip>
           </Stack>
@@ -140,7 +123,7 @@ const ManuscriptPage = () => {
           </Box>
           
         </Stack>
-      </Block>
+      </Block>} */}
     </Stack>
     <Block inset >
       <ManuscriptScenes />
@@ -152,20 +135,14 @@ export default ManuscriptPage;
 
 
 function SplitButton(props) {
-  
+  const {languages,languageIndex, setLanguageIndex} = props
   return (
-    <Segmented  tag="div">
-      <Button  round size="small"  outline active>
-        English
-      </Button>
-      <Button round size="small"  outline>
-        Swedish
-      </Button>
-      <Button round size="small"  outline>
-        
-        Norwegian
-      </Button>
-    </Segmented>   
+    <Stack direction="row" spacing={2} sx={{alignItems:'center'}}>
+      <Typography variant="subtitle1" color="text.secondary" component="div">Language</Typography>
+      <Segmented  tag="div">
+        {languages.map((language,index) => <Button key={index} size="small"  outline active={languageIndex === index} onClick={() => {setLanguageIndex(index)}}>{language}</Button>)}
+      </Segmented>   
+    </Stack>
   );
 }
 
@@ -176,6 +153,18 @@ function ManuscriptClosed() {
         <BlockTitle>Manuscript is closed</BlockTitle>
       </Block>
     </Page>
+  )
+}
+
+
+function VersionSelect({versions, versionIndex, setVersionIndex}) {
+
+  const options = versions.map(version => {return {value: version, label: versionIndex === versions.length ? `${version} (current)` : version}})
+  return(
+    <Stack direction="row" spacing={2} sx={{alignItems:'center'}}>
+      <Typography variant="subtitle1" color="text.secondary" component="div">Version</Typography>
+      <Select  color={"#000"} options={options} onChange={(e) => setVersionIndex(e.value)}/>
+    </Stack>
     
   )
 }
