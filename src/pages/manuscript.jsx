@@ -30,8 +30,7 @@ const ManuscriptPage = () => {
   
   useEffect(() => {
     // const  versions = project.manuscript.data.filter(manuscript => {return manuscript.language === project.manuscript.languages[languageIndex]}).versions
-    console.log("selected language: ", project.manuscript.languages[languageIndex])
-    const versions = project.manuscript.data[languageIndex].versions
+    const versions = project?.manuscript?.data[languageIndex].versions
     console.log("versions: ",versions)
   },[languageIndex])
 
@@ -43,7 +42,7 @@ const ManuscriptPage = () => {
     <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={2}>
           <SplitButton languages={project?.manuscript?.languages} languageIndex={languageIndex} setLanguageIndex={setLanguageIndex}/>
-          <VersionSelect versions={project?.manuscript.data.filter(man => {return man.language === project?.manuscript.languages[languageIndex]})[0].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
+          <VersionSelect versions={project?.manuscript?.data.filter(man => {return man.language === project?.manuscript.languages[languageIndex]})[0].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
         </Stack>
         <Stack direction="row" mt={2} spacing={2}>
           <Box>
