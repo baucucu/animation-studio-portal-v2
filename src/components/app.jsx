@@ -27,8 +27,6 @@ import {
 } from 'framework7-react';
 import CommentsDrawer from '../components/comments-drawer.jsx'
 
-// import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-
 import routes from '../js/routes';
 import store from '../js/store';
 
@@ -39,7 +37,6 @@ const MyApp = () => {
   const [loginError, setLoginError] = useState()
   const [selected, setSelected] = useState('projects');
   const [loginScreenOpened,setLoginScreenOpened] = useState(!store.getters.user.value)
-  const [showRight, setShowRight] = useState(false)
   // Framework7 Parameters
   const f7params = {
     name: 'AnimationStudio Portal', // App name

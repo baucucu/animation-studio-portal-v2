@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Page, Navbar, Block, View, Views, useStore,f7, Link } from 'framework7-react';
+import { Page, Navbar, Block, View, Views,f7, Link , useStore} from 'framework7-react';
 import store from '../js/store';
 
 import Chip from '@mui/material/Chip';
@@ -38,10 +38,31 @@ const ProjectPage = ({f7route,f7router}) => {
   
   const firstIndex = tabs.filter(tab => {return tab.completed !== true})[0]?.index || 0
   const [selectedIndex, setSelectedIndex] = useState(firstIndex)
+  const user = useStore('user')
+  console.log("user: ", user)
+
+  const mongodb = user.mongoClient("mongodb-atlas");
+  const projects = mongodb.db("AnimationStudioDB").collection("Projects");
+
+  async function watchProjects(projects) {
+    for await (const change of projects.watch({
+      filter : {
+        operationType: "update"
+      }
+    })) {
+      const { documentKey, fullDocument } = change;
+      console.log(`updated document - projects.jsx : ${documentKey}`, fullDocument);
+      store.dispatch('setProject',f7route.params.id)
+    }
+  }
 
   useEffect(() => {
       store.dispatch('setProject',f7route.params.id)
       console.log("tabs: ", tabs)
+  },[])
+
+  useEffect(() => {
+    watchProjects(projects)
   },[])
 
 return (

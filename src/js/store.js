@@ -23,10 +23,13 @@ const store = createStore({
   },
   actions: {
     getProjects({state}, user){
-      const mongodb = app.currentUser.mongoClient("mongodb-atlas");
+      const mongodb = user.mongoClient("mongodb-atlas");
       const projectsCollection = mongodb.db("AnimationStudioDB").collection("Projects");
       projectsCollection.find()
-      .then(projects=> state.projects = [...projects])
+      .then(projects=> {
+        state.projects = [...projects];
+        watchProjects(store,projectsCollection).catch(err => console.log("watchProjects error: ",err))
+      })
     },
     setProject({state}, id){
       const project = state.projects.filter(project => project._id.toString() === id)[0]
@@ -81,3 +84,14 @@ const store = createStore({
 export default store;
 
 
+async function watchProjects(store, projects) {
+  for await (const change of projects.watch({
+    // filter : {
+    //   operationType: "update"
+    // }
+  })) {
+    const { documentKey, fullDocument } = change;
+    console.log(`updated document - store.js : ${documentKey}`, fullDocument);
+    store.dispatch('setProjects', store.state.user).catch(err => console.log("setProjects error: " + err))
+  }
+}

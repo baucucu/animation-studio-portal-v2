@@ -1,7 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Page, Block, BlockTitle,Icon, ListItem,ListInput, Segmented, Button,f7, useStore } from 'framework7-react';
-
-import Select from 'react-select'
+import { Page, Block, BlockTitle, ListItem,Popover, List, Segmented, Button,f7, useStore } from 'framework7-react';
 
 import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
@@ -12,8 +10,6 @@ import Box from '@mui/material/Box';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import SendIcon from '@mui/icons-material/Send';
-import CheckIcon from '@mui/icons-material/Check';
-import RateReviewIcon from '@mui/icons-material/RateReview';
 import MoreTimeIcon from '@mui/icons-material/MoreTime';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -23,16 +19,23 @@ import ManuscriptScenes from '../components/manuscript-scenes'
 const ManuscriptPage = () => {
   
   const project = useStore('project')
-  const [versions, setVersions] = useState([])
-  const [versionIndex, setVersionIndex] = useState(0)
   const [languageIndex, setLanguageIndex] = useState(0)
-  const [currentManuscript, setCurrentManuscript] = useState()
+  const [versions,setVersions] = useState(project?.manuscript?.data[languageIndex].versions)
+  const [versionIndex, setVersionIndex] = useState(versions?.length-1)
   
   useEffect(() => {
-    // const  versions = project.manuscript.data.filter(manuscript => {return manuscript.language === project.manuscript.languages[languageIndex]}).versions
-    const versions = project?.manuscript?.data[languageIndex].versions
-    console.log("versions: ",versions)
+    console.log("new languageIndex: ",languageIndex)
+    setVersions(project?.manuscript?.data[languageIndex].versions)
   },[languageIndex])
+
+  useEffect(() => {
+    console.log("new versions: ",versions)
+    setVersionIndex(versions?.length-1)
+  },[versions])
+
+  useEffect(() => {
+    console.log(" new versionIndex: ",versionIndex)
+  },[versionIndex])
 
   if(project?.manuscript?.completed === undefined) return <ManuscriptClosed/>
   
@@ -42,7 +45,7 @@ const ManuscriptPage = () => {
     <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={2}>
           <SplitButton languages={project?.manuscript?.languages} languageIndex={languageIndex} setLanguageIndex={setLanguageIndex}/>
-          <VersionSelect versions={project?.manuscript?.data.filter(man => {return man.language === project?.manuscript.languages[languageIndex]})[0].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
+          <VersionSelect versions={project?.manuscript?.data[languageIndex].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
         </Stack>
         <Stack direction="row" mt={2} spacing={2}>
           <Box>
@@ -94,35 +97,6 @@ const ManuscriptPage = () => {
           </Box>
         </Stack>
       </Block>
-      {/* {<Block inset strong style={{flexGrow:1}}>
-        <Stack direction="row" spacing={2}>
-          <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
-              <Typography variant="subtitle1" color="text.secondary" component="div">Revisions</Typography>
-              <Chip color="secondary" variant="outlined" label={"2/5"} ></Chip>
-          </Stack>
-          <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
-              <Typography variant="subtitle1" color="text.secondary" component="div">Time to respond</Typography>
-              <Chip color="secondary" variant="outlined" label={"18:00:00"} ></Chip>
-          </Stack>
-        </Stack>
-        <Stack direction="row" spacing={2} mt={3}>
-          
-          <Box>
-            <MUIButton size="small" variant="contained" color= "success" startIcon={<CheckIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to approve the manuscript?')}>
-              Approve manuscript
-            </MUIButton>
-          </Box>
-          <Box>
-            <MUIButton size="small" variant="contained" color= "warning" startIcon={<RateReviewIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to ask for revision?')}>
-              Ask for revision
-            </MUIButton>
-          </Box>
-          <Box>
-            <Chip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="Open by manuscript writer"/>
-          </Box>
-          
-        </Stack>
-      </Block>} */}
     </Stack>
     <Block inset >
       <ManuscriptScenes />
@@ -131,7 +105,6 @@ const ManuscriptPage = () => {
 )};
 
 export default ManuscriptPage;
-
 
 function SplitButton(props) {
   const {languages,languageIndex, setLanguageIndex} = props
@@ -155,14 +128,18 @@ function ManuscriptClosed() {
   )
 }
 
-
 function VersionSelect({versions, versionIndex, setVersionIndex}) {
-
-  const options = versions.map(version => {return {value: version, label: versionIndex === versions.length ? `${version} (current)` : version}})
   return(
     <Stack direction="row" spacing={2} sx={{alignItems:'center'}}>
       <Typography variant="subtitle1" color="text.secondary" component="div">Version</Typography>
-      <Select  color={"#000"} options={options} onChange={(e) => setVersionIndex(e.value)}/>
+      <Button style={{minWidth:80}} fill raised popoverOpen=".popover-menu">
+        {versions.length-1 === versionIndex ?  String(versionIndex+" (current)"): String(versionIndex)}
+      </Button>
+      <Popover className="popover-menu">
+        <List>
+          {versions.map((version, id) => <ListItem onClick={() => setVersionIndex(version)} link key={id} popoverClose >{version === versionIndex ?  String(version+" (current)"): String(version)}</ListItem>)}
+        </List>
+      </Popover>
     </Stack>
     
   )
