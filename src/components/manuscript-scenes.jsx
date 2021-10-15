@@ -23,7 +23,7 @@ import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 
 
 
-export default function ManuscriptScenes({scenes=[]}) {
+export default function ManuscriptScenes({scenes=[], language="", version=0}) {
     const project = useStore('project') 
     console.log("project: ",project)
 
@@ -71,7 +71,7 @@ export default function ManuscriptScenes({scenes=[]}) {
                                 </Stack>
                             </Stack>
                             
-                            <Stack sx={{flexDirection:"column"}} spacing={2}>
+                            <Stack spacing={2}>
                                 <Stack mt={1} sx={{flexDirection:"row"}}>
                                     <MicIcon />
                                     <TextField
@@ -103,7 +103,7 @@ export default function ManuscriptScenes({scenes=[]}) {
                                         // onChange={handleChange}
                                     />
                                 </Stack>
-                                <PageWithComments commentBoxId={`${String(project._id)}-${id}`} />
+                                <PageWithComments commentBoxId={`${String(project._id)}-${language}-${version}-${id}`} />
                             </Stack>
                         </CardContent>
                     </Card>

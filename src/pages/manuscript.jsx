@@ -99,7 +99,7 @@ const ManuscriptPage = () => {
       </Block>
     </Stack>
     <Block inset >
-      <ManuscriptScenes scenes={versions[versionIndex]?.scenes}/>
+      <ManuscriptScenes scenes={versions[versionIndex]?.scenes} language={project?.manuscript?.languages[languageIndex]} version={versionIndex}/>
     </Block>
   </Page>
 )};
