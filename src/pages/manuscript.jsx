@@ -21,7 +21,7 @@ const ManuscriptPage = () => {
   const project = useStore('project')
   const [languageIndex, setLanguageIndex] = useState(0)
   const [versions,setVersions] = useState(project?.manuscript?.data[languageIndex].versions)
-  const [versionIndex, setVersionIndex] = useState(versions?.length-1)
+  const [versionIndex, setVersionIndex] = useState(versions?.length)
   
   useEffect(() => {
     console.log("new languageIndex: ",languageIndex)
@@ -30,7 +30,7 @@ const ManuscriptPage = () => {
 
   useEffect(() => {
     console.log("new versions: ",versions)
-    setVersionIndex(versions?.length-1)
+    setVersionIndex(versions?.length)
   },[versions])
 
   useEffect(() => {
@@ -76,7 +76,7 @@ const ManuscriptPage = () => {
           </Stack>
           <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
             <Typography  variant="subtitle1" color="text.secondary" component="div">Scenes</Typography>
-            <Chip color="secondary" outline text={versions?.[versionIndex]?.scenes?.length} ></Chip>
+            <Chip color="secondary" outline text={versions?.[versionIndex-1]?.scenes?.length} ></Chip>
           </Stack>
         </Stack>
         <Stack direction="row" mt={1} spacing={2}>
@@ -99,7 +99,7 @@ const ManuscriptPage = () => {
       </Block>
     </Stack>
     <Block inset >
-      <ManuscriptScenes scenes={versions[versionIndex]?.scenes} language={project?.manuscript?.languages[languageIndex]} version={versionIndex}/>
+      <ManuscriptScenes scenes={versions[versionIndex-1]?.scenes} language={project?.manuscript?.languages[languageIndex]} version={versionIndex}/>
     </Block>
   </Page>
 )};
@@ -129,10 +129,11 @@ function ManuscriptClosed() {
 }
 
 function VersionSelect({versions, versionIndex, setVersionIndex}) {
+  console.log("version index: ", versionIndex)
   return(
     <Stack direction="row" spacing={2} sx={{alignItems:'center'}}>
       <Button small style={{minWidth:80}} fill raised popoverOpen=".popover-menu">
-        {versions.length-1 === versionIndex ?  "version ".concat(versionIndex+1," (current)"): String("version "+versionIndex)}
+        {versions.length === versionIndex ?  "version ".concat(versionIndex," (current)"): String("version "+versionIndex)}
       </Button>
       <Popover className="popover-menu">
         <List>
