@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import {f7, useStore,Popover } from 'framework7-react';
+import {f7, Button as F7Button,Block, Link, useStore,Popover, List, ListItem } from 'framework7-react';
 import Comments from './comments'
 
 import Grid from '@mui/material/Grid';
@@ -42,16 +42,20 @@ export default function ManuscriptScenes({language, versionIndex}) {
     useEffect(() => {
         const mongodb = user.mongoClient("mongodb-atlas");
         const projectsCollection = mongodb.db("AnimationStudioDB").collection("Projects");
-        f7.on('saveVoice',({voice,sceneIndex})=>{
+
+        f7.on('saveVoice',({voice,language,versionIndex,sceneIndex})=>{
             let tempManuscript = project.manuscript
-            console.log("saving voice to ",tempManuscript.data[language]," version ",tempManuscript.data[language].versions[versionIndex-1])," scene ",sceneIndex
+            console.log(String("saving voice to "+language+" version "+versionIndex+" scene "+sceneIndex))
             tempManuscript.data[language].versions[versionIndex-1].scenes[sceneIndex].voice = voice
+            console.log("tempManuscript: ",tempManuscript)
             projectsCollection.updateOne({_id:(project._id)},{
                 $set:{"manuscript":tempManuscript}
             })
         })
+        
         f7.on('saveAction',({action,sceneIndex})=>{
             let tempManuscript = project.manuscript
+            // console.log(String("saving action to "+String(language)+" version "+String(versionIndex)+" scene "+sceneIndex))
             tempManuscript.data[language].versions[versionIndex-1].scenes[sceneIndex].action = action
             projectsCollection.updateOne({_id:(project._id)},{
                 $set:{"manuscript":tempManuscript}
@@ -70,12 +74,12 @@ export default function ManuscriptScenes({language, versionIndex}) {
                                     <Typography variant="h6" color="text.secondary" component="div">Scene {`${language}-${versionIndex}-${id+1}`}</Typography>
                                 </Stack>                                
                                 <Stack direction="row">
-                                    <ShowMoreOptions id={id}/>
+                                    <ShowMoreOptions sceneIndex={id}/>
                                 </Stack>
                             </Stack>
                             <Stack spacing={2}>
-                                <Voice sceneIndex={id} text={project.manuscript.data[language].versions[versionIndex-1].scenes[id].voice} handleChange={(e)=> console.log("Voice change - language: ",language,"; version: ",versionIndex,"; scene: ",scene.id,"; value: ",e.target.value)}/>
-                                <Action sceneIndex={id} text={project.manuscript.data[language].versions[versionIndex-1].scenes[id].action} handleChange={(e)=> console.log("Action change - language: ",language,"; version: ",versionIndex,"; scene: ",scene.id,"; value: ",e.target.value)}/>
+                                <Voice sceneIndex={id} language={language} versionIndex={versionIndex} text={project.manuscript.data[language].versions[versionIndex-1].scenes[id].voice} handleChange={(e)=> {}}/>
+                                <Action sceneIndex={id} language={language} versionIndex={versionIndex} text={project.manuscript.data[language].versions[versionIndex-1].scenes[id].action} handleChange={(e)=> {}}/>
                                 <Comments commentBoxId={`${String(project._id)}-${language}-${versionIndex}-${id}`} />
                             </Stack>
                         </CardContent>
@@ -86,33 +90,36 @@ export default function ManuscriptScenes({language, versionIndex}) {
     )
 }
 
-function ShowMoreOptions(){
-
-    const handleClick = (event) => {
-        console.log("options button clicked: ",event)
-    };
-
-    
+function ShowMoreOptions({sceneIndex}){    
     return(
         <Box>
-            <IconButton  onClick={handleClick}>
-                <MoreVertIcon  color="secondary" />
-            </IconButton>
+            <F7Button icon="more_vert" popoverOpen=".more-popover-menu">
+                <MoreVertIcon/>
+            </F7Button>
+            <Popover className="more-popover-menu">
+                <List>
+                    <ListItem><Link popoverClose onClick={()=>{f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'addLeft'})}}>Add new scene to left</Link></ListItem>
+                    <ListItem><Link popoverClose onClick={()=>{f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'addRight'})}}>Add new scene to right</Link></ListItem>
+                    {sceneIndex !== 0 && <ListItem><Link popoverClose onClick={()=>{f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'moveRight'})}}>Move scene to left</Link></ListItem>}
+                    {<ListItem><Link popoverClose onClick={()=>{f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'moveLeft'})}}>Move scene to right</Link></ListItem>}
+                    <ListItem><Link popoverClose onClick={()=>{f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'delete'})}} color="red">Delete scene</Link></ListItem>
+                </List>
+            </Popover>
         </Box>
     )
 }
 
-function Voice({text,sceneIndex,handleChange}){
+function Voice({text,language,versionIndex,sceneIndex,handleChange}){
     // const project = useStore('project')
     const [voice,setVoice] = useState(text)
     useEffect(()=>{
-        console.log("new text props: ", text)
+        // console.log("new text props: ", text)
         setVoice(text)
     },[text])
 
     function saveVoice(e){
-        console.log("saving voice: ", voice)
-        f7.emit('saveVoice',{voice, sceneIndex})
+        console.log("saving voice: ", {voice,language,versionIndex,sceneIndex})
+        f7.emit('saveVoice',{voice,language,versionIndex,sceneIndex})
     }
     
     return(
@@ -145,7 +152,7 @@ function Voice({text,sceneIndex,handleChange}){
 function Action({text,sceneIndex,   handleChange}){
     const[action,setAction] = useState(text)
     useEffect(()=>{
-        console.log("new text props: ", text)
+        // console.log("new text props: ", text)
         setAction(text)
     },[text])
 

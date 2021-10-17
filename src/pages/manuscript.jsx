@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Page, Chip, Block, BlockTitle, ListItem,Popover, List, Segmented, Button,f7, useStore } from 'framework7-react';
+import { Page, Chip, Block, BlockTitle, ListItem,Popover, List, Link, Segmented, Button,f7, useStore } from 'framework7-react';
 
 import MUIChip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
@@ -23,11 +23,11 @@ const ManuscriptPage = () => {
   const [versionIndex, setVersionIndex] = useState(project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions.length)
   
   useEffect(() => {
-    console.log("new languageIndex: ",languageIndex)
+    // console.log("new languageIndex: ",languageIndex)
   },[languageIndex])
 
   useEffect(() => {
-    console.log(" new versionIndex: ",versionIndex)
+    // console.log(" new versionIndex: ",versionIndex)
   },[versionIndex])
   
   useEffect(() => {
@@ -139,7 +139,7 @@ function VersionSelect({versions, versionIndex, setVersionIndex}) {
       </Button>
       <Popover className="popover-menu">
         <List>
-          {versions.map((version, id) => <ListItem onClick={() => {console.log("new version selected: ", version); setVersionIndex(version)}} link key={id} popoverClose >{versions.length === version ?  String(version+" (current)"): String(version)}</ListItem>)}
+          {versions.map((version, id) => <ListItem key={id}><Link onClick={() => {console.log("new version selected: ", version); setVersionIndex(version)}}  popoverClose >{versions.length === version ?  String("Version "+version+" (current)"): String("Version "+version)}</Link></ListItem>)}
         </List>
       </Popover>
     </Stack>

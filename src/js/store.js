@@ -30,7 +30,7 @@ const store = createStore({
       .then(projects=> {
         state.projects = [...projects];
         // f7.dialog.close()
-        console.log("new projects state: ", state.projects)
+        // console.log("new projects state: ", state.projects)
         if(store.state.project) {store.dispatch('setProject',store.state.project?._id.toString(), store.state.user).catch(err => console.log("setProject error: " + err))}
         // watchProjects(store,projectsCollection).catch(err => console.log("watchProjects error: ",err))
       })
@@ -38,7 +38,7 @@ const store = createStore({
     setProject({state}, id){
       const project = state.projects.filter(project => {return project._id.toString() === id})[0]
       state.project=project
-      console.log("new project state: ",state.project )
+      // console.log("new project state: ",state.project )
     },
     setUser({ state }, user) {
       state.user = user
