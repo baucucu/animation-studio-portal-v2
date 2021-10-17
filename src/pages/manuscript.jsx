@@ -20,21 +20,14 @@ const ManuscriptPage = () => {
   
   const project = useStore('project')
   const [languageIndex, setLanguageIndex] = useState(0)
-  const [versions,setVersions] = useState(project?.manuscript?.data[languageIndex].versions)
-  const [versionIndex, setVersionIndex] = useState(versions?.length)
+  const [versionIndex, setVersionIndex] = useState(project.manuscript.data["Norsk"].versions.length)
   
   useEffect(() => {
-    console.log("new languageIndex: ",languageIndex)
-    setVersions(project?.manuscript?.data[languageIndex].versions)
+    // console.log("new languageIndex: ",languageIndex)
   },[languageIndex])
 
   useEffect(() => {
-    console.log("new versions: ",versions)
-    setVersionIndex(versions?.length)
-  },[versions])
-
-  useEffect(() => {
-    console.log(" new versionIndex: ",versionIndex)
+    // console.log(" new versionIndex: ",versionIndex)
   },[versionIndex])
 
   if(project?.manuscript?.completed === undefined) return <ManuscriptClosed/>
@@ -45,7 +38,7 @@ const ManuscriptPage = () => {
     <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={1}>
           <SplitButton languages={project?.manuscript?.languages} languageIndex={languageIndex} setLanguageIndex={setLanguageIndex}/>
-          <VersionSelect versions={project?.manuscript?.data[languageIndex].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
+          <VersionSelect versions={project?.manuscript?.data[project.manuscript.languages[languageIndex]].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
         </Stack>
         <Stack direction="row" mt={2} spacing={1}>
           <Box>
@@ -76,7 +69,7 @@ const ManuscriptPage = () => {
           </Stack>
           <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
             <Typography  variant="subtitle1" color="text.secondary" component="div">Scenes</Typography>
-            <Chip color="secondary" outline text={versions?.[versionIndex-1]?.scenes?.length} ></Chip>
+            <Chip color="secondary" outline text={project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions[versionIndex-1].scenes.length} ></Chip>
           </Stack>
         </Stack>
         <Stack direction="row" mt={1} spacing={2}>
@@ -99,7 +92,7 @@ const ManuscriptPage = () => {
       </Block>
     </Stack>
     <Block inset >
-      <ManuscriptScenes scenes={versions[versionIndex-1]?.scenes} language={project?.manuscript?.languages[languageIndex]} version={versionIndex}/>
+      <ManuscriptScenes  language={project?.manuscript?.languages[languageIndex]} versionIndex={versionIndex}/>
     </Block>
   </Page>
 )};
@@ -129,7 +122,6 @@ function ManuscriptClosed() {
 }
 
 function VersionSelect({versions, versionIndex, setVersionIndex}) {
-  console.log("version index: ", versionIndex)
   return(
     <Stack direction="row" spacing={2} sx={{alignItems:'center'}}>
       <Button small style={{minWidth:80}} fill raised popoverOpen=".popover-menu">

@@ -4,6 +4,18 @@ import {f7} from 'framework7-react';
 import * as Realm from "realm-web";
 const app = new Realm.App({ id: "animationstudioapp-hxbnj" });
 
+async function watchProjects(store, projects) {
+  for await (const change of projects.watch({
+    // filter : {
+    //   operationType: "update"
+    // }
+  })) {
+    const { documentKey, fullDocument } = change;
+    console.log(`updated document - store.js : ${documentKey}`, fullDocument);
+    store.dispatch('setProjects', store.state.user).catch(err => console.log("setProjects error: " + err))
+  }
+}
+
 const store = createStore({
   state: {
     user: app.currentUser,
@@ -84,14 +96,3 @@ const store = createStore({
 export default store;
 
 
-async function watchProjects(store, projects) {
-  for await (const change of projects.watch({
-    // filter : {
-    //   operationType: "update"
-    // }
-  })) {
-    const { documentKey, fullDocument } = change;
-    console.log(`updated document - store.js : ${documentKey}`, fullDocument);
-    store.dispatch('setProjects', store.state.user).catch(err => console.log("setProjects error: " + err))
-  }
-}
