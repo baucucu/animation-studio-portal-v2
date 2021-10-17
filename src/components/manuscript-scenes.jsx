@@ -1,7 +1,6 @@
 import React, {useState,useEffect} from 'react';
-import {f7, useStore } from 'framework7-react';
-import CommentsDrawer from '../components/comments-drawer'
-import PageWithComments from './comments'
+import {f7, useStore,Popover } from 'framework7-react';
+import Comments from './comments'
 
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
@@ -13,9 +12,6 @@ import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import InputAdornment from '@mui/material/InputAdornment';
-
 
 import MicIcon from '@mui/icons-material/Mic';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -48,6 +44,7 @@ export default function ManuscriptScenes({language, versionIndex}) {
         const projectsCollection = mongodb.db("AnimationStudioDB").collection("Projects");
         f7.on('saveVoice',({voice,sceneIndex})=>{
             let tempManuscript = project.manuscript
+            console.log("saving voice to ",tempManuscript.data[language]," version ",tempManuscript.data[language].versions[versionIndex-1])," scene ",sceneIndex
             tempManuscript.data[language].versions[versionIndex-1].scenes[sceneIndex].voice = voice
             projectsCollection.updateOne({_id:(project._id)},{
                 $set:{"manuscript":tempManuscript}
@@ -69,30 +66,39 @@ export default function ManuscriptScenes({language, versionIndex}) {
                     <Card sx={{width: 450}}>
                         <CardContent >
                             <Stack direction="row" sx={{justifyContent:"space-between"}}>
-                                
                                 <Stack direction="row" sx={{alignItems:"center",     justifyContent:"center"}}>
                                     <Typography variant="h6" color="text.secondary" component="div">Scene {`${language}-${versionIndex}-${id+1}`}</Typography>
-                                   
-                                </Stack>
-                                
+                                </Stack>                                
                                 <Stack direction="row">
-                                    <Box>
-                                        <IconButton>
-                                            <MoreVertIcon color="secondary"/>
-                                        </IconButton>
-                                    </Box>
+                                    <ShowMoreOptions id={id}/>
                                 </Stack>
                             </Stack>
                             <Stack spacing={2}>
                                 <Voice sceneIndex={id} text={project.manuscript.data[language].versions[versionIndex-1].scenes[id].voice} handleChange={(e)=> console.log("Voice change - language: ",language,"; version: ",versionIndex,"; scene: ",scene.id,"; value: ",e.target.value)}/>
                                 <Action sceneIndex={id} text={project.manuscript.data[language].versions[versionIndex-1].scenes[id].action} handleChange={(e)=> console.log("Action change - language: ",language,"; version: ",versionIndex,"; scene: ",scene.id,"; value: ",e.target.value)}/>
-                                <PageWithComments commentBoxId={`${String(project._id)}-${language}-${versionIndex}-${id}`} />
+                                <Comments commentBoxId={`${String(project._id)}-${language}-${versionIndex}-${id}`} />
                             </Stack>
                         </CardContent>
                     </Card>
                 </Grid>
             )}
         </Grid>
+    )
+}
+
+function ShowMoreOptions(){
+
+    const handleClick = (event) => {
+        console.log("options button clicked: ",event)
+    };
+
+    
+    return(
+        <Box>
+            <IconButton  onClick={handleClick}>
+                <MoreVertIcon  color="secondary" />
+            </IconButton>
+        </Box>
     )
 }
 
@@ -136,7 +142,7 @@ function Voice({text,sceneIndex,handleChange}){
     )
 }
 
-function Action({text,sceneIndex, handleChange}){
+function Action({text,sceneIndex,   handleChange}){
     const[action,setAction] = useState(text)
     useEffect(()=>{
         console.log("new text props: ", text)

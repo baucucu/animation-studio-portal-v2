@@ -1,36 +1,36 @@
 import React, {useEffect} from 'react';
 const commentBox = window.commentBox;
 
-// class PageWithComments extends React.Component {
+class PageWithComments extends React.Component {
 
-//     componentDidMount() {
+    componentDidMount() {
 
-//         this.removeCommentBox = commentBox('5707536883777536-proj');
-//     }
+        this.removeCommentBox = commentBox('5707536883777536-proj');
+    }
 
-//     componentWillUnmount() {
+    componentWillUnmount() {
 
-//         this.removeCommentBox();
-//     }
+        this.removeCommentBox();
+    }
 
-//     render() {
+    render() {
 
-//         return (
-//             <div className="commentbox" id={this.props.commentBoxId}/>
-//         );
-//     }
-// }
-
-function PageWithComments({commentBoxId}){
-
-    useEffect(() => {
-        const removeCommentBox = commentBox('5707536883777536-proj')
-        return removeCommentBox()
-    },[])
-
-    return(
-        <div className="commentbox" id={commentBoxId}/>
-    )
+        return (
+            <div className="commentbox" id={this.props.commentBoxId}/>
+        );
+    }
 }
+
+// function PageWithComments({commentBoxId}){
+
+//     useEffect(() => {
+//         const removeCommentBox = commentBox('5707536883777536-proj')
+//         return removeCommentBox()
+//     },[])
+
+//     return(
+//         <div className="commentbox" id={commentBoxId}/>
+//     )
+// }
 
 export default PageWithComments
