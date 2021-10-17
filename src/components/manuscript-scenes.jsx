@@ -53,10 +53,11 @@ export default function ManuscriptScenes({language, versionIndex}) {
             })
         })
         
-        f7.on('saveAction',({action,sceneIndex})=>{
+        f7.on('saveAction',({action,language,versionIndex,sceneIndex})=>{
             let tempManuscript = project.manuscript
-            // console.log(String("saving action to "+String(language)+" version "+String(versionIndex)+" scene "+sceneIndex))
+            console.log(String("saving action to "+language+" version "+versionIndex+" scene "+sceneIndex))
             tempManuscript.data[language].versions[versionIndex-1].scenes[sceneIndex].action = action
+            console.log("tempManuscript: ",tempManuscript)
             projectsCollection.updateOne({_id:(project._id)},{
                 $set:{"manuscript":tempManuscript}
             })
@@ -74,7 +75,7 @@ export default function ManuscriptScenes({language, versionIndex}) {
                                     <Typography variant="h6" color="text.secondary" component="div">Scene {`${language}-${versionIndex}-${id+1}`}</Typography>
                                 </Stack>                                
                                 <Stack direction="row">
-                                    <ShowMoreOptions sceneIndex={id}/>
+                                    <ShowMoreOptions language={language} versionIndex={versionIndex} sceneIndex={id} scenes={project.manuscript.data[language].versions[versionIndex-1].scenes.length}/>
                                 </Stack>
                             </Stack>
                             <Stack spacing={2}>
@@ -90,17 +91,21 @@ export default function ManuscriptScenes({language, versionIndex}) {
     )
 }
 
-function ShowMoreOptions({sceneIndex}){    
+function ShowMoreOptions({language,versionIndex,sceneIndex, scenes}){    
+
+    useEffect(()=> {
+        console.log({language,versionIndex,sceneIndex, scenes})
+    },[])
     return(
         <Box>
             <F7Button icon="more_vert" popoverOpen=".more-popover-menu">
                 <MoreVertIcon/>
             </F7Button>
-            <Popover className="more-popover-menu">
+            <Popover closeByOutsideClick className="more-popover-menu">
                 <List>
                     <ListItem><Link popoverClose onClick={()=>{f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'addLeft'})}}>Add new scene to left</Link></ListItem>
                     <ListItem><Link popoverClose onClick={()=>{f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'addRight'})}}>Add new scene to right</Link></ListItem>
-                    {sceneIndex !== 0 && <ListItem><Link popoverClose onClick={()=>{f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'moveRight'})}}>Move scene to left</Link></ListItem>}
+                    {<ListItem><Link popoverClose onClick={()=>{f7.emit('sceneAction',{language:language, versionIndex:versionIndex, sceneIndex:sceneIndex,action:'moveLeft'})}}>Move scene to left</Link></ListItem>}
                     {<ListItem><Link popoverClose onClick={()=>{f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'moveLeft'})}}>Move scene to right</Link></ListItem>}
                     <ListItem><Link popoverClose onClick={()=>{f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'delete'})}} color="red">Delete scene</Link></ListItem>
                 </List>
@@ -110,10 +115,8 @@ function ShowMoreOptions({sceneIndex}){
 }
 
 function Voice({text,language,versionIndex,sceneIndex,handleChange}){
-    // const project = useStore('project')
     const [voice,setVoice] = useState(text)
     useEffect(()=>{
-        // console.log("new text props: ", text)
         setVoice(text)
     },[text])
 
@@ -140,7 +143,7 @@ function Voice({text,language,versionIndex,sceneIndex,handleChange}){
                 >
                 </TextField>
                 {text!==voice && <Stack direction="row">
-                <Button onClick={()=>saveVoice(voice)} variant="text" color="success" startIcon={<CheckCircleIcon />}>Save</Button>
+                    <Button onClick={()=>saveVoice({voice,language,versionIndex,sceneIndex})} variant="text" color="success" startIcon={<CheckCircleIcon />}>Save</Button>
                     <Button onClick={()=>setVoice(text)} variant="text" color="error" startIcon={<DeleteIcon />}>Cancel</Button>
                 </Stack>}
             </Stack>
@@ -149,16 +152,15 @@ function Voice({text,language,versionIndex,sceneIndex,handleChange}){
     )
 }
 
-function Action({text,sceneIndex,   handleChange}){
+function Action({text,language,versionIndex,sceneIndex,handleChange}){
     const[action,setAction] = useState(text)
     useEffect(()=>{
-        // console.log("new text props: ", text)
         setAction(text)
     },[text])
 
     function saveAction(e){
         console.log("saving action: ", action)
-        f7.emit('saveAction',{action, sceneIndex})
+        f7.emit('saveAction',{action,language,versionIndex,sceneIndex})
     }
     return(
         <Stack mt={1} style={{flexDirection:"row"}} >
@@ -176,7 +178,7 @@ function Action({text,sceneIndex,   handleChange}){
                     onChange={(e)=>{handleChange(e); setAction(e.target.value)}}
                 />
                 {text!==action && <Stack direction="row">
-                    <Button onClick={()=>saveAction(action)} variant="text" color="success" startIcon={<CheckCircleIcon />}>Save</Button>
+                    <Button onClick={()=>saveAction({action,language,versionIndex,sceneIndex})} variant="text" color="success" startIcon={<CheckCircleIcon />}>Save</Button>
                     <Button onClick={()=>setAction(text)} variant="text" color="error" startIcon={<DeleteIcon />}>Cancel</Button>
                 </Stack>}
             </Stack>
