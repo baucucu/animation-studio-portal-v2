@@ -4,18 +4,6 @@ import {f7} from 'framework7-react';
 import * as Realm from "realm-web";
 const app = new Realm.App({ id: "animationstudioapp-hxbnj" });
 
-async function watchProjects(store, projects) {
-  for await (const change of projects.watch({
-    // filter : {
-    //   operationType: "update"
-    // }
-  })) {
-    const { documentKey, fullDocument } = change;
-    console.log(`updated document - store.js : ${documentKey}`, fullDocument);
-    store.dispatch('setProjects', store.state.user).catch(err => console.log("setProjects error: " + err))
-  }
-}
-
 const store = createStore({
   state: {
     user: app.currentUser,
@@ -35,17 +23,22 @@ const store = createStore({
   },
   actions: {
     getProjects({state}, user){
+      // f7.dialog.preloader()
       const mongodb = user.mongoClient("mongodb-atlas");
       const projectsCollection = mongodb.db("AnimationStudioDB").collection("Projects");
       projectsCollection.find()
       .then(projects=> {
         state.projects = [...projects];
-        watchProjects(store,projectsCollection).catch(err => console.log("watchProjects error: ",err))
+        // f7.dialog.close()
+        console.log("new projects state: ", state.projects)
+        if(store.state.project) {store.dispatch('setProject',store.state.project?._id.toString(), store.state.user).catch(err => console.log("setProject error: " + err))}
+        // watchProjects(store,projectsCollection).catch(err => console.log("watchProjects error: ",err))
       })
     },
     setProject({state}, id){
-      const project = state.projects.filter(project => project._id.toString() === id)[0]
-      state.project = project
+      const project = state.projects.filter(project => {return project._id.toString() === id})[0]
+      state.project=project
+      console.log("new project state: ",state.project )
     },
     setUser({ state }, user) {
       state.user = user

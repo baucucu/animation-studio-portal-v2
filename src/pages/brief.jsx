@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 const BriefPage = () => {
   const brief = useStore('project')?.brief
 
-  if (brief.completed) {
+  if (brief?.completed) {
     return (
       <List inset meediaList>  
         {brief.formResponse.answers.map((item,index) =>{
@@ -45,7 +45,7 @@ const BriefPage = () => {
               </NavRight>
             </Navbar>
             <div style={{flexGrow:1, height:'100%'}}>
-              <iframe style={{height:'100%', width: '100%' }} scrolling="no" seamless="seamless" title="Brief" src={brief.formUrl}></iframe>
+              <iframe style={{height:'100%', width: '100%' }} scrolling="no" seamless="seamless" title="Brief" src={brief?.formUrl}></iframe>
             </div>
           </Page>
         </Popup>   

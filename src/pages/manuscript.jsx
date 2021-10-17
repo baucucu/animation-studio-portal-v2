@@ -29,6 +29,10 @@ const ManuscriptPage = () => {
   useEffect(() => {
     console.log(" new versionIndex: ",versionIndex)
   },[versionIndex])
+  
+  useEffect(() => {
+    setVersionIndex(project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions.length)
+  },[project])
 
   function setNewLanguage(index) {
     setLanguageIndex(index);
@@ -42,7 +46,7 @@ const ManuscriptPage = () => {
     <Stack direction="row" justifyContent="stretch">
     <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={1}>
-          <SplitButton languages={project?.manuscript?.languages} languageIndex={languageIndex} setNewLanguage={setNewLanguage}/>
+          <SplitButton languageIndex={languageIndex} setNewLanguage={setNewLanguage}/>
           <VersionSelect versions={project?.manuscript?.data[project.manuscript.languages[languageIndex]].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
         </Stack>
         <Stack direction="row" mt={2} spacing={1}>
@@ -105,7 +109,8 @@ const ManuscriptPage = () => {
 export default ManuscriptPage;
 
 function SplitButton(props) {
-  const {languages,languageIndex, setNewLanguage} = props
+  const languages=useStore('project').manuscript.languages
+  const {languageIndex, setNewLanguage} = props
   return (
     <Stack direction="row" spacing={2} sx={{alignItems:'center'}}>
       {/* <Typography variant="subtitle1" color="text.secondary" component="div">Language</Typography> */}

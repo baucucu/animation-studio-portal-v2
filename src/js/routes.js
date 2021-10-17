@@ -21,6 +21,8 @@ import IllustrationsPage from '../pages/illustrations';
 import AnimationPage from '../pages/animation';
 import DeliveryPage from '../pages/delivery'
 
+import store from './store';
+
 var routes = [
   {
     path: '/',
@@ -36,7 +38,28 @@ var routes = [
   },
   {
     path: '/project/:id',
-    component: ProjectPage,
+    // component: ProjectPage,
+    async: function ({ router, to, resolve }) {
+      // App instance
+      var app = router.app;
+
+      // Show Preloader
+      // app.preloader.show();
+      
+      try {
+        store.dispatch('setProject',to.params.id)
+        // app.preloader.hide();
+      }
+      catch (error) {
+        console.log(error)
+      }
+      
+
+      // Resolve route to load page
+      resolve({component: ProjectPage}
+      );
+
+    }
   },
   {
     path: '/tasks/',

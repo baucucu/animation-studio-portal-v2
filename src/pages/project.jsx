@@ -20,8 +20,6 @@ import CheckIcon from '@mui/icons-material/Check';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LockClockIcon from '@mui/icons-material/LockClock';
 
-import BSON from 'bson';
-
 const ProjectPage = ({f7route,f7router}) => {
 
   const project = useStore('project') 
@@ -36,38 +34,17 @@ const ProjectPage = ({f7route,f7router}) => {
     { text: 'Delivery','icon':'movetofolder', path: '/delivery/', index:6,  completed: project?.delivery?.completed, active:"false"},
   ];
   
-  const firstIndex = tabs.filter(tab => {return tab.completed !== true})[0]?.index || 0
+  const [firstIndex,setFirstIndex] = useState(tabs.filter(tab => {return tab.completed !== true})[0]?.index || 0)
   const [selectedIndex, setSelectedIndex] = useState(firstIndex)
   const user = useStore('user')
-  console.log("user: ", user)
 
-  const mongodb = user.mongoClient("mongodb-atlas");
-  const projects = mongodb.db("AnimationStudioDB").collection("Projects");
-
-  async function watchProjects(projects) {
-    for await (const change of projects.watch({
-      filter : {
-        operationType: "update"
-      }
-    })) {
-      const { documentKey, fullDocument } = change;
-      console.log(`updated document - projects.jsx: ${documentKey}`, fullDocument);
-      store.dispatch('setProject',f7route.params.id)
-    }
-  }
-
-  useEffect(() => {
-      store.dispatch('setProject',f7route.params.id)
-      console.log("tabs: ", tabs)
-  },[])
-
-  useEffect(() => {
-    watchProjects(projects)
-  },[])
+  useEffect(()=>{
+    setFirstIndex(tabs.filter(tab => {return tab.completed !== true})[0]?.index || 0)
+  },[project])
 
 return (
   <Page>
-    <Navbar title={project.projectName}/>
+    <Navbar title={project?.projectName}/>
       <ProjectHeader project={project} f7router={f7router} />
       <Block inset strong style={{marginTop:0, marginBottom:0}}>
         <Stepper activeStep={selectedIndex} >

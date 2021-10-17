@@ -16,6 +16,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 export default function ProjectsPage({f7router}) {
   const projects = useStore('projects')
+  const user = useStore('user')
 
   function stringAvatar(name) {
     return {
@@ -23,7 +24,22 @@ export default function ProjectsPage({f7router}) {
     };
   }
 
-  useEffect(() => {store.dispatch('getProjects',store.state.user)}, [])
+  async function watchProjects(store, projects) {
+    const mongodb = user.mongoClient("mongodb-atlas");
+    const projectsCollection = mongodb.db("AnimationStudioDB").collection("Projects");
+    for await (const change of projectsCollection.watch({
+      // filter : {
+      //   operationType: "update"
+      // }
+    })) {
+      const { documentKey, fullDocument } = change;
+      console.log(`updated document - store.js : ${documentKey}`, fullDocument);
+      store.dispatch('getProjects', store.state.user).catch(err => console.log("setProjects error: " + err))
+    }
+  }
+
+  useEffect(() => {store.dispatch('getProjects',user)}, [])
+  useEffect(() => {watchProjects(store,projects)}, [])
 
   return (
     <Page name="projects" >
