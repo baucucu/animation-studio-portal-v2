@@ -62,6 +62,14 @@ export default function ManuscriptScenes({language, versionIndex}) {
                 $set:{"manuscript":tempManuscript}
             })
         })
+        
+        f7.on('deleteScene',({language, versionIndex, sceneIndex, action})=>{
+            console.log('deleteScene',{language, versionIndex, sceneIndex, action})
+        })
+        f7.on('sceneAction',({sceneIndex,action})=>{
+            console.log("sceneAction received: "),{sceneIndex,action}
+        })
+            
     },[])
 
     return(
@@ -91,23 +99,56 @@ export default function ManuscriptScenes({language, versionIndex}) {
     )
 }
 
-function ShowMoreOptions({language,versionIndex,sceneIndex, scenes}){    
-
-    useEffect(()=> {
-        console.log({language,versionIndex,sceneIndex, scenes})
-    },[])
+function ShowMoreOptions({language,versionIndex,sceneIndex,scenes}){
     return(
         <Box>
             <F7Button icon="more_vert" popoverOpen=".more-popover-menu">
                 <MoreVertIcon/>
             </F7Button>
             <Popover closeByOutsideClick className="more-popover-menu">
-                <List>
-                    <ListItem><Link popoverClose onClick={()=>{f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'addLeft'})}}>Add new scene to left</Link></ListItem>
-                    <ListItem><Link popoverClose onClick={()=>{f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'addRight'})}}>Add new scene to right</Link></ListItem>
-                    {<ListItem><Link popoverClose onClick={()=>{f7.emit('sceneAction',{language:language, versionIndex:versionIndex, sceneIndex:sceneIndex,action:'moveLeft'})}}>Move scene to left</Link></ListItem>}
-                    {<ListItem><Link popoverClose onClick={()=>{f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'moveLeft'})}}>Move scene to right</Link></ListItem>}
-                    <ListItem><Link popoverClose onClick={()=>{f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'delete'})}} color="red">Delete scene</Link></ListItem>
+                <List>                    
+                    <ListItem>
+                        <F7Button 
+                            popoverClose 
+                            onClick={
+                                f7.emit('sceneAction',{sceneIndex:sceneIndex,action:"addLeft"})
+                            }
+                        >Add to left
+                        </F7Button>
+                        <F7Button 
+                            popoverClose 
+                            onClick={()=>{
+                                f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'addRight'})
+                            }}
+                        >Add to right
+                        </F7Button>
+                    </ListItem>
+                    <ListItem>
+                        <F7Button 
+                            disabled 
+                            popoverClose 
+                            onClick={()=>{
+                                f7.emit('sceneAction',{language:language, versionIndex:versionIndex, sceneIndex:sceneIndex,action:'moveLeft'})
+                            }}
+                        >Move left
+                        </F7Button>
+                        <F7Button 
+                            popoverClose 
+                            onClick={()=>{f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'MoveRight'})
+                            }}
+                            >Move right
+                        </F7Button>
+                    </ListItem>
+                    <ListItem>
+                        <F7Button 
+                            popoverClose 
+                            onClick={()=>{
+                                f7.emit('deleteScene',{language,versionIndex, sceneIndex,action:'delete'})
+                            }} 
+                            color="red"
+                        >Delete scene
+                        </F7Button>
+                    </ListItem> 
                 </List>
             </Popover>
         </Box>

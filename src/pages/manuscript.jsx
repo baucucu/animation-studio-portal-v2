@@ -139,7 +139,7 @@ function VersionSelect({versions, versionIndex, setVersionIndex}) {
       </Button>
       <Popover className="popover-menu">
         <List>
-          {versions.map((version, id) => <ListItem key={id}><Link onClick={() => {console.log("new version selected: ", version); setVersionIndex(version)}}  popoverClose >{versions.length === version ?  String("Version "+version+" (current)"): String("Version "+version)}</Link></ListItem>)}
+          {versions.map((version, id) => <ListItem key={id}><Button onClick={() => {console.log("new version selected: ", version); setVersionIndex(version)}}  popoverClose >{versions.length === version ?  String("Version "+version+" (current)"): String("Version "+version)}</Button></ListItem>)}
         </List>
       </Popover>
     </Stack>
