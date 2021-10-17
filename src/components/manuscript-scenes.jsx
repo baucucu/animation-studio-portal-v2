@@ -38,12 +38,12 @@ export default function ManuscriptScenes({language, versionIndex}) {
     useEffect(() => {
         console.log("languages in manuscript: ",project.manuscript.data)
         console.log("language: ",language)
-        console.log("scenes: ", project.manuscript.data[language].versions)
+        console.log("scenes: ", project?.manuscript?.data[language].versions)
         console.log("versionIndex: ",versionIndex)
     },[])
     return(
         <Grid pb={2} pr={2} container spacing={2} direction="row" rows={1} wrap="nowrap" sx={{overflow:"auto", flexGrow: 1, alignItems:"stretch", }}>
-            {project.manuscript.data[language].versions[versionIndex-1].scenes.map((scene,id) => 
+            {project?.manuscript?.data[language]?.versions[versionIndex-1]?.scenes.map((scene,id) => 
                 <Grid item key={`${String(project._id)}-${language}-${versionIndex}-${id}`}>
                     <Card sx={{width: 450}}>
                         <CardContent >

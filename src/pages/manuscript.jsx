@@ -20,7 +20,7 @@ const ManuscriptPage = () => {
   
   const project = useStore('project')
   const [languageIndex, setLanguageIndex] = useState(0)
-  const [versionIndex, setVersionIndex] = useState(project.manuscript.data[project.manuscript.languages[languageIndex]].versions.length)
+  const [versionIndex, setVersionIndex] = useState(project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions.length)
   
   useEffect(() => {
     console.log("new languageIndex: ",languageIndex)
@@ -32,7 +32,7 @@ const ManuscriptPage = () => {
 
   function setNewLanguage(index) {
     setLanguageIndex(index);
-    setVersionIndex(project.manuscript.data[project.manuscript.languages[index]].versions.length);
+    setVersionIndex(project?.manuscript?.data[project?.manuscript?.languages[index]].versions.length);
   }
 
   if(project?.manuscript?.completed === undefined) return <ManuscriptClosed/>
