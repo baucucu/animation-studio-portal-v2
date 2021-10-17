@@ -24,10 +24,10 @@ import { stepConnectorClasses } from '@mui/material';
 
 
 
-export default function ManuscriptScenes({language, versionIndex=0}) {
+export default function ManuscriptScenes({language, versionIndex}) {
     
     const project = useStore('project') 
-    
+    // debugger;
     
     function sortScenes(items) {
         console.log("sorting scenes: ", items)
@@ -83,8 +83,8 @@ export default function ManuscriptScenes({language, versionIndex=0}) {
                                 </Stack>
                             </Stack>
                             <Stack spacing={2}>
-                                <Voice scene={scene} handleChange={(e)=> console.log("language: ",language,"; version: ",versionIndex,"; scene: ",scene.index,"; value: ",e.target.value)}/>
-                                <Action scene={scene} handleChange={(e)=> console.log("language: ",language,"; version: ",versionIndex,"; scene: ",scene.index,"; value: ",e.target.value)}/>
+                                <Voice scene={scene} handleChange={(e)=> console.log("Voice change - language: ",language,"; version: ",versionIndex,"; scene: ",scene.id,"; value: ",e.target.value)}/>
+                                <Action scene={scene} handleChange={(e)=> console.log("Action change - language: ",language,"; version: ",versionIndex,"; scene: ",scene.id,"; value: ",e.target.value)}/>
                                 <PageWithComments commentBoxId={`${String(project._id)}-${language}-${versionIndex}-${id}`} />
                             </Stack>
                         </CardContent>
@@ -99,11 +99,11 @@ function Voice({scene,handleChange}){
 
     const [voice,setVoice] = useState(scene.voice)
     useEffect(()=>{
-        console.log("new scene props: ",scene.voice)
+        // console.log("new scene props: ",scene.voice)
         setVoice(scene.voice)
     },[scene])
     useEffect(()=>{
-        console.log("new voice state: ",voice)
+        // console.log("new voice state: ",voice)
     },[voice])
 
     return(

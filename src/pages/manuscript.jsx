@@ -20,15 +20,20 @@ const ManuscriptPage = () => {
   
   const project = useStore('project')
   const [languageIndex, setLanguageIndex] = useState(0)
-  const [versionIndex, setVersionIndex] = useState(project.manuscript.data["Norsk"].versions.length)
+  const [versionIndex, setVersionIndex] = useState(project.manuscript.data[project.manuscript.languages[languageIndex]].versions.length)
   
   useEffect(() => {
-    // console.log("new languageIndex: ",languageIndex)
+    console.log("new languageIndex: ",languageIndex)
   },[languageIndex])
 
   useEffect(() => {
-    // console.log(" new versionIndex: ",versionIndex)
+    console.log(" new versionIndex: ",versionIndex)
   },[versionIndex])
+
+  function setNewLanguage(index) {
+    setLanguageIndex(index);
+    setVersionIndex(project.manuscript.data[project.manuscript.languages[index]].versions.length);
+  }
 
   if(project?.manuscript?.completed === undefined) return <ManuscriptClosed/>
   
@@ -37,7 +42,7 @@ const ManuscriptPage = () => {
     <Stack direction="row" justifyContent="stretch">
     <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={1}>
-          <SplitButton languages={project?.manuscript?.languages} languageIndex={languageIndex} setLanguageIndex={setLanguageIndex}/>
+          <SplitButton languages={project?.manuscript?.languages} languageIndex={languageIndex} setNewLanguage={setNewLanguage}/>
           <VersionSelect versions={project?.manuscript?.data[project.manuscript.languages[languageIndex]].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
         </Stack>
         <Stack direction="row" mt={2} spacing={1}>
@@ -69,7 +74,7 @@ const ManuscriptPage = () => {
           </Stack>
           <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
             <Typography  variant="subtitle1" color="text.secondary" component="div">Scenes</Typography>
-            <Chip color="secondary" outline text={project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions[versionIndex-1].scenes.length} ></Chip>
+            <Chip color="secondary" outline text={project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions[versionIndex-1]?.scenes.length} ></Chip>
           </Stack>
         </Stack>
         <Stack direction="row" mt={1} spacing={2}>
@@ -100,12 +105,12 @@ const ManuscriptPage = () => {
 export default ManuscriptPage;
 
 function SplitButton(props) {
-  const {languages,languageIndex, setLanguageIndex} = props
+  const {languages,languageIndex, setNewLanguage} = props
   return (
     <Stack direction="row" spacing={2} sx={{alignItems:'center'}}>
       {/* <Typography variant="subtitle1" color="text.secondary" component="div">Language</Typography> */}
       <Segmented  tag="div">
-        {languages.map((language,index) => <Button small key={index} size="small"  outline active={languageIndex === index} onClick={() => {setLanguageIndex(index)}}>{language}</Button>)}
+        {languages.map((language,index) => <Button small key={index} size="small"  outline active={languageIndex === index} onClick={() => {setNewLanguage(index)}}>{language}</Button>)}
       </Segmented>   
     </Stack>
   );
@@ -129,7 +134,7 @@ function VersionSelect({versions, versionIndex, setVersionIndex}) {
       </Button>
       <Popover className="popover-menu">
         <List>
-          {versions.map((version, id) => <ListItem onClick={() => setVersionIndex(version)} link key={id} popoverClose >{versions.length === version ?  String(version+" (current)"): String(version)}</ListItem>)}
+          {versions.map((version, id) => <ListItem onClick={() => {console.log("new version selected: ", version); setVersionIndex(version)}} link key={id} popoverClose >{versions.length === version ?  String(version+" (current)"): String(version)}</ListItem>)}
         </List>
       </Popover>
     </Stack>
