@@ -63,11 +63,8 @@ export default function ManuscriptScenes({language, versionIndex}) {
             })
         })
         
-        f7.on('deleteScene',({language, versionIndex, sceneIndex, action})=>{
-            console.log('deleteScene',{language, versionIndex, sceneIndex, action})
-        })
-        f7.on('sceneAction',({sceneIndex,action})=>{
-            console.log("sceneAction received: "),{sceneIndex,action}
+        f7.on('deleteScene',({sceneIndex})=>{
+            console.log('deleteScene',{sceneIndex})
         })
             
     },[])
@@ -83,7 +80,8 @@ export default function ManuscriptScenes({language, versionIndex}) {
                                     <Typography variant="h6" color="text.secondary" component="div">Scene {`${language}-${versionIndex}-${id+1}`}</Typography>
                                 </Stack>                                
                                 <Stack direction="row">
-                                    <ShowMoreOptions language={language} versionIndex={versionIndex} sceneIndex={id} scenes={project.manuscript.data[language].versions[versionIndex-1].scenes.length}/>
+                                    {/* <ShowMoreOptions language={language} versionIndex={versionIndex} sceneIndex={id} scenes={project.manuscript.data[language].versions[versionIndex-1].scenes.length}/> */}
+                                    <OptionsButton sceneIndex={id}/>
                                 </Stack>
                             </Stack>
                             <Stack spacing={2}>
@@ -96,6 +94,34 @@ export default function ManuscriptScenes({language, versionIndex}) {
                 </Grid>
             )}
         </Grid>
+    )
+}
+
+function OptionsButton(props) {
+    const {language,versionIndex,sceneIndex,scenes} = props
+
+    const[index,setIndex] = useState(sceneIndex)
+    return(
+        <Box>
+            <F7Button popoverOpen=".more-popover-menu" onClick={()=>{console.log("options button sceneIndex: "+sceneIndex)}} icon="more_vert" >
+                <MoreVertIcon/>
+            </F7Button>
+            <Popover closeByOutsideClick className="more-popover-menu">
+                <List>                    
+                    <ListItem>
+                        <F7Button 
+                            popoverClose 
+                            onClick={()=>{
+                                // f7.emit('deleteScene',{sceneIndex:sceneIndex})
+                                console.log("popover sceneIndex: " + sceneIndex)
+                            }} 
+                            color="red"
+                        >Delete scene
+                        </F7Button>
+                    </ListItem> 
+                </List>
+            </Popover>
+        </Box>
     )
 }
 

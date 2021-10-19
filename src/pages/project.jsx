@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Page, Navbar, Block, View, Views,f7, Link , useStore} from 'framework7-react';
+import { Page, Navbar, Block, View, Views,f7,Button, Link , useStore} from 'framework7-react';
 import store from '../js/store';
 
 import Chip from '@mui/material/Chip';
@@ -87,9 +87,9 @@ function ProjectHeader(props) {
       <Stack sx={{flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
         <Stack sx={{flexDirection: 'row', alignItems: 'center', justifyContent:'flex-start'}}>
           <Box>
-            <IconButton onClick={() => f7router.back()}>
+            <Button onClick={() => f7router.back()}>
               <ArrowBackIcon color="secondary"/>
-            </IconButton>
+            </Button>
           </Box>
           <Typography color="secondary" sx={{flexGrow:1}} ml={1} mr={1} component="div" variant='h6' className="projectName">{project?.projectName}</Typography>
           <AvatarGroup max={4} >
