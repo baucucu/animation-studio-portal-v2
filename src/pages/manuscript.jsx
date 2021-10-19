@@ -63,23 +63,27 @@ const ManuscriptPage = () => {
           {/* <DropDownButton/> */}
         </Stack>
         <Stack direction="row" mt={2} spacing={1}>
-          <Box>
-              <MUIButton size="small" variant="contained" color= "success" startIcon={<SendIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to send to client?')}>
-                Send to client
-              </MUIButton>
-            </Box>
-            <Box>
-              <MUIButton size="small" variant="contained" color= "warning" startIcon={<MoreTimeIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to extend time?')}>
-                Extend time
-              </MUIButton>
-            </Box>
-            <Box>
+          {project.manuscript.status === "open" && <Box>
+            <MUIButton size="small" variant="contained" color= "success" startIcon={<SendIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to send to client?')}>
+              Send to client
+            </MUIButton>
+          </Box>}
+          {project.manuscript.status === "open" && <Box>
+            <MUIButton size="small" variant="contained" color= "warning" startIcon={<MoreTimeIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to extend time?')}>
+              Extend time
+            </MUIButton>
+          </Box>}
+          {project.manuscript.status === "review" && <Box>
             <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="In review by client"/>
-            </Box>
+          </Box>}
         </Stack>
       </Block>
       <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={2}>
+          <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
+            <Typography  variant="subtitle1" color="text.secondary" component="div">Scenes</Typography>
+            <MUIChip color="secondary" variant="outlined" label={project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions[versionIndex-1]?.scenes.length} ></MUIChip>
+          </Stack>
           <Stack direction="row" sx={{alignItems:'center'}}>
             <Typography mr={1} variant="subtitle1" color="text.secondary" component="div">Word count</Typography>
             <MUIChip color="secondary" variant="outlined" label={"385"} ></MUIChip>
@@ -89,12 +93,9 @@ const ManuscriptPage = () => {
             <MUIChip color="secondary" variant="outlined" label={project?.brief.formResponse.answers[0].choice.label} ></MUIChip>
             <MUIChip color="secondary" variant="outlined" label={project?.brief.formResponse.answers[1].choice.label} ></MUIChip>
           </Stack>
-          <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
-            <Typography  variant="subtitle1" color="text.secondary" component="div">Scenes</Typography>
-            <MUIChip color="secondary" variant="outlined" label={project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions[versionIndex-1]?.scenes.length} ></MUIChip>
-          </Stack>
+          
         </Stack>
-        <Stack direction="row" mt={1} spacing={2}>
+        <Stack direction="row" mt={2} spacing={2}>
           <Box>
             <MUIButton size="small" variant="contained" color= "info" startIcon={<VolumeUpIcon />}>
               Listen to AI Voiceover
