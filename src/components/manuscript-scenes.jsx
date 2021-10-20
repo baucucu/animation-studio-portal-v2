@@ -84,8 +84,8 @@ export default function ManuscriptScenes({language, versionIndex}) {
                                 </Stack>
                             </Stack>
                             <Stack spacing={2}>
-                                <Voice user={user} sceneIndex={id} language={language} versionIndex={versionIndex} text={project.manuscript.data[language].versions[versionIndex-1].scenes[id].voice} handleChange={(e)=> {}}/>
-                                <Action user={user} sceneIndex={id} language={language} versionIndex={versionIndex} text={project.manuscript.data[language].versions[versionIndex-1].scenes[id].action} handleChange={(e)=> {}}/>
+                                <Voice manuscriptStatus={project.manuscript.status} role={user?.customData?.role} sceneIndex={id} language={language} versionIndex={versionIndex} text={project.manuscript.data[language].versions[versionIndex-1].scenes[id].voice} handleChange={(e)=> {}}/>
+                                <Action manuscriptStatus={project.manuscript.status} role={user?.customData?.role} language={language} versionIndex={versionIndex} text={project.manuscript.data[language].versions[versionIndex-1].scenes[id].action} handleChange={(e)=> {}}/>
                                 <Comments commentBoxId={`${String(project._id)}-${language}-${versionIndex}-${id}`} />
                             </Stack>
                         </CardContent>
@@ -96,15 +96,15 @@ export default function ManuscriptScenes({language, versionIndex}) {
     )
 }
 
-function OptionsButton({index}) {
+function OptionsButton(props) {
     useEffect(()=>{
-        console.log("scene: " + JSON.stringify(index))
+        console.log("scene: " + JSON.stringify(props.index))
     },[])
 
     return(
         <Box>
-            <F7Button popoverOpen=".more-popover-menu" onClick={()=>{console.log("options button sceneIndex: "+index)}} icon="more_vert" >
-                {index}<MoreVertIcon/>
+            <F7Button popoverOpen=".more-popover-menu" onClick={()=>{console.log("options button sceneIndex: "+props.index)}} icon="more_vert" >
+                {props.index}<MoreVertIcon/>
             </F7Button>
             <Popover closeByOutsideClick className="more-popover-menu">
                 <List>                    
@@ -113,10 +113,10 @@ function OptionsButton({index}) {
                             popoverClose 
                             onClick={()=>{
                                 // f7.emit('deleteScene',{sceneIndex:sceneIndex})
-                                console.log("popover sceneIndex: " + index);
+                                console.log("popover sceneIndex: " + props.index);
                             }} 
                             color="red"
-                        >Delete scene {index}
+                        >Delete scene {props.index}
                         </F7Button>
                     </ListItem> 
                 </List>
@@ -125,7 +125,7 @@ function OptionsButton({index}) {
     )
 }
 
-function Voice({text,language,versionIndex,sceneIndex,handleChange, user}){
+function Voice({text,language,versionIndex,sceneIndex,handleChange, role, manuscriptStatus}){
     const [voice,setVoice] = useState(text)
     useEffect(()=>{
         setVoice(text)
@@ -150,7 +150,7 @@ function Voice({text,language,versionIndex,sceneIndex,handleChange, user}){
                     maxRows={20}
                     placeholder="Maximum 4 rows"
                     value={voice}
-                    disabled={user && user.customData.role === "client"}
+                    disabled={role === "client" && manuscriptStatus === 'review' && manuscriptStatus==="approved"}
                     onChange={(e)=>{handleChange(e); setVoice(e.target.value)}}
                 >
                 </TextField>
@@ -164,7 +164,7 @@ function Voice({text,language,versionIndex,sceneIndex,handleChange, user}){
     )
 }
 
-function Action({text,language,versionIndex,sceneIndex,handleChange, user}){
+function Action({text,language,versionIndex,sceneIndex,handleChange, role, manuscriptStatus}){
     const[action,setAction] = useState(text)
     useEffect(()=>{
         setAction(text)
@@ -187,7 +187,7 @@ function Action({text,language,versionIndex,sceneIndex,handleChange, user}){
                     maxRows={20}
                     placeholder="Maximum 4 rows"
                     value={action}
-                    disabled={user && user.customData.role === "client"}
+                    disabled={role === "client" && manuscriptStatus === 'review' && manuscriptStatus==="approved"}
                     onChange={(e)=>{handleChange(e); setAction(e.target.value)}}
                 />
                 {text!==action && <Stack direction="row">

@@ -24,7 +24,7 @@ const store = createStore({
   actions: {
     getProjects({state}, user){
       // f7.dialog.preloader()
-      const mongodb = user.mongoClient("mongodb-atlas");
+      if(user !==null) {const mongodb = user.mongoClient("mongodb-atlas");
       const projectsCollection = mongodb.db("AnimationStudioDB").collection("Projects");
       projectsCollection.find()
       .then(projects=> {
@@ -33,7 +33,7 @@ const store = createStore({
         // console.log("new projects state: ", state.projects)
         if(store.state.project) {store.dispatch('setProject',store.state.project?._id.toString(), store.state.user).catch(err => console.log("setProject error: " + err))}
         // watchProjects(store,projectsCollection).catch(err => console.log("watchProjects error: ",err))
-      })
+      })}
     },
     setProject({state}, id){
       const project = state.projects.filter(project => {return project._id.toString() === id})[0]

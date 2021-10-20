@@ -25,16 +25,18 @@ export default function ProjectsPage({f7router}) {
   }
 
   async function watchProjects(store, projects) {
-    const mongodb = user.mongoClient("mongodb-atlas");
-    const projectsCollection = mongodb.db("AnimationStudioDB").collection("Projects");
-    for await (const change of projectsCollection.watch({
-      // filter : {
-      //   operationType: "update"
-      // }
-    })) {
-      const { documentKey, fullDocument } = change;
-      // console.log(`updated document - store.js : ${documentKey}`, fullDocument);
-      store.dispatch('getProjects', store.state.user).catch(err => console.log("setProjects error: " + err))
+    if (user!==null) {
+      const mongodb = user.mongoClient("mongodb-atlas");
+      const projectsCollection = mongodb.db("AnimationStudioDB").collection("Projects");
+      for await (const change of projectsCollection.watch({
+        // filter : {
+        //   operationType: "update"
+        // }
+      })) {
+        const { documentKey, fullDocument } = change;
+        // console.log(`updated document - store.js : ${documentKey}`, fullDocument);
+        store.dispatch('getProjects', store.state.user).catch(err => console.log("setProjects error: " + err))
+      }
     }
   }
 

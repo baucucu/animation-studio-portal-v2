@@ -28,10 +28,13 @@ import ManuscriptScenes from '../components/manuscript-scenes'
 
 const ManuscriptPage = () => {
   const user = useStore('user')
-  console.log('user: ', user)
   const project = useStore('project')
   const [languageIndex, setLanguageIndex] = useState(0)
   const [versionIndex, setVersionIndex] = useState(project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions.length)
+
+  const mongodb = user?.mongoClient("mongodb-atlas");
+  const projectsCollection = mongodb?.db("AnimationStudioDB")?.collection("Projects");
+
   
   useEffect(() => {
     // console.log("new languageIndex: ",languageIndex)
@@ -49,14 +52,38 @@ const ManuscriptPage = () => {
     setLanguageIndex(index);
     setVersionIndex(project?.manuscript?.data[project?.manuscript?.languages[index]].versions.length);
   }
+  
+  function sendForReview() {
+    projectsCollection.updateOne({_id:(project._id)},{
+      $set:{"manuscript.status":"review"}
+    })
+  }
+  
+  function extendTime() {}
+  
+  function approveManuscript() {
+    projectsCollection.updateOne({_id:(project._id)},{
+      $set:{"manuscript.status.":"approved"}
+    })
+  }
+  
+  function askForRevision() {
+    let newManuscript = project.manuscript
+    newManuscript[languageIndex]
+
+    projectsCollection.updateOne({_id:(project._id)},{
+      $set:{"manuscript.status":"open"},
+      $set:{"":""}
+    })
+  }
 
   if(project?.manuscript?.completed === undefined) return <ManuscriptClosed/>
   
   else return (
   <Page className="viewPage">
     <Stack direction="row" justifyContent="stretch">
-      {user && user.customData.role === "freelancer" && <FreelancerManuscriptControlPanel project={project} languageIndex={languageIndex} versionIndex={versionIndex} setNewLanguage={setNewLanguage} setVersionIndex={setVersionIndex}/>}
-      {user && user.customData.role === "client" && <ClientManuscriptControlPanel project={project} languageIndex={languageIndex} versionIndex={versionIndex} setNewLanguage={setNewLanguage} setVersionIndex={setVersionIndex}/>}
+      {user !== null && user?.customData?.role === "freelancer" && <FreelancerManuscriptControlPanel project={project} sendForReview={sendForReview} extendTime={extendTime} languageIndex={languageIndex} versionIndex={versionIndex} setNewLanguage={setNewLanguage} setVersionIndex={setVersionIndex}/>}
+      {user !== null && user?.customData?.role === "client" && <ClientManuscriptControlPanel project={project} approveManuscript={approveManuscript} askForRevision={askForRevision} languageIndex={languageIndex} versionIndex={versionIndex} setNewLanguage={setNewLanguage} setVersionIndex={setVersionIndex}/>}
       <ManuscriptMetadata project={project} languageIndex={languageIndex} versionIndex={versionIndex}/>
     </Stack>
     <Block inset >
@@ -171,7 +198,8 @@ function ManuscriptMetadata (props){
 }
 
 function FreelancerManuscriptControlPanel(props){
-  const {project,languageIndex,versionIndex,setNewLanguage, setVersionIndex} = props
+  const {project,languageIndex,versionIndex,setNewLanguage, setVersionIndex, sendForReview,extendTime} = props
+  console.log("freelancer control panel: ",props)
   return(
     <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={1}>
@@ -180,12 +208,16 @@ function FreelancerManuscriptControlPanel(props){
         </Stack>
         <Stack direction="row" mt={2} spacing={1}>
           {project.manuscript.status === "open" && <Box>
-            <MUIButton size="small" variant="contained" color= "success" startIcon={<SendIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to send to client?')}>
+            <MUIButton size="small" variant="contained" color= "success" startIcon={<SendIcon />} 
+              onClick={()=>{
+                f7.dialog.confirm('Are you sure you want to send the manuscript to client for review?','Send manuscript to client',sendForReview)
+              }}
+            >
               Send to client
             </MUIButton>
           </Box>}
           {project.manuscript.status === "open" && <Box>
-            <MUIButton size="small" variant="contained" color= "warning" startIcon={<MoreTimeIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to extend time?')}>
+            <MUIButton size="small" variant="contained" color= "warning" startIcon={<MoreTimeIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to extend time?','Extend time',extendTime)}>
               Extend time
             </MUIButton>
           </Box>}
@@ -198,7 +230,7 @@ function FreelancerManuscriptControlPanel(props){
 }
 
 function ClientManuscriptControlPanel(props){
-  const {project,languageIndex,versionIndex,setNewLanguage, setVersionIndex} = props
+  const {project,languageIndex,versionIndex,setNewLanguage, setVersionIndex,approveManuscript,askForRevision} = props
   return(
     <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={1}>
@@ -207,12 +239,12 @@ function ClientManuscriptControlPanel(props){
         </Stack>
         <Stack direction="row" mt={2} spacing={1}>
           {project.manuscript.status === "review" && <Box>
-            <MUIButton size="small" variant="contained" color= "success" startIcon={<SendIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to approve?')}>
+            <MUIButton size="small" variant="contained" color= "success" startIcon={<SendIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to approve?','Approve manuscript',approveManuscript)}>
               Approve
             </MUIButton>
           </Box>}
           {project.manuscript.status === "review" && <Box>
-            <MUIButton size="small" variant="contained" color= "warning" startIcon={<MoreTimeIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to ask for revison?')}>
+            <MUIButton size="small" variant="contained" color= "warning" startIcon={<MoreTimeIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to ask for revison?','Ask for revision',askForRevision)}>
               Ask for revision
             </MUIButton>
           </Box>}
