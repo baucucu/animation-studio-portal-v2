@@ -27,7 +27,8 @@ import Popper from '@mui/material/Popper';
 import ManuscriptScenes from '../components/manuscript-scenes'
 
 const ManuscriptPage = () => {
-  
+  const user = useStore('user')
+  console.log('user: ', user)
   const project = useStore('project')
   const [languageIndex, setLanguageIndex] = useState(0)
   const [versionIndex, setVersionIndex] = useState(project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions.length)
@@ -54,65 +55,9 @@ const ManuscriptPage = () => {
   else return (
   <Page className="viewPage">
     <Stack direction="row" justifyContent="stretch">
-    <Block inset strong style={{flexGrow:1}}>
-        <Stack direction="row" spacing={1}>
-          {/* <SplitButton languageIndex={languageIndex} setNewLanguage={setNewLanguage}/> */}
-          <LanguageSelector languageIndex={languageIndex} setNewLanguage={setNewLanguage}/>
-          {/* <VersionSelect versions={project?.manuscript?.data[project.manuscript.languages[languageIndex]].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/> */}
-          <VersionSelect versions={project?.manuscript?.data[project.manuscript.languages[languageIndex]].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
-          {/* <DropDownButton/> */}
-        </Stack>
-        <Stack direction="row" mt={2} spacing={1}>
-          {project.manuscript.status === "open" && <Box>
-            <MUIButton size="small" variant="contained" color= "success" startIcon={<SendIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to send to client?')}>
-              Send to client
-            </MUIButton>
-          </Box>}
-          {project.manuscript.status === "open" && <Box>
-            <MUIButton size="small" variant="contained" color= "warning" startIcon={<MoreTimeIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to extend time?')}>
-              Extend time
-            </MUIButton>
-          </Box>}
-          {project.manuscript.status === "review" && <Box>
-            <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="In review by client"/>
-          </Box>}
-        </Stack>
-      </Block>
-      <Block inset strong style={{flexGrow:1}}>
-        <Stack direction="row" spacing={2}>
-          <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
-            <Typography  variant="subtitle1" color="text.secondary" component="div">Scenes</Typography>
-            <MUIChip color="secondary" variant="outlined" label={project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions[versionIndex-1]?.scenes.length} ></MUIChip>
-          </Stack>
-          <Stack direction="row" sx={{alignItems:'center'}}>
-            <Typography mr={1} variant="subtitle1" color="text.secondary" component="div">Word count</Typography>
-            <MUIChip color="secondary" variant="outlined" label={"385"} ></MUIChip>
-          </Stack>
-          <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
-            <Typography variant="subtitle1" color="text.secondary" component="div">Target length</Typography>
-            <MUIChip color="secondary" variant="outlined" label={project?.brief.formResponse.answers[0].choice.label} ></MUIChip>
-            <MUIChip color="secondary" variant="outlined" label={project?.brief.formResponse.answers[1].choice.label} ></MUIChip>
-          </Stack>
-          
-        </Stack>
-        <Stack direction="row" mt={2} spacing={2}>
-          <Box>
-            <MUIButton size="small" variant="contained" color= "info" startIcon={<VolumeUpIcon />}>
-              Listen to AI Voiceover
-            </MUIButton>
-          </Box>
-          <Box>
-            <MUIButton size="small" variant="contained" color= "info" startIcon={<VisibilityIcon />}>
-              Preview
-            </MUIButton>
-          </Box>
-          <Box>
-            <MUIButton size="small" variant="contained" color= "info" startIcon={<PictureAsPdfIcon />}>
-            Download PDF
-            </MUIButton>
-          </Box>
-        </Stack>
-      </Block>
+      {user && user.customData.role === "freelancer" && <FreelancerManuscriptControlPanel project={project} languageIndex={languageIndex} versionIndex={versionIndex} setNewLanguage={setNewLanguage} setVersionIndex={setVersionIndex}/>}
+      {user && user.customData.role === "client" && <ClientManuscriptControlPanel project={project} languageIndex={languageIndex} versionIndex={versionIndex} setNewLanguage={setNewLanguage} setVersionIndex={setVersionIndex}/>}
+      <ManuscriptMetadata project={project} languageIndex={languageIndex} versionIndex={versionIndex}/>
     </Stack>
     <Block inset >
       <ManuscriptScenes  language={project?.manuscript?.languages[languageIndex]} versionIndex={versionIndex}/>
@@ -121,19 +66,6 @@ const ManuscriptPage = () => {
 )};
 
 export default ManuscriptPage;
-
-function SplitButton(props) {
-  const languages=useStore('project').manuscript.languages
-  const {languageIndex, setNewLanguage} = props
-  return (
-    <Stack direction="row" spacing={2} sx={{alignItems:'center'}}>
-      {/* <Typography variant="subtitle1" color="text.secondary" component="div">Language</Typography> */}
-      <Segmented  tag="div">
-        {languages.map((language,index) => <Button small key={index} size="small"  outline active={languageIndex === index} onClick={() => {setNewLanguage(index)}}>{language}</Button>)}
-      </Segmented>   
-    </Stack>
-  );
-}
 
 function LanguageSelector(props) {
   const languages=useStore('project').manuscript.languages
@@ -197,83 +129,97 @@ function VersionSelect({versions, versionIndex, setVersionIndex}) {
   );
 }
 
-const options = ['Version 1', 'Version 2', 'Rebase and merge'];
+function ManuscriptMetadata (props){
+  const {project, languageIndex, versionIndex, setNewLanguage} = props
+  return(
+    <Block inset strong style={{flexGrow:1}}>
+        <Stack direction="row" spacing={2}>
+          <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
+            <Typography  variant="subtitle1" color="text.secondary" component="div">Scenes</Typography>
+            <MUIChip color="secondary" variant="outlined" label={project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions[versionIndex-1]?.scenes.length} ></MUIChip>
+          </Stack>
+          <Stack direction="row" sx={{alignItems:'center'}}>
+            <Typography mr={1} variant="subtitle1" color="text.secondary" component="div">Word count</Typography>
+            <MUIChip color="secondary" variant="outlined" label={"385"} ></MUIChip>
+          </Stack>
+          <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
+            <Typography variant="subtitle1" color="text.secondary" component="div">Target length</Typography>
+            <MUIChip color="secondary" variant="outlined" label={project?.brief.formResponse.answers[0].choice.label} ></MUIChip>
+            <MUIChip color="secondary" variant="outlined" label={project?.brief.formResponse.answers[1].choice.label} ></MUIChip>
+          </Stack>
+          
+        </Stack>
+        <Stack direction="row" mt={2} spacing={2}>
+          <Box>
+            <MUIButton size="small" variant="contained" color= "info" startIcon={<VolumeUpIcon />}>
+              Listen to AI Voiceover
+            </MUIButton>
+          </Box>
+          <Box>
+            <MUIButton size="small" variant="contained" color= "info" startIcon={<VisibilityIcon />}>
+              Preview
+            </MUIButton>
+          </Box>
+          <Box>
+            <MUIButton size="small" variant="contained" color= "info" startIcon={<PictureAsPdfIcon />}>
+            Download PDF
+            </MUIButton>
+          </Box>
+        </Stack>
+      </Block>
+  )
+}
 
-function DropDownButton() {
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+function FreelancerManuscriptControlPanel(props){
+  const {project,languageIndex,versionIndex,setNewLanguage, setVersionIndex} = props
+  return(
+    <Block inset strong style={{flexGrow:1}}>
+        <Stack direction="row" spacing={1}>
+          <LanguageSelector languageIndex={languageIndex} setNewLanguage={setNewLanguage}/>
+          <VersionSelect versions={project?.manuscript?.data[project.manuscript.languages[languageIndex]].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
+        </Stack>
+        <Stack direction="row" mt={2} spacing={1}>
+          {project.manuscript.status === "open" && <Box>
+            <MUIButton size="small" variant="contained" color= "success" startIcon={<SendIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to send to client?')}>
+              Send to client
+            </MUIButton>
+          </Box>}
+          {project.manuscript.status === "open" && <Box>
+            <MUIButton size="small" variant="contained" color= "warning" startIcon={<MoreTimeIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to extend time?')}>
+              Extend time
+            </MUIButton>
+          </Box>}
+          {project.manuscript.status === "review" && <Box>
+            <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="In review by client"/>
+          </Box>}
+        </Stack>
+      </Block>
+  )
+}
 
-  const handleClick = () => {
-    console.info(`You clicked ${options[selectedIndex]}`);
-  };
-
-  const handleMenuItemClick = (event, index) => {
-    setSelectedIndex(index);
-    setOpen(false);
-  };
-
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
-
-  const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  return (
-    <>
-      <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
-        <MUIButton size="small" onClick={handleClick}>{options[selectedIndex]}</MUIButton>
-        <MUIButton
-          size="small"
-          aria-controls={open ? 'split-button-menu' : undefined}
-          aria-expanded={open ? 'true' : undefined}
-          aria-label="select merge strategy"
-          aria-haspopup="menu"
-          onClick={handleToggle}
-        >
-          <ArrowDropDownIcon />
-        </MUIButton>
-      </ButtonGroup>
-      <Popper
-        open={open}
-        anchorEl={anchorRef.current}
-        role={undefined}
-        transition
-        disablePortal
-      >
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin:
-                placement === 'bottom' ? 'center top' : 'center bottom',
-            }}
-          >
-            <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
-                <MenuList id="split-button-menu">
-                  {options.map((option, index) => (
-                    <MenuItem
-                      key={option}
-                      disabled={index === 2}
-                      selected={index === selectedIndex}
-                      onClick={(event) => handleMenuItemClick(event, index)}
-                    >
-                      {option}
-                    </MenuItem>
-                  ))}
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
-    </>
-  );
+function ClientManuscriptControlPanel(props){
+  const {project,languageIndex,versionIndex,setNewLanguage, setVersionIndex} = props
+  return(
+    <Block inset strong style={{flexGrow:1}}>
+        <Stack direction="row" spacing={1}>
+          <LanguageSelector languageIndex={languageIndex} setNewLanguage={setNewLanguage}/>
+          <VersionSelect versions={project?.manuscript?.data[project.manuscript.languages[languageIndex]].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
+        </Stack>
+        <Stack direction="row" mt={2} spacing={1}>
+          {project.manuscript.status === "review" && <Box>
+            <MUIButton size="small" variant="contained" color= "success" startIcon={<SendIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to approve?')}>
+              Approve
+            </MUIButton>
+          </Box>}
+          {project.manuscript.status === "review" && <Box>
+            <MUIButton size="small" variant="contained" color= "warning" startIcon={<MoreTimeIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to ask for revison?')}>
+              Ask for revision
+            </MUIButton>
+          </Box>}
+          {project.manuscript.status === "open" && <Box>
+            <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="In revision by manuscript writer"/>
+          </Box>}
+        </Stack>
+      </Block>
+  )
 }

@@ -25,7 +25,6 @@ import {
   BlockFooter,
   useStore
 } from 'framework7-react';
-import CommentsDrawer from '../components/comments-drawer.jsx'
 
 import routes from '../js/routes';
 import store from '../js/store';

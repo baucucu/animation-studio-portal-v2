@@ -80,13 +80,12 @@ export default function ManuscriptScenes({language, versionIndex}) {
                                     <Typography variant="h6" color="text.secondary" component="div">Scene {`${language}-${versionIndex}-${id+1}`}</Typography>
                                 </Stack>                                
                                 <Stack direction="row">
-                                    <OptionsButton index={`${language}-${versionIndex}-${scene.index}`}/>
-                                        
+                                    <OptionsButton id={id} index={`${language}-${versionIndex}-${scene.index}`}/>   
                                 </Stack>
                             </Stack>
                             <Stack spacing={2}>
-                                <Voice sceneIndex={id} language={language} versionIndex={versionIndex} text={project.manuscript.data[language].versions[versionIndex-1].scenes[id].voice} handleChange={(e)=> {}}/>
-                                <Action sceneIndex={id} language={language} versionIndex={versionIndex} text={project.manuscript.data[language].versions[versionIndex-1].scenes[id].action} handleChange={(e)=> {}}/>
+                                <Voice user={user} sceneIndex={id} language={language} versionIndex={versionIndex} text={project.manuscript.data[language].versions[versionIndex-1].scenes[id].voice} handleChange={(e)=> {}}/>
+                                <Action user={user} sceneIndex={id} language={language} versionIndex={versionIndex} text={project.manuscript.data[language].versions[versionIndex-1].scenes[id].action} handleChange={(e)=> {}}/>
                                 <Comments commentBoxId={`${String(project._id)}-${language}-${versionIndex}-${id}`} />
                             </Stack>
                         </CardContent>
@@ -126,7 +125,7 @@ function OptionsButton({index}) {
     )
 }
 
-function Voice({text,language,versionIndex,sceneIndex,handleChange}){
+function Voice({text,language,versionIndex,sceneIndex,handleChange, user}){
     const [voice,setVoice] = useState(text)
     useEffect(()=>{
         setVoice(text)
@@ -151,6 +150,7 @@ function Voice({text,language,versionIndex,sceneIndex,handleChange}){
                     maxRows={20}
                     placeholder="Maximum 4 rows"
                     value={voice}
+                    disabled={user && user.customData.role === "client"}
                     onChange={(e)=>{handleChange(e); setVoice(e.target.value)}}
                 >
                 </TextField>
@@ -164,7 +164,7 @@ function Voice({text,language,versionIndex,sceneIndex,handleChange}){
     )
 }
 
-function Action({text,language,versionIndex,sceneIndex,handleChange}){
+function Action({text,language,versionIndex,sceneIndex,handleChange, user}){
     const[action,setAction] = useState(text)
     useEffect(()=>{
         setAction(text)
@@ -187,6 +187,7 @@ function Action({text,language,versionIndex,sceneIndex,handleChange}){
                     maxRows={20}
                     placeholder="Maximum 4 rows"
                     value={action}
+                    disabled={user && user.customData.role === "client"}
                     onChange={(e)=>{handleChange(e); setAction(e.target.value)}}
                 />
                 {text!==action && <Stack direction="row">
