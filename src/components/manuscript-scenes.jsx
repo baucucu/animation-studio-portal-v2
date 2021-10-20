@@ -80,8 +80,8 @@ export default function ManuscriptScenes({language, versionIndex}) {
                                     <Typography variant="h6" color="text.secondary" component="div">Scene {`${language}-${versionIndex}-${id+1}`}</Typography>
                                 </Stack>                                
                                 <Stack direction="row">
-                                    {/* <ShowMoreOptions language={language} versionIndex={versionIndex} sceneIndex={id} scenes={project.manuscript.data[language].versions[versionIndex-1].scenes.length}/> */}
-                                    <OptionsButton sceneIndex={id}/>
+                                    <OptionsButton index={`${language}-${versionIndex}-${scene.index}`}/>
+                                        
                                 </Stack>
                             </Stack>
                             <Stack spacing={2}>
@@ -97,14 +97,15 @@ export default function ManuscriptScenes({language, versionIndex}) {
     )
 }
 
-function OptionsButton(props) {
-    const {language,versionIndex,sceneIndex,scenes} = props
+function OptionsButton({index}) {
+    useEffect(()=>{
+        console.log("scene: " + JSON.stringify(index))
+    },[])
 
-    const[index,setIndex] = useState(sceneIndex)
     return(
         <Box>
-            <F7Button popoverOpen=".more-popover-menu" onClick={()=>{console.log("options button sceneIndex: "+sceneIndex)}} icon="more_vert" >
-                <MoreVertIcon/>
+            <F7Button popoverOpen=".more-popover-menu" onClick={()=>{console.log("options button sceneIndex: "+index)}} icon="more_vert" >
+                {index}<MoreVertIcon/>
             </F7Button>
             <Popover closeByOutsideClick className="more-popover-menu">
                 <List>                    
@@ -113,66 +114,10 @@ function OptionsButton(props) {
                             popoverClose 
                             onClick={()=>{
                                 // f7.emit('deleteScene',{sceneIndex:sceneIndex})
-                                console.log("popover sceneIndex: " + sceneIndex)
+                                console.log("popover sceneIndex: " + index);
                             }} 
                             color="red"
-                        >Delete scene
-                        </F7Button>
-                    </ListItem> 
-                </List>
-            </Popover>
-        </Box>
-    )
-}
-
-function ShowMoreOptions({language,versionIndex,sceneIndex,scenes}){
-    return(
-        <Box>
-            <F7Button icon="more_vert" popoverOpen=".more-popover-menu">
-                <MoreVertIcon/>
-            </F7Button>
-            <Popover closeByOutsideClick className="more-popover-menu">
-                <List>                    
-                    <ListItem>
-                        <F7Button 
-                            popoverClose 
-                            onClick={
-                                f7.emit('sceneAction',{sceneIndex:sceneIndex,action:"addLeft"})
-                            }
-                        >Add to left
-                        </F7Button>
-                        <F7Button 
-                            popoverClose 
-                            onClick={()=>{
-                                f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'addRight'})
-                            }}
-                        >Add to right
-                        </F7Button>
-                    </ListItem>
-                    <ListItem>
-                        <F7Button 
-                            disabled 
-                            popoverClose 
-                            onClick={()=>{
-                                f7.emit('sceneAction',{language:language, versionIndex:versionIndex, sceneIndex:sceneIndex,action:'moveLeft'})
-                            }}
-                        >Move left
-                        </F7Button>
-                        <F7Button 
-                            popoverClose 
-                            onClick={()=>{f7.emit('sceneAction',{sceneIndex:sceneIndex,action:'MoveRight'})
-                            }}
-                            >Move right
-                        </F7Button>
-                    </ListItem>
-                    <ListItem>
-                        <F7Button 
-                            popoverClose 
-                            onClick={()=>{
-                                f7.emit('deleteScene',{language,versionIndex, sceneIndex,action:'delete'})
-                            }} 
-                            color="red"
-                        >Delete scene
+                        >Delete scene {index}
                         </F7Button>
                     </ListItem> 
                 </List>
