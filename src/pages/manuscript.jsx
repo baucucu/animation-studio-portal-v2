@@ -29,25 +29,16 @@ import ManuscriptScenes from '../components/manuscript-scenes'
 const ManuscriptPage = () => {
   const user = useStore('user')
   const project = useStore('project')
-  const [languageIndex, setLanguageIndex] = useState(0)
-  const [versionIndex, setVersionIndex] = useState(project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions.length)
+  const [versionIndex, setVersionIndex] = useState(project?.manuscript.versions[project.manuscript.versions.length - 1].id)
 
   const mongodb = user?.mongoClient("mongodb-atlas");
   const projectsCollection = mongodb?.db("AnimationStudioDB")?.collection("Projects");
 
-  
-  useEffect(() => {
-    // console.log("new languageIndex: ",languageIndex)
-  },[languageIndex])
-  
-  useEffect(() => {
-    setVersionIndex(project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions.length)
-  },[project])
 
-  function setNewLanguage(index) {
-    setLanguageIndex(index);
-    setVersionIndex(project?.manuscript?.data[project?.manuscript?.languages[index]].versions.length);
-  }
+  
+  useEffect(() => {
+    setVersionIndex(project.manuscript.versions.length)
+  },[project])
   
   function sendForReview() {
     projectsCollection.updateOne({_id:(project._id)},{
@@ -64,11 +55,25 @@ const ManuscriptPage = () => {
   }
   
   function askForRevision() {
-    let newManuscript = project.manuscript
-    newManuscript[languageIndex]
+    let newManuscript = project.manuscript    
+    newManuscript.status = "open"
+    
+    const lastVersionNumber = newManuscript.versions.length
+    console.log("lastVersionNumber: ",lastVersionNumber)
+    
+    const newVersion = {
+      id:lastVersionNumber+1,
+      scenes: project.manuscript.versions[lastVersionNumber-1].scenes
+    }
+    console.log('setting up a new version: ', newVersion)
 
+    newManuscript.versions = [...project.manuscript.versions, newVersion]
+    console.log("new manuscript object: ", newManuscript)
+    
     projectsCollection.updateOne({_id:(project._id)},{
-      $set:{"manuscript.status":"open"},
+      $set:{
+        "manuscript": newManuscript
+      },
     })
   }
 
@@ -78,9 +83,9 @@ const ManuscriptPage = () => {
   else return (
   <Page className="viewPage">
     <Stack direction="row" justifyContent="stretch">
-      {user !== null && user?.customData?.role === "freelancer" && <FreelancerManuscriptControlPanel project={project} sendForReview={sendForReview} extendTime={extendTime} languageIndex={languageIndex} versionIndex={versionIndex} setNewLanguage={setNewLanguage} setVersionIndex={setVersionIndex}/>}
-      {user !== null && user?.customData?.role === "client" && <ClientManuscriptControlPanel project={project} approveManuscript={approveManuscript} askForRevision={askForRevision} languageIndex={languageIndex} versionIndex={versionIndex} setNewLanguage={setNewLanguage} setVersionIndex={setVersionIndex}/>}
-      <ManuscriptMetadata project={project} languageIndex={languageIndex} versionIndex={versionIndex}/>
+      {user !== null && user?.customData?.role === "freelancer" && <FreelancerManuscriptControlPanel project={project} sendForReview={sendForReview} extendTime={extendTime}  versionIndex={versionIndex}  setVersionIndex={setVersionIndex}/>}
+      {user !== null && user?.customData?.role === "client" && <ClientManuscriptControlPanel project={project} approveManuscript={approveManuscript} askForRevision={askForRevision}  versionIndex={versionIndex}  setVersionIndex={setVersionIndex}/>}
+      <ManuscriptMetadata project={project}  versionIndex={versionIndex}/>
     </Stack>
     <Block inset >
       <ManuscriptScenes versionIndex={versionIndex}/>
@@ -90,15 +95,6 @@ const ManuscriptPage = () => {
 
 export default ManuscriptPage;
 
-function LanguageSelector(props) {
-  const languages=useStore('project').manuscript.languages
-  const {languageIndex, setNewLanguage} = props
-  return(
-    <ButtonGroup size="small">
-      {languages.map((language,index) => <MUIButton key={index}  variant={index===languageIndex?"contained":"outlined"} color="secondary" onClick={() => {setNewLanguage(index)}}>{language}</MUIButton>)}
-    </ButtonGroup>
-  )
-}
 
 function ManuscriptClosed() {
   return(
@@ -153,7 +149,7 @@ function VersionSelect({versions, versionIndex, setVersionIndex}) {
 }
 
 function ManuscriptMetadata (props){
-  const {project, languageIndex, versionIndex, setNewLanguage} = props
+  const {project, versionIndex} = props
   return(
     <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={2}>
@@ -163,7 +159,7 @@ function ManuscriptMetadata (props){
           </Stack>
           <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
             <Typography  variant="subtitle1" color="text.secondary" component="div">Scenes</Typography>
-            <MUIChip color="secondary" variant="outlined" label={project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions[versionIndex-1]?.scenes.length} ></MUIChip>
+            <MUIChip color="secondary" variant="outlined" label={project.manuscript.versions[versionIndex-1]?.scenes.length} ></MUIChip>
           </Stack>
           <Stack direction="row" sx={{alignItems:'center'}}>
             <Typography mr={1} variant="subtitle1" color="text.secondary" component="div">Word count</Typography>
@@ -198,13 +194,13 @@ function ManuscriptMetadata (props){
 }
 
 function FreelancerManuscriptControlPanel(props){
-  const {project,languageIndex,versionIndex,setNewLanguage, setVersionIndex, sendForReview,extendTime} = props
+  const {project,versionIndex, setVersionIndex, sendForReview,extendTime} = props
   console.log("freelancer control panel: ",props)
   return(
     <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={1}>
-          {/* <LanguageSelector languageIndex={languageIndex} setNewLanguage={setNewLanguage}/> */}
-          <VersionSelect versions={project?.manuscript?.data[project.manuscript.languages[languageIndex]].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
+          {/* <LanguageSelector  /> */}
+          <VersionSelect versions={project?.manuscript.versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
         </Stack>
         <Stack direction="row" mt={2} spacing={1}>
           {project.manuscript.status === "open" && <Box>
@@ -230,12 +226,11 @@ function FreelancerManuscriptControlPanel(props){
 }
 
 function ClientManuscriptControlPanel(props){
-  const {project,languageIndex,versionIndex,setNewLanguage, setVersionIndex,approveManuscript,askForRevision} = props
+  const {project,versionIndex, setVersionIndex,approveManuscript,askForRevision} = props
   return(
     <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={1}>
-          <LanguageSelector languageIndex={languageIndex} setNewLanguage={setNewLanguage}/>
-          <VersionSelect versions={project?.manuscript?.data[project.manuscript.languages[languageIndex]].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
+          <VersionSelect versions={project.manuscript.versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
         </Stack>
         <Stack direction="row" mt={2} spacing={1}>
           {project.manuscript.status === "review" && <Box>
