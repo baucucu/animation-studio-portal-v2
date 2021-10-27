@@ -56,7 +56,7 @@ const MyApp = () => {
     f7.on('loggedIn', () => {setLoginScreenOpened(false); setLoginError()}) 
     f7.on('loggedOut', () => setLoginScreenOpened(true)) 
     f7.on('loginError', (err) => {console.log("login error: ", err.error);setLoginError(err.error)})
-    setUserName(f7.store.state.user.customData.name)
+    setUserName(f7.store.state?.user?.customData?.name)
   })
 
   f7ready(() => {
