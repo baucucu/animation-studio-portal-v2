@@ -20,6 +20,10 @@ import MoreTimeIcon from '@mui/icons-material/MoreTime';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import LanguageIcon from '@mui/icons-material/Language';
+import MovieIcon from '@mui/icons-material/Movie';
+import TextFormatIcon from '@mui/icons-material/TextFormat';
+import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Grow from '@mui/material/Grow';
@@ -194,26 +198,26 @@ function ManuscriptMetadata (props){
   return(
     <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" sx={{justifyContent:"space-between"}}>
-          <Stack direction="row" spacing={2}>
-            <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
-              <Typography  variant="subtitle1" color="text.secondary" component="div">Language</Typography>
-              <MUIChip color="secondary" variant="outlined" label={project?.manuscript.language} ></MUIChip>
+          <Stack direction="row" spacing={1}>
+            <Stack direction="row" spacing={0.2} sx={{alignItems:'center'}}>
+              {/* <Typography  variant="body2" color="text.secondary" component="div">Language</Typography> */}
+              <MUIChip icon={<LanguageIcon/>} color="secondary"  variant="outlined" label={project?.manuscript.language} ></MUIChip>
             </Stack>
-            <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
-              <Typography  variant="subtitle1" color="text.secondary" component="div">Scenes</Typography>
-              <MUIChip color="secondary" variant="outlined" label={project.manuscript.versions[versionIndex-1]?.scenes.length} ></MUIChip>
+            <Stack direction="row" spacing={0.2} sx={{alignItems:'center'}}>
+              {/* <Typography  variant="body2" color="text.secondary" component="div">Scenes</Typography> */}
+              <MUIChip icon={<MovieIcon/>}color="secondary" variant="outlined" label={project.manuscript.versions[versionIndex-1]?.scenes.length} ></MUIChip>
             </Stack>
-            <Stack direction="row" sx={{alignItems:'center'}}>
-              <Typography mr={1} variant="subtitle1" color="text.secondary" component="div">Word count</Typography>
-              <MUIChip color="secondary" variant="outlined" label={"385"} ></MUIChip>
+            <Stack direction="row" spacing={0.2} sx={{alignItems:'center'}}>
+              {/* <Typography variant="body2" color="text.secondary" component="div">Word count</Typography> */}
+              <MUIChip icon={<TextFormatIcon/>} color="secondary" variant="outlined" label={"385"} ></MUIChip>
             </Stack>
-            <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
-              <Typography variant="subtitle1" color="text.secondary" component="div">Target length</Typography>
-              <MUIChip color="secondary" variant="outlined" label={project?.brief.formResponse.answers[0].choice.label} ></MUIChip>
-              <MUIChip color="secondary" variant="outlined" label={project?.brief.formResponse.answers[1].choice.label} ></MUIChip>
+            <Stack direction="row" spacing={0.2} sx={{alignItems:'center'}}>
+              {/* <Typography variant="body2" color="text.secondary" component="div">Target length</Typography> */}
+              <MUIChip icon = {<TrackChangesIcon/>} color="secondary"  variant="outlined" label={project?.brief.formResponse.answers[0].choice.label+"; "+project?.brief.formResponse.answers[1].choice.label} ></MUIChip>
+              {/* <MUIChip color="secondary" size="small" variant="outlined" label={project?.brief.formResponse.answers[1].choice.label} ></MUIChip> */}
             </Stack>
           </Stack>
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} sx={{alignItems:"center"}}>
             <VersionSelect versions={project?.manuscript.versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
             {user !== null && user?.customData?.role === "client" && 
               <Stack direction="row" spacing={1}>
@@ -226,6 +230,9 @@ function ManuscriptMetadata (props){
                   <MUIButton size="small" variant="contained" color= "warning" startIcon={<MoreTimeIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to ask for revison?','Ask for revision',askForRevision)}>
                     Ask for revision
                   </MUIButton>
+                </Box>}
+                {project.manuscript.status === "open" && <Box>
+                  <MUIChip  color="secondary" variant="filled" icon={<AccessTimeIcon/>} label="Edited by manuscript writer"/>
                 </Box>}
               </Stack>
             }
@@ -246,7 +253,7 @@ function ManuscriptMetadata (props){
                   </MUIButton>
                 </Box>}
                 {project.manuscript.status === "review" && <Box>
-                  <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="In review by client"/>
+                  <MUIChip color="secondary" variant="filled" icon={<AccessTimeIcon/>} label="In review by client"/>
                 </Box>}
               </Stack>
             }
