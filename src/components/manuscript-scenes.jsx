@@ -165,16 +165,16 @@ export default function ManuscriptScenes({versionIndex}) {
                         <CardContent >
                             <Stack direction="row" sx={{justifyContent:"space-between"}}>
                                 <Stack direction="row" sx={{alignItems:"center",     justifyContent:"center"}}>
-                                    <Typography variant="h6" color="text.secondary" component="div">Scene {`${versionIndex}-${scene.index}`}</Typography>
+                                    <Typography variant="h6" color="text.secondary" component="div">Scene {`#${scene.index}`}</Typography>
                                 </Stack>                                
                                 <Stack direction="row">
-                                    <OptionsButton 
+                                    {project.manuscript.status === 'open' && versionIndex === project.manuscript.versions.length && <OptionsButton
                                         addScene={addScene}
                                         moveScene={moveScene}
                                         deleteScene={deleteScene}
                                         index={scene.index} 
                                         scenesCount={project.manuscript.versions[versionIndex-1].scenes.length}
-                                    />   
+                                    />}   
                                 </Stack>
                             </Stack>
                             <Stack spacing={2}>

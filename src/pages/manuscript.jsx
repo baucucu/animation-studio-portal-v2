@@ -195,6 +195,7 @@ function ManuscriptOptionsButton() {
 
 function ManuscriptMetadata (props){
   const {project, versionIndex, setVersionIndex, sendForReview,extendTime,approveManuscript,askForRevision,user} = props
+  
   return(
     <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" sx={{justifyContent:"space-between"}}>
@@ -209,11 +210,11 @@ function ManuscriptMetadata (props){
             </Stack>
             <Stack direction="row" spacing={0.2} sx={{alignItems:'center'}}>
               {/* <Typography variant="body2" color="text.secondary" component="div">Word count</Typography> */}
-              <MUIChip icon={<TextFormatIcon/>} color="secondary" variant="outlined" label={"385"} ></MUIChip>
+              <MUIChip icon={<TextFormatIcon/>} color="secondary" variant="outlined" label={project.manuscript.versions[versionIndex-1].scenes.map(scene => scene.action.length + scene.voice.length).reduce((a, b) =>{return a+b} )} ></MUIChip>
             </Stack>
             <Stack direction="row" spacing={0.2} sx={{alignItems:'center'}}>
               {/* <Typography variant="body2" color="text.secondary" component="div">Target length</Typography> */}
-              <MUIChip icon = {<TrackChangesIcon/>} color="secondary"  variant="outlined" label={project?.brief.formResponse.answers[0].choice.label+"; "+project?.brief.formResponse.answers[1].choice.label} ></MUIChip>
+              <MUIChip icon = {<TrackChangesIcon/>} color="secondary"  variant="outlined" label={project?.brief.formResponse.answers[0].choice.label+" - "+project?.brief.formResponse.answers[1].choice.label} ></MUIChip>
               {/* <MUIChip color="secondary" size="small" variant="outlined" label={project?.brief.formResponse.answers[1].choice.label} ></MUIChip> */}
             </Stack>
           </Stack>
