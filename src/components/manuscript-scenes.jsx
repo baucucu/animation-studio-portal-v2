@@ -71,12 +71,27 @@ export default function ManuscriptScenes({versionIndex}) {
     }
     function addScene(direction,sceneIndex) {
         console.log('addScene',{direction, sceneIndex})
-        // let tempManuscript = project.manuscript
-        // tempManuscript.versions[versionIndex-1].scenes[sceneIndex].index = tempManuscript.versions[versionIndex-1].scenes[sceneIndex].index +1
-        // tempManuscript.versions[versionIndex-1].scenes[sceneIndex+1].index = tempManuscript.versions[versionIndex-1].scenes[sceneIndex+1].index -1
-        // projectsCollection.updateOne({_id:(project._id)},{
-        //     $set:{"manuscript":tempManuscript}
-        // })
+        let tempManuscript = project.manuscript
+        
+        const indexModifier = direction === 'left' ? 0 : 1
+        console.log("indexModifier: "+indexModifier)
+        
+        const lastId = tempManuscript.versions[versionIndex-1].scenes[tempManuscript.versions[versionIndex-1].scenes.length-1].id
+        console.log("lastId: "+lastId)
+        tempManuscript.versions[versionIndex-1].scenes.map((scene, index)=>{
+            if(sceneIndex <= scene.index) {tempManuscript.versions[versionIndex-1].scenes[index].index = tempManuscript.versions[versionIndex-1].scenes[index]?.index + 1}
+        })
+        tempManuscript.versions[versionIndex-1].scenes.push({
+            id: lastId+1,
+            index : sceneIndex + indexModifier,
+            voice : "Voice placeholder",
+            action: "Action placeholder"
+        })
+
+        projectsCollection.updateOne({_id:(project._id)},{
+            $set:{"manuscript":tempManuscript}
+        })
+
     }
 
     function moveScene(direction,sceneIndex) {
@@ -114,17 +129,6 @@ export default function ManuscriptScenes({versionIndex}) {
             $set:{"manuscript":tempManuscript}
         })
     }
-
-    // function moveRight(sceneIndex) {
-    //     console.log('moveRight',{sceneIndex})
-    //     let tempManuscript = project.manuscript
-    //     tempManuscript.versions[versionIndex-1].scenes[sceneIndex].index = tempManuscript.versions[versionIndex-1].scenes[sceneIndex].index +1
-    //     tempManuscript.versions[versionIndex-1].scenes[sceneIndex+1].index = tempManuscript.versions[versionIndex-1].scenes[sceneIndex+1].index -1
-    //     projectsCollection.updateOne({_id:(project._id)},{
-    //         $set:{"manuscript":tempManuscript}
-    //     })
-    // }
-
 
     return(
         <Grid pb={2} pr={2} container spacing={2} direction="row" rows={1} wrap="nowrap" sx={{overflow:"auto", flexGrow: 1, alignItems:"stretch", }}>
