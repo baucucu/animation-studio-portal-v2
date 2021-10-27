@@ -35,6 +35,12 @@ export default function ManuscriptScenes({versionIndex}) {
     
     const mongodb = user.mongoClient("mongodb-atlas");
     const projectsCollection = mongodb.db("AnimationStudioDB").collection("Projects");
+
+    function ObjectId () {
+        const timestamp = (new Date().getTime() / 1000 | 0).toString(16);
+        const suffix = 'xxxxxxxxxxxxxxxx'.replace(/[x]/g, () => (Math.random() * 16 | 0).toString(16)).toLowerCase()
+        return `${timestamp}${suffix}`;
+      }
     
     function sortScenes(items) {
         console.log("sorting scenes: ", items)
@@ -97,11 +103,12 @@ export default function ManuscriptScenes({versionIndex}) {
 
         console.log("sceneIndex: ",sceneIndex)
         console.log("indexModifier: ",indexModifier)
+        const newId = ObjectId()
         const newIndex = sceneIndex + indexModifier
         console.log("newIndex: ", newIndex)
 
         let newScene = {
-            id: lastId+1,
+            id: newId,
             index : newIndex,
             voice : "Voice placeholder",
             action: "Action placeholder"
@@ -187,7 +194,7 @@ export default function ManuscriptScenes({versionIndex}) {
                                     versionIndex={versionIndex} 
                                     text={project.manuscript.versions[versionIndex-1].scenes[id].action}
                                 />
-                                <Comments commentBoxId={`${String(project._id)}-${versionIndex}-${scene.id}`} />
+                                <Comments commentBoxId={scene.id} />
                             </Stack>
                         </CardContent>
                     </Card>
