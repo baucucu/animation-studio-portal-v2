@@ -168,7 +168,7 @@ export default function ManuscriptScenes({versionIndex}) {
                                     <Typography variant="h6" color="text.secondary" component="div">Scene {`#${scene.index}`}</Typography>
                                 </Stack>                                
                                 <Stack direction="row">
-                                    {project.manuscript.status === 'open' && versionIndex === project.manuscript.versions.length && <OptionsButton
+                                    {project.manuscript.status === 'open' && versionIndex === project.manuscript.versions.length && user.customData.role==="freelancer" && <OptionsButton
                                         addScene={addScene}
                                         moveScene={moveScene}
                                         deleteScene={deleteScene}
