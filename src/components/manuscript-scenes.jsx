@@ -185,7 +185,7 @@ export default function ManuscriptScenes({versionIndex}) {
                                     role={user?.customData?.role} 
                                     sceneIndex={scene.index} 
                                     versionIndex={versionIndex} 
-                                    text={project.manuscript.versions[versionIndex-1].scenes[id].action} 
+                                    text={project.manuscript.versions[versionIndex-1].scenes[id].action}
                                 />
                                 <Comments commentBoxId={`${String(project._id)}-${versionIndex}-${id}`} />
                             </Stack>
@@ -255,7 +255,8 @@ function OptionsButton({index, scenesCount, addScene, moveScene, deleteScene}) {
                         <F7Button 
                             popoverClose 
                             onClick={()=>{
-                                deleteScene(index)
+                                f7.dialog.confirm('Are you sure you want to delete scene '+index,()=>deleteScene(index))
+                                // deleteScene(index)
                                 console.log("popover sceneIndex: " + index);
                             }} 
                             color="red"
@@ -298,7 +299,7 @@ function Voice({text,versionIndex,sceneIndex,handleChange, role, manuscriptStatu
                     placeholder="Maximum 4 rows"
                     value={voice}
                     disabled={role === "client" && manuscriptStatus === 'review' && manuscriptStatus==="approved"}
-                    onChange={(e)=>{handleChange(e); setVoice(e.target.value)}}
+                    onChange={(e)=>{setVoice(e.target.value)}}
                 >
                 </TextField>
                 {text!==voice && <Stack direction="row">
@@ -335,7 +336,7 @@ function Action({text,versionIndex,sceneIndex,handleChange, role, manuscriptStat
                     placeholder="Maximum 4 rows"
                     value={action}
                     disabled={role === "client" && manuscriptStatus === 'review' && manuscriptStatus==="approved"}
-                    onChange={(e)=>{handleChange(e); setAction(e.target.value)}}
+                    onChange={(e)=>{setAction(e.target.value)}}
                 />
                 {text!==action && <Stack direction="row">
                     <Button onClick={()=>onSaveAction({action,versionIndex,sceneIndex})} variant="text" color="success" startIcon={<CheckCircleIcon />}>Save</Button>
