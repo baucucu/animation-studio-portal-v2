@@ -44,7 +44,6 @@ export default function ManuscriptScenes({versionIndex}) {
         console.log("sorted scenes: ", result)
         return result
     }
-
     function saveVoice(voice,sceneIndex) {
         let tempManuscript = project.manuscript
         console.log(String("saving voice to version "+versionIndex+" scene "+sceneIndex))
@@ -69,31 +68,53 @@ export default function ManuscriptScenes({versionIndex}) {
             $set:{"manuscript":tempManuscript}
         })
     }
-    function addScene(direction,sceneIndex) {
+
+    function addScene() {
+        console.log("function args: ",arguments)
+        const direction = arguments[0]
+        const sceneIndex = arguments[1]
         console.log('addScene',{direction, sceneIndex})
         let tempManuscript = project.manuscript
         
         const indexModifier = direction === 'left' ? 0 : 1
-        console.log("indexModifier: "+indexModifier)
         
         const lastId = tempManuscript.versions[versionIndex-1].scenes[tempManuscript.versions[versionIndex-1].scenes.length-1].id
         console.log("lastId: "+lastId)
+
         tempManuscript.versions[versionIndex-1].scenes.map((scene, index)=>{
-            if(sceneIndex <= scene.index) {tempManuscript.versions[versionIndex-1].scenes[index].index = tempManuscript.versions[versionIndex-1].scenes[index]?.index + 1}
+            console.log("index: ",index)
+            console.log("scene.index: ", scene.index)
+            console.log("sceneIndex: ",sceneIndex)
+            if(sceneIndex < scene.index) {
+                console.log("changing scene index from ",tempManuscript.versions[versionIndex-1].scenes[index].index," to ",tempManuscript.versions[versionIndex-1].scenes[index]?.index + 1)
+                tempManuscript.versions[versionIndex-1].scenes[index].index = tempManuscript.versions[versionIndex-1].scenes[index]?.index + 1
+            }
+            if(sceneIndex === scene.index && direction === 'left') {
+                console.log("changing scene index from ",tempManuscript.versions[versionIndex-1].scenes[index].index," to ",tempManuscript.versions[versionIndex-1].scenes[index]?.index + 1)
+                tempManuscript.versions[versionIndex-1].scenes[index].index = tempManuscript.versions[versionIndex-1].scenes[index]?.index + 1
+            }
         })
-        tempManuscript.versions[versionIndex-1].scenes.push({
+
+        console.log("sceneIndex: ",sceneIndex)
+        console.log("indexModifier: ",indexModifier)
+        const newIndex = sceneIndex + indexModifier
+        console.log("newIndex: ", newIndex)
+
+        let newScene = {
             id: lastId+1,
-            index : sceneIndex + indexModifier,
+            index : newIndex,
             voice : "Voice placeholder",
             action: "Action placeholder"
-        })
+        }
+
+        console.log("pushing new scene: ", newScene)
+        tempManuscript.versions[versionIndex-1].scenes.push(newScene)
 
         projectsCollection.updateOne({_id:(project._id)},{
             $set:{"manuscript":tempManuscript}
         })
 
     }
-
     function moveScene(direction,sceneIndex) {
         let tempManuscript = project.manuscript
 
@@ -117,7 +138,6 @@ export default function ManuscriptScenes({versionIndex}) {
             $set:{"manuscript":tempManuscript}
         })
     }
-
     function deleteScene(sceneIndex) {
         console.log('deleteScene',{sceneIndex})
         let tempManuscript = project.manuscript
