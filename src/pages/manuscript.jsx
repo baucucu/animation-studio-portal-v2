@@ -50,7 +50,7 @@ const ManuscriptPage = () => {
   
   function approveManuscript() {
     projectsCollection.updateOne({_id:(project._id)},{
-      $set:{"manuscript.status.":"approved"}
+      $set:{"manuscript.status":"approved"}
     })
   }
   
@@ -220,6 +220,9 @@ function FreelancerManuscriptControlPanel(props){
           {project.manuscript.status === "review" && <Box>
             <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="In review by client"/>
           </Box>}
+          {project.manuscript.status === "approved" && <Box>
+            <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="Approved"/>
+          </Box>}
         </Stack>
       </Block>
   )
@@ -245,6 +248,9 @@ function ClientManuscriptControlPanel(props){
           </Box>}
           {project.manuscript.status === "open" && <Box>
             <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="In revision by manuscript writer"/>
+          </Box>}
+          {project.manuscript.status === "approved" && <Box>
+            <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="Approved"/>
           </Box>}
         </Stack>
       </Block>

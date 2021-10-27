@@ -305,7 +305,7 @@ function Voice({text,versionIndex,sceneIndex,handleChange, role, manuscriptStatu
                     maxRows={20}
                     placeholder="Maximum 4 rows"
                     value={voice}
-                    disabled={role === "client" && manuscriptStatus === 'review' && manuscriptStatus==="approved"}
+                    disabled={manuscriptStatus==="approved" || role === "client" ||  role==="freelancer" && manuscriptStatus==="review"}
                     onChange={(e)=>{setVoice(e.target.value)}}
                 >
                 </TextField>
@@ -342,7 +342,7 @@ function Action({text,versionIndex,sceneIndex,handleChange, role, manuscriptStat
                     maxRows={20}
                     placeholder="Maximum 4 rows"
                     value={action}
-                    disabled={role === "client" && manuscriptStatus === 'review' && manuscriptStatus==="approved"}
+                    disabled={manuscriptStatus==="approved" || role === "client" ||  role==="freelancer" && manuscriptStatus==="review"}
                     onChange={(e)=>{setAction(e.target.value)}}
                 />
                 {text!==action && <Stack direction="row">
