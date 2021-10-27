@@ -39,10 +39,6 @@ const ManuscriptPage = () => {
   useEffect(() => {
     // console.log("new languageIndex: ",languageIndex)
   },[languageIndex])
-
-  useEffect(() => {
-    // console.log(" new versionIndex: ",versionIndex)
-  },[versionIndex])
   
   useEffect(() => {
     setVersionIndex(project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions.length)
@@ -73,9 +69,9 @@ const ManuscriptPage = () => {
 
     projectsCollection.updateOne({_id:(project._id)},{
       $set:{"manuscript.status":"open"},
-      $set:{"":""}
     })
   }
+
 
   if(project?.manuscript?.completed === undefined) return <ManuscriptClosed/>
   
@@ -87,7 +83,7 @@ const ManuscriptPage = () => {
       <ManuscriptMetadata project={project} languageIndex={languageIndex} versionIndex={versionIndex}/>
     </Stack>
     <Block inset >
-      <ManuscriptScenes  language={project?.manuscript?.languages[languageIndex]} versionIndex={versionIndex}/>
+      <ManuscriptScenes versionIndex={versionIndex}/>
     </Block>
   </Page>
 )};
@@ -161,6 +157,10 @@ function ManuscriptMetadata (props){
   return(
     <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={2}>
+         <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
+            <Typography  variant="subtitle1" color="text.secondary" component="div">Language</Typography>
+            <MUIChip color="secondary" variant="outlined" label={project?.manuscript.language} ></MUIChip>
+          </Stack>
           <Stack direction="row" spacing={1} sx={{alignItems:'center'}}>
             <Typography  variant="subtitle1" color="text.secondary" component="div">Scenes</Typography>
             <MUIChip color="secondary" variant="outlined" label={project?.manuscript?.data[project?.manuscript?.languages[languageIndex]].versions[versionIndex-1]?.scenes.length} ></MUIChip>
@@ -203,7 +203,7 @@ function FreelancerManuscriptControlPanel(props){
   return(
     <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" spacing={1}>
-          <LanguageSelector languageIndex={languageIndex} setNewLanguage={setNewLanguage}/>
+          {/* <LanguageSelector languageIndex={languageIndex} setNewLanguage={setNewLanguage}/> */}
           <VersionSelect versions={project?.manuscript?.data[project.manuscript.languages[languageIndex]].versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
         </Stack>
         <Stack direction="row" mt={2} spacing={1}>

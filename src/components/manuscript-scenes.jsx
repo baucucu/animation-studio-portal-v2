@@ -28,65 +28,128 @@ import { stepConnectorClasses } from '@mui/material';
 
 
 
-export default function ManuscriptScenes({language, versionIndex}) {
+export default function ManuscriptScenes({versionIndex}) {
     
     const project = useStore('project') 
     const user = useStore('user')
     
+    const mongodb = user.mongoClient("mongodb-atlas");
+    const projectsCollection = mongodb.db("AnimationStudioDB").collection("Projects");
+    
     function sortScenes(items) {
         console.log("sorting scenes: ", items)
-        if(items.length <2) return scenes
-        else return items.sort((a,b) => a?.index<b?.index)
+        let result
+        if(items.length <2) result = items
+        else result =  items.sort(({index:a}, {index:b}) => a-b)
+        console.log("sorted scenes: ", result)
+        return result
     }
 
-    useEffect(() => {
-        const mongodb = user.mongoClient("mongodb-atlas");
-        const projectsCollection = mongodb.db("AnimationStudioDB").collection("Projects");
+    function saveVoice(voice,sceneIndex) {
+        let tempManuscript = project.manuscript
+        console.log(String("saving voice to version "+versionIndex+" scene "+sceneIndex))
+        tempManuscript.versions[versionIndex-1].scenes.map((scene,index) => {
+            if(sceneIndex===scene.index) {
+                tempManuscript.versions[versionIndex-1].scenes[index].voice = voice
+            }  
+        })
+        projectsCollection.updateOne({_id:(project._id)},{
+            $set:{"manuscript":tempManuscript}
+        })
+    }
+    function saveAction(action,sceneIndex) {
+        let tempManuscript = project.manuscript
+        console.log(String("saving action to version "+versionIndex+" scene "+sceneIndex))
+        tempManuscript.versions[versionIndex-1].scenes.map((scene,index) => {
+            if(sceneIndex===scene.index) {
+                tempManuscript.versions[versionIndex-1].scenes[index].action = action
+            }  
+        })
+        projectsCollection.updateOne({_id:(project._id)},{
+            $set:{"manuscript":tempManuscript}
+        })
+    }
+    function addScene(direction,sceneIndex) {
+        console.log('addScene',{direction, sceneIndex})
+        // let tempManuscript = project.manuscript
+        // tempManuscript.versions[versionIndex-1].scenes[sceneIndex].index = tempManuscript.versions[versionIndex-1].scenes[sceneIndex].index +1
+        // tempManuscript.versions[versionIndex-1].scenes[sceneIndex+1].index = tempManuscript.versions[versionIndex-1].scenes[sceneIndex+1].index -1
+        // projectsCollection.updateOne({_id:(project._id)},{
+        //     $set:{"manuscript":tempManuscript}
+        // })
+    }
 
-        f7.on('saveVoice',({voice,language,versionIndex,sceneIndex})=>{
-            let tempManuscript = project.manuscript
-            console.log(String("saving voice to "+language+" version "+versionIndex+" scene "+sceneIndex))
-            tempManuscript.data[language].versions[versionIndex-1].scenes[sceneIndex].voice = voice
-            console.log("tempManuscript: ",tempManuscript)
-            projectsCollection.updateOne({_id:(project._id)},{
-                $set:{"manuscript":tempManuscript}
-            })
+    function moveScene(direction,sceneIndex) {
+        console.log('addScene',{direction, sceneIndex})
+        // let tempManuscript = project.manuscript
+        // tempManuscript.versions[versionIndex-1].scenes[sceneIndex].index = tempManuscript.versions[versionIndex-1].scenes[sceneIndex].index +1
+        // tempManuscript.versions[versionIndex-1].scenes[sceneIndex+1].index = tempManuscript.versions[versionIndex-1].scenes[sceneIndex+1].index -1
+        // projectsCollection.updateOne({_id:(project._id)},{
+        //     $set:{"manuscript":tempManuscript}
+        // })
+    }
+
+    function deleteScene(sceneIndex) {
+        console.log('deleteScene',{sceneIndex})
+        let tempManuscript = project.manuscript
+        tempManuscript.versions[versionIndex-1].scenes.map((scene,index) => {
+            if(sceneIndex === scene.index) {tempManuscript.versions[versionIndex-1].scenes.splice(index,1)}
+            if(sceneIndex <= scene.index) {tempManuscript.versions[versionIndex-1].scenes[index].index = tempManuscript.versions[versionIndex-1].scenes[index]?.index - 1}
         })
-        
-        f7.on('saveAction',({action,language,versionIndex,sceneIndex})=>{
-            let tempManuscript = project.manuscript
-            console.log(String("saving action to "+language+" version "+versionIndex+" scene "+sceneIndex))
-            tempManuscript.data[language].versions[versionIndex-1].scenes[sceneIndex].action = action
-            console.log("tempManuscript: ",tempManuscript)
-            projectsCollection.updateOne({_id:(project._id)},{
-                $set:{"manuscript":tempManuscript}
-            })
+        projectsCollection.updateOne({_id:(project._id)},{
+            $set:{"manuscript":tempManuscript}
         })
-        
-        f7.on('deleteScene',({sceneIndex})=>{
-            console.log('deleteScene',{sceneIndex})
-        })
-            
-    },[])
+    }
+
+    // function moveRight(sceneIndex) {
+    //     console.log('moveRight',{sceneIndex})
+    //     let tempManuscript = project.manuscript
+    //     tempManuscript.versions[versionIndex-1].scenes[sceneIndex].index = tempManuscript.versions[versionIndex-1].scenes[sceneIndex].index +1
+    //     tempManuscript.versions[versionIndex-1].scenes[sceneIndex+1].index = tempManuscript.versions[versionIndex-1].scenes[sceneIndex+1].index -1
+    //     projectsCollection.updateOne({_id:(project._id)},{
+    //         $set:{"manuscript":tempManuscript}
+    //     })
+    // }
+
 
     return(
         <Grid pb={2} pr={2} container spacing={2} direction="row" rows={1} wrap="nowrap" sx={{overflow:"auto", flexGrow: 1, alignItems:"stretch", }}>
-            {project?.manuscript?.data[language]?.versions[versionIndex-1]?.scenes.map((scene,id) => 
-                <Grid item key={`${String(project._id)}-${language}-${versionIndex}-${id}`}>
+            {sortScenes(project?.manuscript?.versions[versionIndex-1]?.scenes).map((scene,id) => 
+                <Grid item key={`${String(project._id)}-${versionIndex}-${scene.index}`}>
                     <Card sx={{width: 450}}>
                         <CardContent >
                             <Stack direction="row" sx={{justifyContent:"space-between"}}>
                                 <Stack direction="row" sx={{alignItems:"center",     justifyContent:"center"}}>
-                                    <Typography variant="h6" color="text.secondary" component="div">Scene {`${language}-${versionIndex}-${id+1}`}</Typography>
+                                    <Typography variant="h6" color="text.secondary" component="div">Scene {`${versionIndex}-${scene.index}`}</Typography>
                                 </Stack>                                
                                 <Stack direction="row">
-                                    <OptionsButton id={id} index={`${language}-${versionIndex}-${scene.index}`}/>   
+                                    <OptionsButton 
+                                        addScene={addScene}
+                                        moveScene={moveScene}
+                                        deleteScene={deleteScene}
+                                        index={scene.index} 
+                                        scenesCount={project.manuscript.versions[versionIndex-1].scenes.length}
+                                    />   
                                 </Stack>
                             </Stack>
                             <Stack spacing={2}>
-                                <Voice manuscriptStatus={project.manuscript.status} role={user?.customData?.role} sceneIndex={id} language={language} versionIndex={versionIndex} text={project.manuscript.data[language].versions[versionIndex-1].scenes[id].voice} handleChange={(e)=> {}}/>
-                                <Action manuscriptStatus={project.manuscript.status} role={user?.customData?.role} language={language} versionIndex={versionIndex} text={project.manuscript.data[language].versions[versionIndex-1].scenes[id].action} handleChange={(e)=> {}}/>
-                                <Comments commentBoxId={`${String(project._id)}-${language}-${versionIndex}-${id}`} />
+                                <Voice
+                                    saveVoice={saveVoice} 
+                                    manuscriptStatus={project.manuscript.status} 
+                                    role={user?.customData?.role} 
+                                    sceneIndex={scene.index} 
+                                    versionIndex={versionIndex} 
+                                    text={project.manuscript.versions[versionIndex-1].scenes[id].voice} 
+                                />
+                                <Action 
+                                    saveAction={saveAction} 
+                                    manuscriptStatus={project.manuscript.status} 
+                                    role={user?.customData?.role} 
+                                    sceneIndex={scene.index} 
+                                    versionIndex={versionIndex} 
+                                    text={project.manuscript.versions[versionIndex-1].scenes[id].action} 
+                                />
+                                <Comments commentBoxId={`${String(project._id)}-${versionIndex}-${id}`} />
                             </Stack>
                         </CardContent>
                     </Card>
@@ -96,27 +159,69 @@ export default function ManuscriptScenes({language, versionIndex}) {
     )
 }
 
-function OptionsButton(props) {
+function OptionsButton({index, scenesCount, addScene, moveScene, deleteScene}) {
     useEffect(()=>{
-        console.log("scene: " + JSON.stringify(props.index))
+        console.log("scene: " + JSON.stringify(index))
     },[])
 
     return(
         <Box>
-            <F7Button popoverOpen=".more-popover-menu" onClick={()=>{console.log("options button sceneIndex: "+props.index)}} icon="more_vert" >
-                {props.index}<MoreVertIcon/>
+            <F7Button popoverOpen={`#scene${index}`} onClick={()=>{console.log("options button sceneIndex: "+index)}} icon="more_vert" >
+                <MoreVertIcon/>
             </F7Button>
-            <Popover closeByOutsideClick className="more-popover-menu">
-                <List>                    
+            <Popover id={"scene"+index} closeByOutsideClick className="more-popover-menu">
+                <List>
                     <ListItem>
                         <F7Button 
                             popoverClose 
                             onClick={()=>{
-                                // f7.emit('deleteScene',{sceneIndex:sceneIndex})
-                                console.log("popover sceneIndex: " + props.index);
+                                addScene('left', index)
+                                console.log("popover sceneIndex: " + index);
+                            }} 
+                            color="secondary"
+                        >Add to left
+                        </F7Button>
+                        <F7Button 
+                            popoverClose 
+                            onClick={()=>{
+                                addScene('right', index)
+                                console.log("popover sceneIndex: " + index);
+                            }} 
+                            color="secondary"
+                        >Add to right
+                        </F7Button>
+                    </ListItem>      
+                    <ListItem>
+                        <F7Button 
+                            popoverClose 
+                            onClick={()=>{
+                                moveScene('left', index)
+                                console.log("popover sceneIndex: " + index);
+                            }} 
+                            color="secondary"
+                            disabled = {index === 1}
+                        >Move left
+                        </F7Button>
+                        <F7Button 
+                            popoverClose 
+                            onClick={()=>{
+                                moveScene('right', index)
+                                console.log("popover sceneIndex: " + index);
+                            }} 
+                            color="secondary"
+                            disabled={index === scenesCount}
+                        >Move right
+                        </F7Button>
+                    </ListItem>         
+                    <ListItem>
+                        <F7Button 
+                            popoverClose 
+                            onClick={()=>{
+                                deleteScene(index)
+                                console.log("popover sceneIndex: " + index);
                             }} 
                             color="red"
-                        >Delete scene {props.index}
+                        >Delete scene
                         </F7Button>
                     </ListItem> 
                 </List>
@@ -125,16 +230,20 @@ function OptionsButton(props) {
     )
 }
 
-function Voice({text,language,versionIndex,sceneIndex,handleChange, role, manuscriptStatus}){
+function Voice({text,versionIndex,sceneIndex,handleChange, role, manuscriptStatus, saveVoice}){
+    console.log("role: " + role)
+    console.log("manuscriptStatus "+manuscriptStatus)
     const [voice,setVoice] = useState(text)
     useEffect(()=>{
         setVoice(text)
     },[text])
 
-    function saveVoice(e){
-        console.log("saving voice: ", {voice,language,versionIndex,sceneIndex})
-        f7.emit('saveVoice',{voice,language,versionIndex,sceneIndex})
+    function onSaveVoice(e){
+        console.log("saving voice: ", {voice,sceneIndex})
+        saveVoice(voice,sceneIndex)
     }
+
+    console.log("disabled: ",["review","approved"].includes(manuscriptStatus))
     
     return(
         <Stack mt={1} sx={{flexDirection:"row"}}>
@@ -155,7 +264,7 @@ function Voice({text,language,versionIndex,sceneIndex,handleChange, role, manusc
                 >
                 </TextField>
                 {text!==voice && <Stack direction="row">
-                    <Button onClick={()=>saveVoice({voice,language,versionIndex,sceneIndex})} variant="text" color="success" startIcon={<CheckCircleIcon />}>Save</Button>
+                    <Button onClick={()=>onSaveVoice({voice,versionIndex,sceneIndex})} variant="text" color="success" startIcon={<CheckCircleIcon />}>Save</Button>
                     <Button onClick={()=>setVoice(text)} variant="text" color="error" startIcon={<DeleteIcon />}>Cancel</Button>
                 </Stack>}
             </Stack>
@@ -164,15 +273,15 @@ function Voice({text,language,versionIndex,sceneIndex,handleChange, role, manusc
     )
 }
 
-function Action({text,language,versionIndex,sceneIndex,handleChange, role, manuscriptStatus}){
+function Action({text,versionIndex,sceneIndex,handleChange, role, manuscriptStatus, saveAction}){
     const[action,setAction] = useState(text)
     useEffect(()=>{
         setAction(text)
     },[text])
 
-    function saveAction(e){
-        console.log("saving action: ", action)
-        f7.emit('saveAction',{action,language,versionIndex,sceneIndex})
+    function onSaveAction(e){
+        console.log("saving action: ", {action, sceneIndex})
+        saveAction(action,sceneIndex)
     }
     return(
         <Stack mt={1} style={{flexDirection:"row"}} >
@@ -191,7 +300,7 @@ function Action({text,language,versionIndex,sceneIndex,handleChange, role, manus
                     onChange={(e)=>{handleChange(e); setAction(e.target.value)}}
                 />
                 {text!==action && <Stack direction="row">
-                    <Button onClick={()=>saveAction({action,language,versionIndex,sceneIndex})} variant="text" color="success" startIcon={<CheckCircleIcon />}>Save</Button>
+                    <Button onClick={()=>onSaveAction({action,versionIndex,sceneIndex})} variant="text" color="success" startIcon={<CheckCircleIcon />}>Save</Button>
                     <Button onClick={()=>setAction(text)} variant="text" color="error" startIcon={<DeleteIcon />}>Cancel</Button>
                 </Stack>}
             </Stack>
