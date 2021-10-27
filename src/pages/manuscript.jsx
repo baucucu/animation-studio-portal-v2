@@ -158,43 +158,31 @@ function ManuscriptOptionsButton() {
               <MoreVertIcon/>
           </Button>
           <Popover id="manuscriptOptions" closeByOutsideClick className="more-popover-menu">
-              <List>
-                <ListItem>
-                  <Button
-                    popoverClose 
-                    onClick={()=>{
-                        // f7.dialog.confirm('Are you sure you want to delete scene '+index,()=>deleteScene(index))
-                    }} 
-                    iconF7="speaker_zzz_fill"
-                  >
-                    <Icon />
-                    Listen to AI Voiceover
-                  </Button>
+              <List menuList>
+                <ListItem
+                  link
+                  title="Listen to AI Voiceover"
+                  // selected={selected === 'projects'}
+                  onClick={() => {}}
+                >
+                  <Icon aurora="f7:speaker_zzz_fill" slot="media" />
                 </ListItem>
-                <ListItem>
-                  <Button
-                    popoverClose 
-                    onClick={()=>{
-                        // f7.dialog.confirm('Are you sure you want to delete scene '+index,()=>deleteScene(index))
-                    }} 
-                    iconF7="eye_fill"
-                  >
-                    <Icon />
-                    Preview
-                  </Button>
+                <ListItem
+                  link
+                  title="Preview"
+                  // selected={selected === 'projects'}
+                  onClick={() => {}}
+                >
+                  <Icon aurora="f7:eye_fill" slot="media" />
                 </ListItem>
-                <ListItem>
-                  <Button
-                    popoverClose 
-                    onClick={()=>{
-                        // f7.dialog.confirm('Are you sure you want to delete scene '+index,()=>deleteScene(index))
-                    }} 
-                    iconF7="arrow_down_to_line"
-                  >
-                    <Icon />
-                    Download PDF
-                  </Button>
-                </ListItem>          
+                <ListItem
+                  link
+                  title="Download PDF"
+                  // selected={selected === 'projects'}
+                  onClick={() => {}}
+                >
+                  <Icon aurora="f7:arrow_down_to_line" slot="media" />
+                </ListItem>     
               </List>
           </Popover>
       </Box>
@@ -239,12 +227,6 @@ function ManuscriptMetadata (props){
                     Ask for revision
                   </MUIButton>
                 </Box>}
-                {project.manuscript.status === "open" && <Box>
-                  <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="In revision by manuscript writer"/>
-                </Box>}
-                {project.manuscript.status === "approved" && <Box>
-                  <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="Approved"/>
-                </Box>}
               </Stack>
             }
             {user !== null && user?.customData?.role === "freelancer" && 
@@ -266,11 +248,11 @@ function ManuscriptMetadata (props){
                 {project.manuscript.status === "review" && <Box>
                   <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="In review by client"/>
                 </Box>}
-                {project.manuscript.status === "approved" && <Box>
-                  <MUIChip  color="success" variant="outlined" icon={<CheckIcon/>} label="Approved"/>
-                </Box>}
               </Stack>
             }
+            {project.manuscript.status === "approved" && <Box>
+              <MUIChip  color="success" variant="outlined" icon={<CheckIcon/>} label="Approved"/>
+            </Box>}
             <ManuscriptOptionsButton />
           </Stack>
         </Stack>
