@@ -11,6 +11,7 @@ import Menu from '@mui/material/Menu';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 
+import CheckIcon from '@mui/icons-material/Check';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import SendIcon from '@mui/icons-material/Send';
@@ -50,7 +51,7 @@ const ManuscriptPage = () => {
   
   function approveManuscript() {
     projectsCollection.updateOne({_id:(project._id)},{
-      $set:{"manuscript.status":"approved"}
+      $set:{"manuscript.status":"approved", "manuscript.completed":true, "storyboard": {completed:false}}
     })
   }
   
@@ -221,7 +222,7 @@ function FreelancerManuscriptControlPanel(props){
             <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="In review by client"/>
           </Box>}
           {project.manuscript.status === "approved" && <Box>
-            <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="Approved"/>
+            <MUIChip  color="success" variant="outlined" icon={<CheckIcon/>} label="Approved"/>
           </Box>}
         </Stack>
       </Block>
