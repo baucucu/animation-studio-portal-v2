@@ -34,7 +34,7 @@ export default function ProjectsPage({f7router}) {
         // }
       })) {
         const { documentKey, fullDocument } = change;
-        // console.log(`updated document - store.js : ${documentKey}`, fullDocument);
+        console.log(`updated document - store.js : ${documentKey}`, fullDocument);
         store.dispatch('getProjects', store.state.user).catch(err => console.log("setProjects error: " + err))
       }
     }

@@ -24,7 +24,7 @@ import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { stepConnectorClasses } from '@mui/material';
+import { breadcrumbsClasses, stepConnectorClasses } from '@mui/material';
 
 
 
@@ -80,13 +80,27 @@ export default function ManuscriptScenes({versionIndex}) {
     }
 
     function moveScene(direction,sceneIndex) {
-        console.log('addScene',{direction, sceneIndex})
-        // let tempManuscript = project.manuscript
-        // tempManuscript.versions[versionIndex-1].scenes[sceneIndex].index = tempManuscript.versions[versionIndex-1].scenes[sceneIndex].index +1
-        // tempManuscript.versions[versionIndex-1].scenes[sceneIndex+1].index = tempManuscript.versions[versionIndex-1].scenes[sceneIndex+1].index -1
-        // projectsCollection.updateOne({_id:(project._id)},{
-        //     $set:{"manuscript":tempManuscript}
-        // })
+        let tempManuscript = project.manuscript
+
+        const index = tempManuscript.versions[versionIndex-1].scenes.findIndex(scene => sceneIndex === scene.index)
+        console.log("index found: ",index)
+        // debugger;
+        console.log('moving scene ',sceneIndex," to ",direction)
+        let indexModifier = direction === 'left' ? -1 : 1
+        console.log("index modifier: ",indexModifier)
+        
+        console.log("current scene index: ", tempManuscript.versions[versionIndex-1].scenes[index].index)
+        console.log("new current scene index: ",tempManuscript.versions[versionIndex-1].scenes[index].index + indexModifier)
+
+        console.log("next scene index: ", tempManuscript.versions[versionIndex-1].scenes[index+indexModifier].index)
+        console.log("new next scene index: ",tempManuscript.versions[versionIndex-1].scenes[index+indexModifier].index - indexModifier)
+        
+        tempManuscript.versions[versionIndex-1].scenes[index].index = tempManuscript.versions[versionIndex-1].scenes[index].index + indexModifier
+        tempManuscript.versions[versionIndex-1].scenes[index + indexModifier].index = tempManuscript.versions[versionIndex-1].scenes[index + indexModifier].index - indexModifier
+   
+        projectsCollection.updateOne({_id:(project._id)},{
+            $set:{"manuscript":tempManuscript}
+        })
     }
 
     function deleteScene(sceneIndex) {
