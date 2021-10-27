@@ -184,7 +184,8 @@ export default function ManuscriptScenes({versionIndex}) {
                                     role={user?.customData?.role} 
                                     sceneIndex={scene.index} 
                                     versionIndex={versionIndex} 
-                                    text={project.manuscript.versions[versionIndex-1].scenes[id].voice} 
+                                    text={project.manuscript.versions[versionIndex-1].scenes[id].voice}
+                                    disabled={project.manuscript.status !== "open" || versionIndex !== project.manuscript.versions.length || user.customData.role === "client"}
                                 />
                                 <Action 
                                     saveAction={saveAction} 
@@ -193,6 +194,7 @@ export default function ManuscriptScenes({versionIndex}) {
                                     sceneIndex={scene.index} 
                                     versionIndex={versionIndex} 
                                     text={project.manuscript.versions[versionIndex-1].scenes[id].action}
+                                    disabled={project.manuscript.status !== "open" || versionIndex !== project.manuscript.versions.length || user.customData.role === "client"}
                                 />
                                 <Comments commentBoxId={scene.id} />
                             </Stack>
@@ -246,7 +248,7 @@ function OptionsButton({index, scenesCount, addScene, moveScene, deleteScene}) {
     )
 }
 
-function Voice({text,versionIndex,sceneIndex,handleChange, role, manuscriptStatus, saveVoice}){
+function Voice({text,versionIndex,sceneIndex, role, manuscriptStatus, saveVoice, disabled}){
     console.log("role: " + role)
     console.log("manuscriptStatus "+manuscriptStatus)
     const [voice,setVoice] = useState(text)
@@ -275,12 +277,12 @@ function Voice({text,versionIndex,sceneIndex,handleChange, role, manuscriptStatu
                     maxRows={20}
                     placeholder="Maximum 4 rows"
                     value={voice}
-                    disabled={manuscriptStatus==="approved" || role === "client" ||  role==="freelancer" && manuscriptStatus==="review"}
+                    disabled={disabled}
                     onChange={(e)=>{setVoice(e.target.value)}}
                 >
                 </TextField>
                 {text!==voice && <Stack direction="row">
-                    <Button onClick={()=>onSaveVoice({voice,versionIndex,sceneIndex})} variant="text" color="success" startIcon={<CheckCircleIcon />}>Save</Button>
+                    <Button onClick={onSaveVoice} variant="text" color="success" startIcon={<CheckCircleIcon />}>Save</Button>
                     <Button onClick={()=>setVoice(text)} variant="text" color="error" startIcon={<DeleteIcon />}>Cancel</Button>
                 </Stack>}
             </Stack>
@@ -289,7 +291,7 @@ function Voice({text,versionIndex,sceneIndex,handleChange, role, manuscriptStatu
     )
 }
 
-function Action({text,versionIndex,sceneIndex,handleChange, role, manuscriptStatus, saveAction}){
+function Action({text,versionIndex,sceneIndex, role, manuscriptStatus, saveAction, disabled}){
     const[action,setAction] = useState(text)
     useEffect(()=>{
         setAction(text)
@@ -304,6 +306,7 @@ function Action({text,versionIndex,sceneIndex,handleChange, role, manuscriptStat
             <DirectionsRunIcon />
             <Stack sx={{flexGrow:1}} spacing={1}>
                 <TextField
+                    color="secondary"
                     pl={2}
                     fullWidth
                     id="outlined-multiline-flexible"
@@ -312,11 +315,11 @@ function Action({text,versionIndex,sceneIndex,handleChange, role, manuscriptStat
                     maxRows={20}
                     placeholder="Maximum 4 rows"
                     value={action}
-                    disabled={manuscriptStatus==="approved" || role === "client" ||  role==="freelancer" && manuscriptStatus==="review"}
+                    disabled={disabled}
                     onChange={(e)=>{setAction(e.target.value)}}
                 />
                 {text!==action && <Stack direction="row">
-                    <Button onClick={()=>onSaveAction({action,versionIndex,sceneIndex})} variant="text" color="success" startIcon={<CheckCircleIcon />}>Save</Button>
+                    <Button onClick={onSaveAction} variant="text" color="success" startIcon={<CheckCircleIcon />}>Save</Button>
                     <Button onClick={()=>setAction(text)} variant="text" color="error" startIcon={<DeleteIcon />}>Cancel</Button>
                 </Stack>}
             </Stack>
