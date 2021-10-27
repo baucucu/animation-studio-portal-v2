@@ -160,7 +160,7 @@ export default function ManuscriptScenes({versionIndex}) {
     return(
         <Grid pb={2} pr={2} container spacing={2} direction="row" rows={1} wrap="nowrap" sx={{overflow:"auto", flexGrow: 1, alignItems:"stretch", }}>
             {sortScenes(project?.manuscript?.versions[versionIndex-1]?.scenes).map((scene,id) => 
-                <Grid item key={`${String(project._id)}-${versionIndex}-${scene.index}`}>
+                <Grid item key={scene.id}>
                     <Card sx={{width: 450}}>
                         <CardContent >
                             <Stack direction="row" sx={{justifyContent:"space-between"}}>
