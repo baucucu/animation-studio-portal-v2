@@ -142,8 +142,8 @@ function VersionSelect({versions, versionIndex, setVersionIndex}) {
         </MUIButton>
       </Link>
       <Popover className="popover-menu">
-        <List>
-          {versions.map((version, id) => <ListButton key={id} onClick={() => {console.log("new version selected: ", version); setVersionIndex(version)}}  popoverClose >{versions.length === version ?  String("Version "+version+" (current)"): String("Version "+version)}</ListButton>)}
+        <List menuList>
+          {versions.map((version, id) => <ListItem link key={id} onClick={() => {console.log("new version selected: ", version); setVersionIndex(version)}}  popoverClose title={versions.length === version ?  String("Version "+version+" (current)"): String("Version "+version)}></ListItem>)}
         </List>
       </Popover>
     </Box>

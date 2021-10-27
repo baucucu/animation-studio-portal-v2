@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import {f7, Button as F7Button,Block, Link, useStore,Popover, List, ListItem } from 'framework7-react';
+import {f7, Button as F7Button,Block, Link,Icon, useStore,Popover, List, ListItem } from 'framework7-react';
 import Comments from './comments'
 
 import Grid from '@mui/material/Grid';
@@ -215,60 +215,30 @@ function OptionsButton({index, scenesCount, addScene, moveScene, deleteScene}) {
                 <MoreVertIcon/>
             </F7Button>
             <Popover id={"scene"+index} closeByOutsideClick className="more-popover-menu">
-                <List>
-                    <ListItem>
-                        <F7Button 
-                            popoverClose 
-                            onClick={()=>{
-                                addScene('left', index)
-                                console.log("popover sceneIndex: " + index);
-                            }} 
-                            color="secondary"
-                        >Add to left
-                        </F7Button>
-                        <F7Button 
-                            popoverClose 
-                            onClick={()=>{
-                                addScene('right', index)
-                                console.log("popover sceneIndex: " + index);
-                            }} 
-                            color="secondary"
-                        >Add to right
-                        </F7Button>
-                    </ListItem>      
-                    <ListItem>
-                        <F7Button 
-                            popoverClose 
-                            onClick={()=>{
-                                moveScene('left', index)
-                                console.log("popover sceneIndex: " + index);
-                            }} 
-                            color="secondary"
-                            disabled = {index === 1}
-                        >Move left
-                        </F7Button>
-                        <F7Button 
-                            popoverClose 
-                            onClick={()=>{
-                                moveScene('right', index)
-                                console.log("popover sceneIndex: " + index);
-                            }} 
-                            color="secondary"
-                            disabled={index === scenesCount}
-                        >Move right
-                        </F7Button>
-                    </ListItem>         
-                    <ListItem>
-                        <F7Button 
-                            popoverClose 
-                            onClick={()=>{
-                                f7.dialog.confirm('Are you sure you want to delete scene '+index,()=>deleteScene(index))
-                                // deleteScene(index)
-                                console.log("popover sceneIndex: " + index);
-                            }} 
-                            color="red"
-                        >Delete scene
-                        </F7Button>
+                <List menuList>
+                    <ListItem
+                        
+                        title="Add scene"
+                    >
+                        <F7Button slot="after" popoverClose onClick={()=>{addScene('left', index)}} ><Icon aurora="f7:square_arrow_left_fill" /></F7Button>
+                        <F7Button slot="after" popoverClose onClick={()=>{addScene('right', index)}}><Icon aurora="f7:square_arrow_right_fill" /></F7Button>
+                    </ListItem> 
+                    <ListItem
+                        
+                        title="Move scene"
+                    >
+                        <F7Button slot="after" disabled={index === 1} popoverClose onClick={()=>{moveScene('left', index)}} ><Icon aurora="f7:rotate_left_fill" /></F7Button>
+                        <F7Button slot="after" disabled={index === scenesCount} popoverClose onClick={()=>{moveScene('right', index)}}><Icon aurora="f7:rotate_right_fill" /></F7Button>
+                    </ListItem>
+                    <ListItem
+                        
+                        title="Delete scene"
+                        textColor="red"
+                        // selected={selected === 'projects'}
+                        
+                        >
+                        <F7Button slot="after" popoverClose onClick={() => {f7.dialog.confirm('Are you sure you want to delete scene '+index,()=>deleteScene(index))}}><Icon color="red" aurora="f7:xmark_circle_fill" /></F7Button>
+                        {/* <Icon color="red"  aurora="f7:xmark_circle_fill" slot="after" /> */}
                     </ListItem> 
                 </List>
             </Popover>
