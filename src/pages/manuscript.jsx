@@ -214,7 +214,7 @@ function ManuscriptMetadata (props){
   const {project, versionIndex, setVersionIndex, sendForReview,extendTime,approveManuscript,askForRevision,user} = props
 
   function wordCount(str) { 
-    return str.split(" ").length;
+    return str.split(" ").filter((word) => { if (word !== '') return word }).length;
   }
   
   return(
