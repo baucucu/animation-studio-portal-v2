@@ -212,6 +212,10 @@ function ManuscriptOptionsButton() {
 
 function ManuscriptMetadata (props){
   const {project, versionIndex, setVersionIndex, sendForReview,extendTime,approveManuscript,askForRevision,user} = props
+
+  function wordCount(str) { 
+    return str.split(" ").length;
+  }
   
   return(
     <Block inset strong style={{flexGrow:1}}>
@@ -227,7 +231,7 @@ function ManuscriptMetadata (props){
             </Stack>
             <Stack direction="row" spacing={0.2} sx={{alignItems:'center'}}>
               {/* <Typography variant="body2" color="text.secondary" component="div">Word count</Typography> */}
-              <MUIChip id="wordCount" icon={<TextFormatIcon/>} color="secondary" variant="outlined" label={project.manuscript.versions[versionIndex-1].scenes.map(scene => scene.action.length + scene.voice.length).reduce((a, b) =>{return a+b} )} ></MUIChip>
+              <MUIChip id="wordCount" icon={<TextFormatIcon/>} color="secondary" variant="outlined" label={project.manuscript.versions[versionIndex-1].scenes.map(scene =>{ return (wordCount(scene.action) + wordCount(scene.voice))}).reduce((a, b) =>{return a+b} )} ></MUIChip>
             </Stack>
             <Stack direction="row" spacing={0.2} sx={{alignItems:'center'}}>
               {/* <Typography variant="body2" color="text.secondary" component="div">Target length</Typography> */}

@@ -5,7 +5,7 @@ class PageWithComments extends React.Component {
 
     componentDidMount() {
 
-        this.removeCommentBox = commentBox('5707536883777536-proj');
+        this.removeCommentBox = commentBox('5630532146692096-proj');
     }
 
     componentWillUnmount() {

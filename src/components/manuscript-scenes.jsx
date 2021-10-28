@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import SvgIcon from '@mui/material/SvgIcon';
 
 import MicIcon from '@mui/icons-material/Mic';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -24,6 +25,10 @@ import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import MoveLeftIcon from '../assets/moveLeftIcon.svg'
+import MoveRightIcon from '../assets/moveRightIcon.svg'
+
+
 import { breadcrumbsClasses, stepConnectorClasses } from '@mui/material';
 
 
@@ -223,6 +228,7 @@ function OptionsButton({index, scenesCount, addScene, moveScene, deleteScene}) {
                         title="Add scene"
                     >
                         <F7Button slot="after" popoverClose onClick={()=>{addScene('left', index)}} ><Icon aurora="f7:square_arrow_left_fill" /></F7Button>
+                        {/* <F7Button slot="after" popoverClose onClick={()=>{addScene('left', index)}} ><SvgIcon><MoveLeftIcon/></SvgIcon></F7Button> */}
                         <F7Button slot="after" popoverClose onClick={()=>{addScene('right', index)}}><Icon aurora="f7:square_arrow_right_fill" /></F7Button>
                     </ListItem> 
                     <ListItem
