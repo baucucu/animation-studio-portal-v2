@@ -201,7 +201,7 @@ export default function ManuscriptScenes({versionIndex}) {
                                     text={project.manuscript.versions[versionIndex-1].scenes[id].action}
                                     disabled={project.manuscript.status !== "open" || versionIndex !== project.manuscript.versions.length || user.customData.role === "client"}
                                 />
-                                <Comments commentBoxId={scene.id} />
+                                <Comments commentBoxId={`${project._id}-${versionIndex}-${scene.id}`} />
                             </Stack>
                         </CardContent>
                     </Card>
