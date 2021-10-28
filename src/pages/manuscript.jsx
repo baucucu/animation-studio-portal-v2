@@ -40,7 +40,24 @@ const ManuscriptPage = () => {
   const mongodb = user?.mongoClient("mongodb-atlas");
   const projectsCollection = mongodb?.db("AnimationStudioDB")?.collection("Projects");
 
-
+  useEffect(() => {
+    const languageTooltip = f7.tooltip.create({
+      targetEl: '#language',
+      text: 'Language',
+    });
+    const scenesTooltip = f7.tooltip.create({
+      targetEl: '#scenes',
+      text: 'Scenes',
+    });
+    const wordCountToolip = f7.tooltip.create({
+      targetEl: '#wordCount',
+      text: 'Word count',
+    });
+    const targetLength = f7.tooltip.create({
+      targetEl: '#targetLength',
+      text: 'Target video length',
+    });
+  },[])
   
   useEffect(() => {
     setVersionIndex(project.manuscript.versions.length)
@@ -124,7 +141,7 @@ function VersionSelect({versions, versionIndex, setVersionIndex}) {
   };
 
   useEffect(() => {
-    console.log("anchorEl: ",anchorEl)
+    // console.log("anchorEl: ",anchorEl)
     console.log("open: ",open)
   },[anchorEl])
 
@@ -142,7 +159,7 @@ function VersionSelect({versions, versionIndex, setVersionIndex}) {
           aria-expanded={open ? 'true' : undefined}
           onClick={handleClick}
         >
-          {versions.length === versionIndex ?  "version ".concat(versionIndex," (current)"): String("version "+versionIndex)}
+          {versions.length === versionIndex ?  "v ".concat(versionIndex," (current)"): String("v "+versionIndex)}
         </MUIButton>
       </Link>
       <Popover className="popover-menu">
@@ -202,19 +219,19 @@ function ManuscriptMetadata (props){
           <Stack direction="row" spacing={1}>
             <Stack direction="row" spacing={0.2} sx={{alignItems:'center'}}>
               {/* <Typography  variant="body2" color="text.secondary" component="div">Language</Typography> */}
-              <MUIChip icon={<LanguageIcon/>} color="secondary"  variant="outlined" label={project?.manuscript.language} ></MUIChip>
+              <MUIChip id="language" icon={<LanguageIcon/>} color="secondary"  variant="outlined" label={project?.manuscript.language} ></MUIChip>
             </Stack>
             <Stack direction="row" spacing={0.2} sx={{alignItems:'center'}}>
               {/* <Typography  variant="body2" color="text.secondary" component="div">Scenes</Typography> */}
-              <MUIChip icon={<MovieIcon/>}color="secondary" variant="outlined" label={project.manuscript.versions[versionIndex-1]?.scenes.length} ></MUIChip>
+              <MUIChip id="scenes" icon={<MovieIcon/>}color="secondary" variant="outlined" label={project.manuscript.versions[versionIndex-1]?.scenes.length} ></MUIChip>
             </Stack>
             <Stack direction="row" spacing={0.2} sx={{alignItems:'center'}}>
               {/* <Typography variant="body2" color="text.secondary" component="div">Word count</Typography> */}
-              <MUIChip icon={<TextFormatIcon/>} color="secondary" variant="outlined" label={project.manuscript.versions[versionIndex-1].scenes.map(scene => scene.action.length + scene.voice.length).reduce((a, b) =>{return a+b} )} ></MUIChip>
+              <MUIChip id="wordCount" icon={<TextFormatIcon/>} color="secondary" variant="outlined" label={project.manuscript.versions[versionIndex-1].scenes.map(scene => scene.action.length + scene.voice.length).reduce((a, b) =>{return a+b} )} ></MUIChip>
             </Stack>
             <Stack direction="row" spacing={0.2} sx={{alignItems:'center'}}>
               {/* <Typography variant="body2" color="text.secondary" component="div">Target length</Typography> */}
-              <MUIChip icon = {<TrackChangesIcon/>} color="secondary"  variant="outlined" label={project?.brief.formResponse.answers[0].choice.label+" - "+project?.brief.formResponse.answers[1].choice.label} ></MUIChip>
+              <MUIChip id="targetLength" icon={<TrackChangesIcon/>} color="secondary"  variant="outlined" label={project?.brief.formResponse.answers[0].choice.label+" - "+project?.brief.formResponse.answers[1].choice.label} ></MUIChip>
               {/* <MUIChip color="secondary" size="small" variant="outlined" label={project?.brief.formResponse.answers[1].choice.label} ></MUIChip> */}
             </Stack>
           </Stack>
