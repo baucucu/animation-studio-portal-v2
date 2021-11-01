@@ -1,40 +1,30 @@
-import React, {useState, useEffect} from 'react';
-import { Page, Icon, Chip,ListItem, Block, BlockTitle, ListButton,Popover, List, Link, Segmented, Button,f7, useStore } from 'framework7-react';
+import React, {useState, useEffect, useRef} from 'react';
+import { Page, Icon,ListItem, Block, BlockTitle,Popover, List, Link, Popup,Navbar,NavRight, Button,f7, useStore } from 'framework7-react';
 
 import MUIChip from '@mui/material/Chip';
-import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MUIButton from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import Box from '@mui/material/Box';
-import Menu from '@mui/material/Menu';
-import MenuList from '@mui/material/MenuList';
-import MenuItem from '@mui/material/MenuItem';
 
 import CheckIcon from '@mui/icons-material/Check';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import SendIcon from '@mui/icons-material/Send';
 import MoreTimeIcon from '@mui/icons-material/MoreTime';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import LanguageIcon from '@mui/icons-material/Language';
 import MovieIcon from '@mui/icons-material/Movie';
 import TextFormatIcon from '@mui/icons-material/TextFormat';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
-
-import ClickAwayListener from '@mui/material/ClickAwayListener';
-import Grow from '@mui/material/Grow';
-import Paper from '@mui/material/Paper';
-import Popper from '@mui/material/Popper';
+import MicIcon from '@mui/icons-material/Mic';
+import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 
 import ManuscriptScenes from '../components/manuscript-scenes'
 
 const ManuscriptPage = () => {
   const user = useStore('user')
   const project = useStore('project')
+  console.log("project: ",project)
   const [versionIndex, setVersionIndex] = useState(project?.manuscript.versions[project.manuscript.versions.length - 1].id)
 
   const mongodb = user?.mongoClient("mongodb-atlas");
@@ -73,7 +63,14 @@ const ManuscriptPage = () => {
   
   function approveManuscript() {
     projectsCollection.updateOne({_id:(project._id)},{
-      $set:{"manuscript.status":"approved", "manuscript.completed":true, "storyboard": {completed:false}}
+      $set:{
+        "manuscript.status":"approved",
+        "manuscript.approvedById":user.id,
+        "manuscript.approvedbyName":user.customData.name,
+        "manuscript.approvedAt":new Date(),
+        "manuscript.completed":true, 
+        "storyboard": {completed:false}
+      }
     })
   }
   
@@ -106,9 +103,7 @@ const ManuscriptPage = () => {
   else return (
   <Page className="viewPage">
     <Stack direction="row" justifyContent="stretch">
-      {/* {user !== null && user?.customData?.role === "freelancer" && <FreelancerManuscriptControlPanel project={project} sendForReview={sendForReview} extendTime={extendTime}  versionIndex={versionIndex}  setVersionIndex={setVersionIndex}/>} */}
-      {/* {user !== null && user?.customData?.role === "client" && <ClientManuscriptControlPanel project={project} approveManuscript={approveManuscript} askForRevision={askForRevision}  versionIndex={versionIndex}  setVersionIndex={setVersionIndex}/>} */}
-      <ManuscriptMetadata project={project}  versionIndex={versionIndex} setVersionIndex={setVersionIndex} user={user} approveManuscript={approveManuscript} askForRevision={askForRevision} sendForReview={sendForReview} extendTime={extendTime}/>
+      <ManuscriptHeader project={project}  versionIndex={versionIndex} setVersionIndex={setVersionIndex} user={user} approveManuscript={approveManuscript} askForRevision={askForRevision} sendForReview={sendForReview} extendTime={extendTime}/>
     </Stack>
     <Block inset >
       <ManuscriptScenes versionIndex={versionIndex}/>
@@ -118,6 +113,33 @@ const ManuscriptPage = () => {
 
 export default ManuscriptPage;
 
+function PreviewPDF() {
+  const project = useStore('project')
+  return(
+    <Block style={{display:'flex', justifyContent: 'center'}}>
+      <Stack spacing={2} sx={{width: 800, alignItems:"start", justifyContent:"space-between", padding:8}}>
+        {project.manuscript.versions[project.manuscript.versions.length-1].scenes.map((scene,index) => {
+          return(
+            <Stack key={index} spacing={2} direction="row" sx={{alignItems:"start", justifyContent:"space-around"}}>
+              <img src="https://via.placeholder.com/300x150.png?text=Storyboard+placeholder"/>
+              <Stack spacing={2} sx={{alignItems:"start", justifyContent:"space-around"}}>
+                  <MUIChip label={index+1} size="small"></MUIChip>
+                  <Stack direction="row" spacing={1}>
+                    <MicIcon fontSize="small"/>
+                    <p style={{fontSize:12}}>{scene.voice}</p>
+                  </Stack>
+                  <Stack direction="row" spacing={1}>
+                    <DirectionsRunIcon fontSize="small"/>
+                    <p style={{fontSize:12}}>{scene.action}</p>
+                  </Stack>
+              </Stack>
+            </Stack>
+          )
+        })}
+      </Stack>
+    </Block>
+  )
+}
 
 function ManuscriptClosed() {
   return(
@@ -174,43 +196,60 @@ function VersionSelect({versions, versionIndex, setVersionIndex}) {
 function ManuscriptOptionsButton() {
 
   return(
-      <Box>
-          <Button popoverOpen="#manuscriptOptions" onClick={()=>{console.log("manuscript options button clicked")}}>
-              <MoreVertIcon/>
-          </Button>
-          <Popover id="manuscriptOptions" closeByOutsideClick className="more-popover-menu">
-              <List menuList>
-                <ListItem
-                  link
-                  title="Listen to AI Voiceover"
-                  // selected={selected === 'projects'}
-                  onClick={() => {}}
-                >
-                  <Icon aurora="f7:speaker_zzz_fill" slot="media" />
-                </ListItem>
-                <ListItem
-                  link
-                  title="Preview"
-                  // selected={selected === 'projects'}
-                  onClick={() => {}}
-                >
-                  <Icon aurora="f7:eye_fill" slot="media" />
-                </ListItem>
-                <ListItem
-                  link
-                  title="Download PDF"
-                  // selected={selected === 'projects'}
-                  onClick={() => {}}
-                >
-                  <Icon aurora="f7:arrow_down_to_line" slot="media" />
-                </ListItem>     
-              </List>
-          </Popover>
-      </Box>
+    <Box>
+      <Button popoverOpen="#manuscriptOptions" onClick={()=>{console.log("manuscript options button clicked")}}>
+          <MoreVertIcon/>
+      </Button>
+      <Popover id="manuscriptOptions" closeByOutsideClick className="more-popover-menu">
+        <List menuList>
+          <ListItem
+            link
+            title="Listen to AI Voiceover"
+            // selected={selected === 'projects'}
+            onClick={() => {}}
+          >
+            <Icon aurora="f7:speaker_zzz_fill" slot="media" />
+          </ListItem>
+          <ListItem 
+            popupOpen=".pdf-popup"
+            link
+            title="Preview"
+            // selected={selected === 'projects'}
+            onClick={() => {f7.popup.close('.more-popover-menu')}}
+          >
+            <Icon aurora="f7:eye_fill" slot="media" />
+          </ListItem>
+          <ListItem
+            link
+            title="Download PDF"
+            // selected={selected === 'projects'}
+            onClick={() => {}}
+          >
+            <Icon aurora="f7:arrow_down_to_line" slot="media" />
+          </ListItem>     
+        </List>
+      </Popover>
+      <Popup
+          // push
+          tabletFullscreen
+          className="pdf-popup"
+        >
+          <Page style={{display: 'flex', flexDirection: 'column'}}>
+            <Navbar title="Manuscript preview">
+              <NavRight>
+                <Link popupClose>Close</Link>
+              </NavRight>
+            </Navbar>
+            <div style={{flexGrow:1, height:'100%'}}>
+              <PreviewPDF/>
+            </div>
+          </Page>
+        </Popup>   
+    </Box>
   )
 }
 
-function ManuscriptMetadata (props){
+function ManuscriptHeader (props){
   const {project, versionIndex, setVersionIndex, sendForReview,extendTime,approveManuscript,askForRevision,user} = props
 
   function wordCount(str) { 
@@ -220,6 +259,17 @@ function ManuscriptMetadata (props){
   return(
     <Block inset strong style={{flexGrow:1}}>
         <Stack direction="row" sx={{justifyContent:"space-between"}}>
+          <Stack direction="row" spacing={1} sx={{alignItems:"center"}}>
+            {project.manuscript.status === "approved" && <Box>
+              <MUIChip  color="success" variant="filled" icon={<CheckIcon/>}  label={`Approved by ${project.manuscript.approvedByName} at ${project.manuscript.approvedAt.toLocaleString()}`}/>
+            </Box>}
+            {project.manuscript.status === "open" && <Box>
+              <MUIChip  color="secondary" variant="filled" icon={<AccessTimeIcon/>} label="Edited by manuscript writer"/>
+            </Box>}
+            {project.manuscript.status === "review" && <Box>
+              <MUIChip color="secondary" variant="filled" icon={<AccessTimeIcon/>} label="In review by client"/>
+            </Box>}
+          </Stack>
           <Stack direction="row" spacing={1}>
             <Stack direction="row" spacing={0.2} sx={{alignItems:'center'}}>
               {/* <Typography  variant="body2" color="text.secondary" component="div">Language</Typography> */}
@@ -253,9 +303,6 @@ function ManuscriptMetadata (props){
                     Ask for revision
                   </MUIButton>
                 </Box>}
-                {project.manuscript.status === "open" && <Box>
-                  <MUIChip  color="secondary" variant="filled" icon={<AccessTimeIcon/>} label="Edited by manuscript writer"/>
-                </Box>}
               </Stack>
             }
             {user !== null && user?.customData?.role === "freelancer" && 
@@ -274,80 +321,10 @@ function ManuscriptMetadata (props){
                     Extend time
                   </MUIButton>
                 </Box>}
-                {project.manuscript.status === "review" && <Box>
-                  <MUIChip color="secondary" variant="filled" icon={<AccessTimeIcon/>} label="In review by client"/>
-                </Box>}
               </Stack>
             }
-            {project.manuscript.status === "approved" && <Box>
-              <MUIChip  color="success" variant="outlined" icon={<CheckIcon/>} label="Approved"/>
-            </Box>}
             <ManuscriptOptionsButton />
           </Stack>
-        </Stack>
-      </Block>
-  )
-}
-
-function FreelancerManuscriptControlPanel(props){
-  const {project,versionIndex, setVersionIndex, sendForReview,extendTime} = props
-  console.log("freelancer control panel: ",props)
-  return(
-    <Block inset strong style={{flexGrow:1}}>
-        <Stack direction="row" spacing={1}>
-          {/* <LanguageSelector  /> */}
-          <VersionSelect versions={project?.manuscript.versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
-        </Stack>
-        <Stack direction="row" mt={2} spacing={1}>
-          {project.manuscript.status === "open" && <Box>
-            <MUIButton size="small" variant="contained" color= "success" startIcon={<SendIcon />} 
-              onClick={()=>{
-                f7.dialog.confirm('Are you sure you want to send the manuscript to client for review?','Send manuscript to client',sendForReview)
-              }}
-            >
-              Send to client
-            </MUIButton>
-          </Box>}
-          {project.manuscript.status === "open" && <Box>
-            <MUIButton size="small" variant="contained" color= "warning" startIcon={<MoreTimeIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to extend time?','Extend time',extendTime)}>
-              Extend time
-            </MUIButton>
-          </Box>}
-          {project.manuscript.status === "review" && <Box>
-            <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="In review by client"/>
-          </Box>}
-          {project.manuscript.status === "approved" && <Box>
-            <MUIChip  color="success" variant="outlined" icon={<CheckIcon/>} label="Approved"/>
-          </Box>}
-        </Stack>
-      </Block>
-  )
-}
-
-function ClientManuscriptControlPanel(props){
-  const {project,versionIndex, setVersionIndex,approveManuscript,askForRevision} = props
-  return(
-    <Block inset strong style={{flexGrow:1}}>
-        <Stack direction="row" spacing={1}>
-          <VersionSelect versions={project.manuscript.versions.map(version => version.id)} versionIndex={versionIndex} setVersionIndex={setVersionIndex}/>
-        </Stack>
-        <Stack direction="row" mt={2} spacing={1}>
-          {project.manuscript.status === "review" && <Box>
-            <MUIButton size="small" variant="contained" color= "success" startIcon={<SendIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to approve?','Approve manuscript',approveManuscript)}>
-              Approve
-            </MUIButton>
-          </Box>}
-          {project.manuscript.status === "review" && <Box>
-            <MUIButton size="small" variant="contained" color= "warning" startIcon={<MoreTimeIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to ask for revison?','Ask for revision',askForRevision)}>
-              Ask for revision
-            </MUIButton>
-          </Box>}
-          {project.manuscript.status === "open" && <Box>
-            <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="In revision by manuscript writer"/>
-          </Box>}
-          {project.manuscript.status === "approved" && <Box>
-            <MUIChip  color="secondary" variant="outlined" icon={<AccessTimeIcon/>} label="Approved"/>
-          </Box>}
         </Stack>
       </Block>
   )
