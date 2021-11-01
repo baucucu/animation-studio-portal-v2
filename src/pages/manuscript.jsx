@@ -121,7 +121,7 @@ function PreviewPDF() {
         {project.manuscript.versions[project.manuscript.versions.length-1].scenes.map((scene,index) => {
           return(
             <Stack key={index} spacing={2} direction="row" sx={{alignItems:"start", justifyContent:"space-around"}}>
-              <img src="https://via.placeholder.com/300x150.png?text=Storyboard+placeholder"/>
+              <img src="https://via.placeholder.com/250x150.png?text=Storyboard+placeholder"/>
               <Stack spacing={2} sx={{alignItems:"start", justifyContent:"space-around"}}>
                   <MUIChip label={index+1} size="small"></MUIChip>
                   <Stack direction="row" spacing={1}>
@@ -136,6 +136,7 @@ function PreviewPDF() {
             </Stack>
           )
         })}
+        <p>{project.deal.title} version {project.manuscript.versions.length}</p>
       </Stack>
     </Block>
   )
