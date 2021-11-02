@@ -18,7 +18,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 
-export default function ManuscriptScenes({versionIndex}) {
+export default function StoryboardScenes() {
     
     const project = useStore('project') 
     const user = useStore('user')
@@ -42,9 +42,9 @@ export default function ManuscriptScenes({versionIndex}) {
     function saveVoice(voice,sceneIndex) {
         let tempManuscript = project.manuscript
         console.log(String("saving voice to version "+versionIndex+" scene "+sceneIndex))
-        tempManuscript.versions[versionIndex-1].scenes.map((scene,index) => {
+        tempstoryboard.scenes.map((scene,index) => {
             if(sceneIndex===scene.index) {
-                tempManuscript.versions[versionIndex-1].scenes[index].voice = voice
+                tempstoryboard.scenes[index].voice = voice
             }  
         })
         projectsCollection.updateOne({_id:(project._id)},{
@@ -54,9 +54,9 @@ export default function ManuscriptScenes({versionIndex}) {
     function saveAction(action,sceneIndex) {
         let tempManuscript = project.manuscript
         console.log(String("saving action to version "+versionIndex+" scene "+sceneIndex))
-        tempManuscript.versions[versionIndex-1].scenes.map((scene,index) => {
+        tempstoryboard.scenes.map((scene,index) => {
             if(sceneIndex===scene.index) {
-                tempManuscript.versions[versionIndex-1].scenes[index].action = action
+                tempstoryboard.scenes[index].action = action
             }  
         })
         projectsCollection.updateOne({_id:(project._id)},{
@@ -72,20 +72,20 @@ export default function ManuscriptScenes({versionIndex}) {
         
         const indexModifier = direction === 'left' ? 0 : 1
         
-        const lastId = tempManuscript.versions[versionIndex-1].scenes[tempManuscript.versions[versionIndex-1].scenes.length-1].id
+        const lastId = tempstoryboard.scenes[tempstoryboard.scenes.length-1].id
         console.log("lastId: "+lastId)
 
-        tempManuscript.versions[versionIndex-1].scenes.map((scene, index)=>{
+        tempstoryboard.scenes.map((scene, index)=>{
             console.log("index: ",index)
             console.log("scene.index: ", scene.index)
             console.log("sceneIndex: ",sceneIndex)
             if(sceneIndex < scene.index) {
-                console.log("changing scene index from ",tempManuscript.versions[versionIndex-1].scenes[index].index," to ",tempManuscript.versions[versionIndex-1].scenes[index]?.index + 1)
-                tempManuscript.versions[versionIndex-1].scenes[index].index = tempManuscript.versions[versionIndex-1].scenes[index]?.index + 1
+                console.log("changing scene index from ",tempstoryboard.scenes[index].index," to ",tempstoryboard.scenes[index]?.index + 1)
+                tempstoryboard.scenes[index].index = tempstoryboard.scenes[index]?.index + 1
             }
             if(sceneIndex === scene.index && direction === 'left') {
-                console.log("changing scene index from ",tempManuscript.versions[versionIndex-1].scenes[index].index," to ",tempManuscript.versions[versionIndex-1].scenes[index]?.index + 1)
-                tempManuscript.versions[versionIndex-1].scenes[index].index = tempManuscript.versions[versionIndex-1].scenes[index]?.index + 1
+                console.log("changing scene index from ",tempstoryboard.scenes[index].index," to ",tempstoryboard.scenes[index]?.index + 1)
+                tempstoryboard.scenes[index].index = tempstoryboard.scenes[index]?.index + 1
             }
         })
 
@@ -103,7 +103,7 @@ export default function ManuscriptScenes({versionIndex}) {
         }
 
         console.log("pushing new scene: ", newScene)
-        tempManuscript.versions[versionIndex-1].scenes.push(newScene)
+        tempstoryboard.scenes.push(newScene)
 
         projectsCollection.updateOne({_id:(project._id)},{
             $set:{"manuscript":tempManuscript}
@@ -113,21 +113,21 @@ export default function ManuscriptScenes({versionIndex}) {
     function moveScene(direction,sceneIndex) {
         let tempManuscript = project.manuscript
 
-        const index = tempManuscript.versions[versionIndex-1].scenes.findIndex(scene => sceneIndex === scene.index)
+        const index = tempstoryboard.scenes.findIndex(scene => sceneIndex === scene.index)
         console.log("index found: ",index)
         // debugger;
         console.log('moving scene ',sceneIndex," to ",direction)
         let indexModifier = direction === 'left' ? -1 : 1
         console.log("index modifier: ",indexModifier)
         
-        console.log("current scene index: ", tempManuscript.versions[versionIndex-1].scenes[index].index)
-        console.log("new current scene index: ",tempManuscript.versions[versionIndex-1].scenes[index].index + indexModifier)
+        console.log("current scene index: ", tempstoryboard.scenes[index].index)
+        console.log("new current scene index: ",tempstoryboard.scenes[index].index + indexModifier)
 
-        console.log("next scene index: ", tempManuscript.versions[versionIndex-1].scenes[index+indexModifier].index)
-        console.log("new next scene index: ",tempManuscript.versions[versionIndex-1].scenes[index+indexModifier].index - indexModifier)
+        console.log("next scene index: ", tempstoryboard.scenes[index+indexModifier].index)
+        console.log("new next scene index: ",tempstoryboard.scenes[index+indexModifier].index - indexModifier)
         
-        tempManuscript.versions[versionIndex-1].scenes[index].index = tempManuscript.versions[versionIndex-1].scenes[index].index + indexModifier
-        tempManuscript.versions[versionIndex-1].scenes[index + indexModifier].index = tempManuscript.versions[versionIndex-1].scenes[index + indexModifier].index - indexModifier
+        tempstoryboard.scenes[index].index = tempstoryboard.scenes[index].index + indexModifier
+        tempstoryboard.scenes[index + indexModifier].index = tempstoryboard.scenes[index + indexModifier].index - indexModifier
    
         projectsCollection.updateOne({_id:(project._id)},{
             $set:{"manuscript":tempManuscript}
@@ -136,9 +136,9 @@ export default function ManuscriptScenes({versionIndex}) {
     function deleteScene(sceneIndex) {
         console.log('deleteScene',{sceneIndex})
         let tempManuscript = project.manuscript
-        tempManuscript.versions[versionIndex-1].scenes.map((scene,index) => {
-            if(sceneIndex === scene.index) {tempManuscript.versions[versionIndex-1].scenes.splice(index,1)}
-            if(sceneIndex <= scene.index) {tempManuscript.versions[versionIndex-1].scenes[index].index = tempManuscript.versions[versionIndex-1].scenes[index]?.index - 1}
+        tempstoryboard.scenes.map((scene,index) => {
+            if(sceneIndex === scene.index) {tempstoryboard.scenes.splice(index,1)}
+            if(sceneIndex <= scene.index) {tempstoryboard.scenes[index].index = tempstoryboard.scenes[index]?.index - 1}
         })
         projectsCollection.updateOne({_id:(project._id)},{
             $set:{"manuscript":tempManuscript}
@@ -147,7 +147,7 @@ export default function ManuscriptScenes({versionIndex}) {
 
     return(
         <Grid pb={2} pr={2} container spacing={2} direction="row" rows={1} wrap="nowrap" sx={{overflow:"auto", flexGrow: 1, alignItems:"stretch", }}>
-            {sortScenes(project?.manuscript?.versions[versionIndex-1]?.scenes).map((scene,id) => 
+            {sortScenes(project?.storyboard.scenes).map((scene,id) => 
                 <Grid item key={scene.id}>
                     <Card sx={{width: 450}}>
                         <CardContent >
@@ -161,7 +161,7 @@ export default function ManuscriptScenes({versionIndex}) {
                                         moveScene={moveScene}
                                         deleteScene={deleteScene}
                                         index={scene.index} 
-                                        scenesCount={project.manuscript.versions[versionIndex-1].scenes.length}
+                                        scenesCount={project.storyboard.scenes.length}
                                     />}   
                                 </Stack>
                             </Stack>
@@ -171,20 +171,18 @@ export default function ManuscriptScenes({versionIndex}) {
                                     manuscriptStatus={project.manuscript.status} 
                                     role={user?.customData?.role} 
                                     sceneIndex={scene.index} 
-                                    versionIndex={versionIndex} 
-                                    text={project.manuscript.versions[versionIndex-1].scenes[id].voice}
-                                    disabled={project.manuscript.status !== "open" || versionIndex !== project.manuscript.versions.length || user.customData.role === "client"}
+                                    text={project.storyboard.scenes[id].voice}
+                                    disabled
                                 />
                                 <Action 
                                     saveAction={saveAction} 
                                     manuscriptStatus={project.manuscript.status} 
                                     role={user?.customData?.role} 
                                     sceneIndex={scene.index} 
-                                    versionIndex={versionIndex} 
-                                    text={project.manuscript.versions[versionIndex-1].scenes[id].action}
-                                    disabled={project.manuscript.status !== "open" || versionIndex !== project.manuscript.versions.length || user.customData.role === "client"}
+                                    text={project.storyboard.scenes[id].action}
+                                    disabled
                                 />
-                                <Comments commentBoxId={`${project._id}-${versionIndex}-${scene.id}`} user={user}/>
+                                {/* <Comments commentBoxId={`${project._id}-${versionIndex}-${scene.id}`} user={user}/> */}
                             </Stack>
                         </CardContent>
                     </Card>
@@ -237,7 +235,7 @@ function OptionsButton({index, scenesCount, addScene, moveScene, deleteScene}) {
     )
 }
 
-function Voice({text,versionIndex,sceneIndex, role, manuscriptStatus, saveVoice, disabled}){
+function Voice({text,sceneIndex, role, manuscriptStatus, saveVoice, disabled}){
     console.log("role: " + role)
     console.log("manuscriptStatus "+manuscriptStatus)
     const [voice,setVoice] = useState(text)
@@ -280,7 +278,7 @@ function Voice({text,versionIndex,sceneIndex, role, manuscriptStatus, saveVoice,
     )
 }
 
-function Action({text,versionIndex,sceneIndex, role, manuscriptStatus, saveAction, disabled}){
+function Action({text,sceneIndex, role, manuscriptStatus, saveAction, disabled}){
     const[action,setAction] = useState(text)
     useEffect(()=>{
         setAction(text)

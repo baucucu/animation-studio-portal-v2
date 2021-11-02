@@ -100,7 +100,6 @@ const ManuscriptPage = () => {
     })
   }
 
-
   if(project?.manuscript?.completed === undefined) return <ManuscriptClosed/>
   
   else return (
