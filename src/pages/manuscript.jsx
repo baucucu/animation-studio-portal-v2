@@ -69,7 +69,10 @@ const ManuscriptPage = () => {
         "manuscript.approvedbyName":user.customData.name,
         "manuscript.approvedAt":new Date(),
         "manuscript.completed":true, 
-        "storyboard": {completed:false}
+        "storyboard": {
+          completed:false,
+          scenes: project.manuscript.versions[versionIndex-1].scenes
+        }
       }
     })
   }
@@ -121,7 +124,7 @@ function PreviewPDF() {
         {project.manuscript.versions[project.manuscript.versions.length-1].scenes.map((scene,index) => {
           return(
             <Stack key={index} spacing={2} direction="row" sx={{alignItems:"start", justifyContent:"space-around"}}>
-              <img src="https://via.placeholder.com/250x150.png?text=Storyboard+placeholder"/>
+              <img src="https://via.placeholder.com/400x250.png?text=Storyboard+placeholder"/>
               <Stack spacing={2} sx={{alignItems:"start", justifyContent:"space-around"}}>
                   <MUIChip label={index+1} size="small"></MUIChip>
                   <Stack direction="row" spacing={1}>
