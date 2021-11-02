@@ -1,5 +1,5 @@
-import React , {useEffect, useRef, useState} from 'react';
-import { Page, Block, BlockTitle, useStore } from 'framework7-react';
+import React , {useEffect, useState} from 'react';
+import { Page, Block, BlockTitle, useStore, f7 } from 'framework7-react';
 
 import StoryboardScenes from '../components/storyboard-scenes'
 
@@ -8,17 +8,20 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import SendIcon from '@mui/icons-material/Send';
+import MoreTimeIcon from '@mui/icons-material/MoreTime';
 
 const StoryboardPage = () => {
   
   const project = useStore('project')
+  const user = useStore('user')
 
   if(project?.storyboard?.completed === undefined) return <StoryboardClosed/>
   
   else return (
   <Page className="viewPage">
     <Block inset strong>
-      Storyboard header
+      <StoryboardActionButtons />
     </Block>
     <Block>
       <StoryboardScenes/>
@@ -69,3 +72,48 @@ function StoryboardClosed() {
   )
 }
 
+
+function StoryboardActionButtons () {
+  const user = useStore('user')
+  const project = useStore('project')
+  
+  function approveStoryboard () {}
+  function askForRevision() {}
+  function sendToClient () {}
+  function extendTime () {}
+
+  console.log("storyboard user: ",user)
+  console.log("storyboard project: ",project)
+  return(
+    <Stack>
+      {user?.customData?.role === "client" && project?.storyboard?.status === "review" &&
+        <Stack direction="row" spacing={1}>
+          <Box>
+            <Button size="small" variant="contained" color= "success" startIcon={<SendIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to approve?','Approve storyboard',approveStoryboard)}>
+              Approve
+            </Button>
+          </Box>
+          <Box>
+            <Button size="small" variant="contained" color= "warning" startIcon={<MoreTimeIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to ask for revison?','Ask for revision',askForRevision)}>
+              Ask for revision
+            </Button>
+          </Box>
+        </Stack>
+      }
+      {user?.customData?.role === "freelancer" && project?.storyboard?.status === "open" &&
+        <Stack direction="row" spacing={1}>
+          <Box>
+            <Button size="small" variant="contained" color= "success" startIcon={<SendIcon />} onClick={()=>{f7.dialog.confirm('Are you sure you want to send the manuscript to client for review?','Send storyboard to client',sendToClient)}} >
+              Send to client
+            </Button>
+          </Box>
+          <Box>
+            <Button size="small" variant="contained" color= "warning" startIcon={<MoreTimeIcon />} onClick={()=>f7.dialog.confirm('Are you sure you want to extend time?','Extend time',extendTime)}>
+              Extend time
+            </Button>
+          </Box>
+        </Stack>
+      }
+    </Stack>
+  )
+}

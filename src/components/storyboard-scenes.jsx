@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import {f7, Button as F7Button,Block, Link,Icon, useStore,Popover, List, ListItem } from 'framework7-react';
+import {f7, Button as F7Button,Block, Link, Swiper, SwiperSlide, Icon, useStore,Popover, List, ListItem } from 'framework7-react';
 import Comments from './comments'
 
 import Grid from '@mui/material/Grid';
@@ -165,6 +165,11 @@ export default function StoryboardScenes() {
                                     />}   
                                 </Stack>
                             </Stack>
+                            <Swiper pagination navigation scrollbar>
+                                <SwiperSlide style={{height:200}}>Slide 1</SwiperSlide>
+                                <SwiperSlide>Slide 2</SwiperSlide>
+                                <SwiperSlide>Slide 3</SwiperSlide>
+                            </Swiper>
                             <Stack spacing={2}>
                                 <Voice
                                     saveVoice={saveVoice} 
