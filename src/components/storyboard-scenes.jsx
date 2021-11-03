@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Swiper, SwiperSlide, useStore } from 'framework7-react';
 
+
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
@@ -27,16 +28,16 @@ export default function StoryboardScenes() {
 
     const [languages,setLanguages] = useState([])
 
-    let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
+    // let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
     let languageNames = new Intl.DisplayNames(['en'], {type: 'language'});
     
     function getLanguageName(code) {
         console.log("code: ",code)
-        return languageNames.of(code.toUpperCase())        
+        return languageNames.of(code.toUpperCase()) 
     }
 
     useEffect(() => {
-        fetch('https://translation.googleapis.com/language/translate/v2/languages?key=AIzaSyDpkkRxaN7453uNXhpeGlsZuHQdlD3RDu8')
+        fetch('https://translation.googleapis.com/language/translate/v2/languages?key=xxxxx')
         .then(response => response.json())
         .then(res => res.data.languages.map(item =>  {return {label: getLanguageName(item.language) , code: item.language }}))
         .then(res => setLanguages([...res]))
