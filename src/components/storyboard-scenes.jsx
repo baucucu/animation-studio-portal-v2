@@ -28,18 +28,17 @@ export default function StoryboardScenes() {
     const [languages,setLanguages] = useState([])
 
     let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
+    let languageNames = new Intl.DisplayNames(['en'], {type: 'language'});
     
-    function getCountryName(code) {
+    function getLanguageName(code) {
         console.log("code: ",code)
-        if(code.length === 2) return regionNames.of(code.toUpperCase())
-        else return code.toUpperCase()
-        
+        return languageNames.of(code.toUpperCase())        
     }
 
     useEffect(() => {
         fetch('https://translation.googleapis.com/language/translate/v2/languages?key=AIzaSyDpkkRxaN7453uNXhpeGlsZuHQdlD3RDu8')
         .then(response => response.json())
-        .then(res => res.data.languages.map(item =>  {return {label: getCountryName(item.language) , code: item.language }}))
+        .then(res => res.data.languages.map(item =>  {return {label: getLanguageName(item.language) , code: item.language }}))
         .then(res => setLanguages([...res]))
     },[])
 
