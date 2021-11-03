@@ -1,20 +1,19 @@
-import React, {useState,useEffect} from 'react';
-import {f7, Button as F7Button,Block, Link, Swiper, SwiperSlide, Icon, useStore,Popover, List, ListItem } from 'framework7-react';
-import Comments from './comments'
+import React, {useState, useEffect} from 'react';
+import {Swiper, SwiperSlide, useStore } from 'framework7-react';
 
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
+import Chip from '@mui/material/Chip';
 import CardContent from '@mui/material/CardContent';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
+import Autocomplete from '@mui/material/Autocomplete';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import MicIcon from '@mui/icons-material/Mic';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 
@@ -25,6 +24,28 @@ export default function StoryboardScenes() {
     
     const mongodb = user.mongoClient("mongodb-atlas");
     const projectsCollection = mongodb.db("AnimationStudioDB").collection("Projects");
+
+    const [languages,setLanguages] = useState([])
+
+    let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
+    
+    function getCountryName(code) {
+        console.log("code: ",code)
+        if(code.length === 2) return regionNames.of(code.toUpperCase())
+        else return code.toUpperCase()
+        
+    }
+
+    useEffect(() => {
+        fetch('https://translation.googleapis.com/language/translate/v2/languages?key=AIzaSyDpkkRxaN7453uNXhpeGlsZuHQdlD3RDu8')
+        .then(response => response.json())
+        .then(res => res.data.languages.map(item =>  {return {label: getCountryName(item.language) , code: item.language }}))
+        .then(res => setLanguages([...res]))
+    },[])
+
+    useEffect(() => {
+        console.log("languages: ",languages)
+    },[languages])
 
     function ObjectId () {
         const timestamp = (new Date().getTime() / 1000 | 0).toString(16);
@@ -63,131 +84,45 @@ export default function StoryboardScenes() {
             $set:{"manuscript":tempManuscript}
         })
     }
-    function addScene() {
-        console.log("function args: ",arguments)
-        const direction = arguments[0]
-        const sceneIndex = arguments[1]
-        console.log('addScene',{direction, sceneIndex})
-        let tempManuscript = project.manuscript
-        
-        const indexModifier = direction === 'left' ? 0 : 1
-        
-        const lastId = tempstoryboard.scenes[tempstoryboard.scenes.length-1].id
-        console.log("lastId: "+lastId)
-
-        tempstoryboard.scenes.map((scene, index)=>{
-            console.log("index: ",index)
-            console.log("scene.index: ", scene.index)
-            console.log("sceneIndex: ",sceneIndex)
-            if(sceneIndex < scene.index) {
-                console.log("changing scene index from ",tempstoryboard.scenes[index].index," to ",tempstoryboard.scenes[index]?.index + 1)
-                tempstoryboard.scenes[index].index = tempstoryboard.scenes[index]?.index + 1
-            }
-            if(sceneIndex === scene.index && direction === 'left') {
-                console.log("changing scene index from ",tempstoryboard.scenes[index].index," to ",tempstoryboard.scenes[index]?.index + 1)
-                tempstoryboard.scenes[index].index = tempstoryboard.scenes[index]?.index + 1
-            }
-        })
-
-        console.log("sceneIndex: ",sceneIndex)
-        console.log("indexModifier: ",indexModifier)
-        const newId = ObjectId()
-        const newIndex = sceneIndex + indexModifier
-        console.log("newIndex: ", newIndex)
-
-        let newScene = {
-            id: newId,
-            index : newIndex,
-            voice : "Voice placeholder",
-            action: "Action placeholder"
-        }
-
-        console.log("pushing new scene: ", newScene)
-        tempstoryboard.scenes.push(newScene)
-
-        projectsCollection.updateOne({_id:(project._id)},{
-            $set:{"manuscript":tempManuscript}
-        })
-
-    }
-    function moveScene(direction,sceneIndex) {
-        let tempManuscript = project.manuscript
-
-        const index = tempstoryboard.scenes.findIndex(scene => sceneIndex === scene.index)
-        console.log("index found: ",index)
-        // debugger;
-        console.log('moving scene ',sceneIndex," to ",direction)
-        let indexModifier = direction === 'left' ? -1 : 1
-        console.log("index modifier: ",indexModifier)
-        
-        console.log("current scene index: ", tempstoryboard.scenes[index].index)
-        console.log("new current scene index: ",tempstoryboard.scenes[index].index + indexModifier)
-
-        console.log("next scene index: ", tempstoryboard.scenes[index+indexModifier].index)
-        console.log("new next scene index: ",tempstoryboard.scenes[index+indexModifier].index - indexModifier)
-        
-        tempstoryboard.scenes[index].index = tempstoryboard.scenes[index].index + indexModifier
-        tempstoryboard.scenes[index + indexModifier].index = tempstoryboard.scenes[index + indexModifier].index - indexModifier
-   
-        projectsCollection.updateOne({_id:(project._id)},{
-            $set:{"manuscript":tempManuscript}
-        })
-    }
-    function deleteScene(sceneIndex) {
-        console.log('deleteScene',{sceneIndex})
-        let tempManuscript = project.manuscript
-        tempstoryboard.scenes.map((scene,index) => {
-            if(sceneIndex === scene.index) {tempstoryboard.scenes.splice(index,1)}
-            if(sceneIndex <= scene.index) {tempstoryboard.scenes[index].index = tempstoryboard.scenes[index]?.index - 1}
-        })
-        projectsCollection.updateOne({_id:(project._id)},{
-            $set:{"manuscript":tempManuscript}
-        })
-    }
 
     return(
         <Grid pb={2} pr={2} container spacing={2} direction="row" rows={1} wrap="nowrap" sx={{overflow:"auto", flexGrow: 1, alignItems:"stretch", }}>
             {sortScenes(project?.storyboard.scenes).map((scene,id) => 
                 <Grid item key={scene.id}>
                     <Card sx={{width: 450}}>
-                        <CardContent >
-                            <Stack direction="row" sx={{justifyContent:"space-between"}}>
-                                <Stack direction="row" sx={{alignItems:"center",     justifyContent:"center"}}>
-                                    <Typography variant="h6" color="text.secondary" component="div">Scene {`#${scene.index}`}</Typography>
-                                </Stack>                                
-                                <Stack direction="row">
-                                    {project.manuscript.status === 'open' && versionIndex === project.manuscript.versions.length && user.customData.role==="freelancer" && <OptionsButton
-                                        addScene={addScene}
-                                        moveScene={moveScene}
-                                        deleteScene={deleteScene}
-                                        index={scene.index} 
-                                        scenesCount={project.storyboard.scenes.length}
-                                    />}   
-                                </Stack>
-                            </Stack>
-                            <Swiper pagination navigation scrollbar>
-                                <SwiperSlide style={{height:200}}>Slide 1</SwiperSlide>
-                                <SwiperSlide>Slide 2</SwiperSlide>
-                                <SwiperSlide>Slide 3</SwiperSlide>
-                            </Swiper>
+                        <CardContent>
                             <Stack spacing={2}>
-                                <Voice
-                                    saveVoice={saveVoice} 
-                                    manuscriptStatus={project.manuscript.status} 
-                                    role={user?.customData?.role} 
-                                    sceneIndex={scene.index} 
-                                    text={project.storyboard.scenes[id].voice}
-                                    disabled
-                                />
-                                <Action 
-                                    saveAction={saveAction} 
-                                    manuscriptStatus={project.manuscript.status} 
-                                    role={user?.customData?.role} 
-                                    sceneIndex={scene.index} 
-                                    text={project.storyboard.scenes[id].action}
-                                    disabled
-                                />
-                                {/* <Comments commentBoxId={`${project._id}-${versionIndex}-${scene.id}`} user={user}/> */}
+                                <Stack direction="row" sx={{justifyContent:"space-between"}}>
+                                    <Typography variant="h6" color="text.secondary" component="div">Scene {`#${scene.index}`}</Typography>        
+                                    <Stack direction="row" sx={{alignItems:"center",justifyContent:"center"}} spacing={1}>
+                                        <Chip variant="outlined" color="success" size="small" icon={<CheckCircleIcon/>} label="Sketch"></Chip>
+                                        <Chip variant="outlined" color="success" size="small" icon={<CheckCircleIcon/>} label="Illustration"></Chip>
+                                    </Stack>
+                                </Stack>
+                                <Swiper pagination navigation>
+                                    <SwiperSlide style={{height:200}}>Slide 1</SwiperSlide>
+                                    <SwiperSlide>Slide 2</SwiperSlide>
+                                    <SwiperSlide>Slide 3</SwiperSlide>
+                                </Swiper>
+                                <LanguageSelector languages={languages}/>
+                                <Stack spacing={2}>
+                                    <Voice
+                                        saveVoice={saveVoice} 
+                                        manuscriptStatus={project.manuscript.status} 
+                                        role={user?.customData?.role} 
+                                        sceneIndex={scene.index} 
+                                        text={project.storyboard.scenes[id].voice}
+                                        disabled
+                                    />
+                                    <Action 
+                                        saveAction={saveAction} 
+                                        manuscriptStatus={project.manuscript.status} 
+                                        role={user?.customData?.role} 
+                                        sceneIndex={scene.index} 
+                                        text={project.storyboard.scenes[id].action}
+                                        disabled
+                                    />
+                                </Stack>
                             </Stack>
                         </CardContent>
                     </Card>
@@ -197,48 +132,49 @@ export default function StoryboardScenes() {
     )
 }
 
-function OptionsButton({index, scenesCount, addScene, moveScene, deleteScene}) {
-    useEffect(()=>{
-        console.log("scene: " + JSON.stringify(index))
-    },[])
+function LanguageSelector(props) {
 
-    return(
-        <Box>
-            <F7Button popoverOpen={`#scene${index}`} onClick={()=>{console.log("options button sceneIndex: "+index)}} icon="more_vert" >
-                <MoreVertIcon/>
-            </F7Button>
-            <Popover id={"scene"+index} closeByOutsideClick className="more-popover-menu">
-                <List menuList>
-                    <ListItem
-                        
-                        title="Add scene"
-                    >
-                        <F7Button slot="after" popoverClose onClick={()=>{addScene('left', index)}} ><Icon aurora="f7:square_arrow_left_fill" /></F7Button>
-                        {/* <F7Button slot="after" popoverClose onClick={()=>{addScene('left', index)}} ><SvgIcon><MoveLeftIcon/></SvgIcon></F7Button> */}
-                        <F7Button slot="after" popoverClose onClick={()=>{addScene('right', index)}}><Icon aurora="f7:square_arrow_right_fill" /></F7Button>
-                    </ListItem> 
-                    <ListItem
-                        
-                        title="Move scene"
-                    >
-                        <F7Button slot="after" disabled={index === 1} popoverClose onClick={()=>{moveScene('left', index)}} ><Icon aurora="f7:rotate_left_fill" /></F7Button>
-                        <F7Button slot="after" disabled={index === scenesCount} popoverClose onClick={()=>{moveScene('right', index)}}><Icon aurora="f7:rotate_right_fill" /></F7Button>
-                    </ListItem>
-                    <ListItem
-                        
-                        title="Delete scene"
-                        textColor="red"
-                        // selected={selected === 'projects'}
-                        
-                        >
-                        <F7Button slot="after" popoverClose onClick={() => {f7.dialog.confirm('Are you sure you want to delete scene '+index,()=>deleteScene(index))}}><Icon color="red" aurora="f7:xmark_circle_fill" /></F7Button>
-                        {/* <Icon color="red"  aurora="f7:xmark_circle_fill" slot="after" /> */}
-                    </ListItem> 
-                </List>
-            </Popover>
-        </Box>
-    )
-}
+    return (
+      <Autocomplete
+        disablePortal
+        disableClearable
+        // id="combo-box-demo"
+        options={props.languages}
+        sx={{ width: 'auto' }}
+        renderInput={(params) => <TextField size="small" {...params} label="Translate to"/>}
+      />
+    );
+  }
+
+// function OptionsButton({index}) {
+//     useEffect(()=>{
+//         console.log("scene: " + JSON.stringify(index))
+//     },[])
+
+//     return(
+//         <Box>
+//             <F7Button popoverOpen={`#scene${index}`} onClick={()=>{console.log("options button sceneIndex: "+index)}} icon="more_vert" >
+//                 <MoreVertIcon/>
+//             </F7Button>
+//             <Popover id={"scene"+index} closeByOutsideClick className="more-popover-menu">
+//                 <List menuList>
+//                     <ListItem
+//                         link
+//                         title="Upload sketches"
+//                     >
+//                         {/* <F7Button slot="after" popoverClose ><Icon aurora="f7:square_arrow_left_fill" /></F7Button> */}
+//                     </ListItem> 
+//                     <ListItem
+//                         link
+//                         title="Upload illustrations"
+//                     >
+//                         {/* <F7Button slot="after" popoverClose ><Icon aurora="f7:rotate_left_fill" /></F7Button> */}
+//                     </ListItem>
+//                 </List>
+//             </Popover>
+//         </Box>
+//     )
+// }
 
 function Voice({text,sceneIndex, role, manuscriptStatus, saveVoice, disabled}){
     console.log("role: " + role)

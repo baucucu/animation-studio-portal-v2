@@ -4,12 +4,14 @@ import { Page, Block, BlockTitle, useStore, f7 } from 'framework7-react';
 import StoryboardScenes from '../components/storyboard-scenes'
 
 import Stack from '@mui/material/Stack';
+import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SendIcon from '@mui/icons-material/Send';
 import MoreTimeIcon from '@mui/icons-material/MoreTime';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const StoryboardPage = () => {
   
@@ -21,7 +23,14 @@ const StoryboardPage = () => {
   else return (
   <Page className="viewPage">
     <Block inset strong>
-      <StoryboardActionButtons />
+      <Stack sx={{flexDirection: 'row', justifyContent:"space-between", alignItems:"center"}}>
+        <Stack direction="row" sx={{alignItems:"center"}} spacing={1}>
+          <Chip variant="filled" color="success" size="small" icon={<CheckCircleIcon/>} label="4/4 sketches"></Chip>
+          <Chip variant="filled" color="success" size="small" icon={<CheckCircleIcon/>} label="4/4 illustrations"></Chip>
+        </Stack>
+        <StoryboardActionButtons />
+      </Stack>
+      
     </Block>
     <Block>
       <StoryboardScenes/>
